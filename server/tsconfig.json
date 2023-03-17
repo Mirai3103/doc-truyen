@@ -9,13 +9,18 @@
     "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    "baseUrl": ".",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "*": ["node_modules/*", "src/types/*"]
+    },
+    "moduleResolution": "node",
+    "esModuleInterop": true
   }
 }

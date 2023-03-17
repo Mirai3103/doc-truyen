@@ -1,0 +1,30 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Author {
+  _id: String!
+  description: String!
+  name: String!
+  slug: String!
+}
+
+input CreateAuthorDto {
+  description: String!
+  name: String!
+}
+
+type Mutation {
+  createAuthor(createAuthorInput: CreateAuthorDto!): Author!
+  updateAuthor(id: String!, updateAuthorInput: UpdateAuthorDto!): Author!
+}
+
+type Query {
+  author(id: String!): Author!
+  authors: [Author!]!
+}
+
+input UpdateAuthorDto {
+  description: String
+  name: String
+}
