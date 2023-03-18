@@ -2,11 +2,27 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Author {
+type Artist {
   _id: String!
+  createdAt: DateTime!
   description: String!
   name: String!
   slug: String!
+  updatedAt: DateTime!
+}
+
+type Author {
+  _id: String!
+  createdAt: DateTime!
+  description: String!
+  name: String!
+  slug: String!
+  updatedAt: DateTime!
+}
+
+input CreateArtistDto {
+  description: String!
+  name: String!
 }
 
 input CreateAuthorDto {
@@ -14,17 +30,117 @@ input CreateAuthorDto {
   name: String!
 }
 
+input CreateTagDto {
+  description: String!
+  name: String!
+}
+
+input CreateTeamDto {
+  description: String!
+  imageBase64: String!
+  name: String!
+  officialUrl: String!
+}
+
+input CreateUserDto {
+  email: String!
+  rawPassword: String!
+  username: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input FindUserDto {
+  _id: String
+  email: String
+  username: String
+}
+
 type Mutation {
+  createArtist(createArtistInput: CreateArtistDto!): Artist!
   createAuthor(createAuthorInput: CreateAuthorDto!): Author!
+  createTag(createTagInput: CreateTagDto!): Tag!
+  createTeam(createTeamInput: CreateTeamDto!): Team!
+  createUser(createUserInput: CreateUserDto!): User!
+  updateArtist(id: String!, updateArtistInput: UpdateArtistDto!): Artist!
   updateAuthor(id: String!, updateAuthorInput: UpdateAuthorDto!): Author!
+  updateTag(id: String!, updateTagInput: UpdateTagDto!): Tag!
+  updateTeam(id: String!, updateTeamInput: UpdateTeamDto!): Team!
+  updateUser(id: String!, updateUserInput: UpdateUserDto!): User!
 }
 
 type Query {
+  artist(id: String!): Artist!
+  artists: [Artist!]!
   author(id: String!): Author!
   authors: [Author!]!
+  tag(id: String!): Tag!
+  tags: [Tag!]!
+  team(id: String!): Team!
+  teams: [Team!]!
+  user(findUserInput: FindUserDto!): User!
+}
+
+type Tag {
+  _id: String!
+  createdAt: DateTime!
+  description: String!
+  name: String!
+  slug: String!
+  updatedAt: DateTime!
+}
+
+type Team {
+  _id: String!
+  createdAt: DateTime!
+  description: String!
+  imageUrl: String!
+  name: String!
+  officialUrl: String!
+  slug: String!
+  updatedAt: DateTime!
+}
+
+input UpdateArtistDto {
+  description: String
+  name: String
 }
 
 input UpdateAuthorDto {
   description: String
   name: String
+}
+
+input UpdateTagDto {
+  description: String
+  name: String
+}
+
+input UpdateTeamDto {
+  description: String
+  imageBase64: String!
+  name: String
+  officialUrl: String!
+}
+
+input UpdateUserDto {
+  base64Avatar: String
+  description: String
+  displayName: String
+  email: String
+}
+
+type User {
+  _id: String!
+  avatarUrl: String!
+  createdAt: DateTime!
+  description: String!
+  displayName: String!
+  email: String!
+  role: Float!
+  updatedAt: DateTime!
+  username: String!
 }

@@ -7,7 +7,7 @@ import { BaseSchema } from '@/base/schema/base.schema';
   timestamps: true,
 })
 @ObjectType()
-export class Author extends BaseSchema {
+export class Tag extends BaseSchema {
   @Prop()
   @Field()
   name: string;
@@ -20,6 +20,5 @@ export class Author extends BaseSchema {
   @Field()
   description: string;
 }
-
-export type AuthorDocument = Author & Document;
-export const AuthorSchema = SchemaFactory.createForClass(Author);
+export type TagDocument = Tag & Document;
+export const TagSchema = SchemaFactory.createForClass(Tag);

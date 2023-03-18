@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { randomUUID } from 'crypto';
+import fs from 'fs';
+import { Buffer } from 'buffer';
+import axios from 'axios';
 @Injectable()
 export class UtilService {
   slugfy(str: string, separator = '-') {
@@ -22,5 +26,38 @@ export class UtilService {
   }
   async compare(text: string, hashed: string): Promise<boolean> {
     return await bcrypt.compare(text, hashed);
+  }
+  async saveFile(base64: string): Promise<string> {
+    const imageFolder = process.env.UPLOAD_FOLDER;
+    const UPLOAD_URL = process.env.UPLOAD_URL;
+    if (imageFolder) {
+      return await this.saveUseFolder(base64);
+    } else if (UPLOAD_URL) {
+      return await this.saveUseUpload(base64);
+    } else {
+      throw new Error('Server not config upload');
+    }
+  }
+  private async saveUseFolder(base64: string): Promise<string> {
+    const imageFolder = process.env.UPLOAD_FOLDER;
+    const fileName = randomUUID() + '.' + base64.split(';')[0].split('/')[1];
+    const filePath = `${imageFolder}/${fileName}`;
+    const base64Data = base64.split(',')[1];
+    const buffer = Buffer.from(base64Data, 'base64');
+    fs.writeFile(filePath, buffer, 'binary', (e) => {
+      console.log(e);
+    });
+
+    return fileName;
+  }
+  private async saveUseUpload(base64: string): Promise<string> {
+    const UPLOAD_URL = process.env.UPLOAD_URL!;
+    const res = await axios.post(UPLOAD_URL, {
+      imageBase64: base64,
+    });
+    if (res.data) {
+      return res.data.filename;
+    }
+    return '';
   }
 }

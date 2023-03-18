@@ -4,20 +4,21 @@ https://docs.nestjs.com/providers#services
 
 import { Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
-import { Author } from './interface/author.interface';
+import { AuthorDocument } from './schema/author.schema';
 import { CreateAuthorDto } from './dto/createAuthor.dto';
 import { UtilService } from '../common/util.service';
 import { InjectModel } from '@nestjs/mongoose';
-import { Author as AuthorModel } from './schema/author.schema';
+import { Author } from './schema/author.schema';
+import { UpdateAuthorDto } from './dto/updateAuthor.dto';
 @Injectable()
 export class AuthorService {
   constructor(
-    @InjectModel(AuthorModel.name)
-    private authorModel: Model<Author>,
+    @InjectModel(Author.name)
+    private authorModel: Model<AuthorDocument>,
     @Inject(UtilService) private readonly utilService: UtilService,
   ) {}
 
-  async create(createAuthorDto: CreateAuthorDto): Promise<Author> {
+  async create(createAuthorDto: CreateAuthorDto): Promise<AuthorDocument> {
     const createdAuthor = new this.authorModel({
       ...createAuthorDto,
       slug: this.utilService.slugfy(createAuthorDto.name),
@@ -25,10 +26,10 @@ export class AuthorService {
     return createdAuthor.save();
   }
 
-  async findAll(): Promise<Author[]> {
+  async findAll(): Promise<AuthorDocument[]> {
     return this.authorModel.find().exec();
   }
-  async findOne(id: string): Promise<Author | null> {
+  async findOne(id: string): Promise<AuthorDocument | null> {
     return this.authorModel
       .findOne({
         _id: id,
@@ -37,7 +38,7 @@ export class AuthorService {
   }
   async update(
     id: string,
-    updateAuthorDto: CreateAuthorDto,
+    updateAuthorDto: UpdateAuthorDto,
   ): Promise<Author | null> {
     return this.authorModel.findByIdAndUpdate(id, updateAuthorDto);
   }

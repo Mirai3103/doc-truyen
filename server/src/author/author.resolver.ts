@@ -14,6 +14,7 @@ export class AuthorResolver {
     if (!author) {
       throw new NotFoundException(id);
     }
+
     return author;
   }
   @Query(() => [Author])
