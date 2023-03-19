@@ -27,4 +27,14 @@ export class AuthController {
   getProfile(@Request() req: any) {
     return req.user;
   }
+  @Post('logout')
+  logout(@Request() req: any) {
+    const { refreshToken } = req.body;
+    return this.authService.logout(refreshToken);
+  }
+  @Post('getNewAccessToken')
+  getNewAccessToken(@Request() req: any) {
+    const { refreshToken } = req.body;
+    return this.authService.refreshToken(refreshToken);
+  }
 }

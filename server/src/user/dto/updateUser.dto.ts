@@ -1,5 +1,6 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, HideField, InputType } from '@nestjs/graphql';
 import { IsEmail, IsString, MinLength, ValidateIf } from 'class-validator';
+import { Role } from '../schema/user.schema';
 
 @InputType()
 export class UpdateUserDto {
@@ -7,19 +8,23 @@ export class UpdateUserDto {
   @Field(() => String, { nullable: true })
   @IsEmail()
   @ValidateIf((o) => o.username !== undefined)
-  email: string;
+  email?: string;
   @Field(() => String, { nullable: true })
   @IsString()
   @MinLength(3)
   @ValidateIf((o) => o.username !== undefined)
-  displayName: string;
+  displayName?: string;
   @Field(() => String, { nullable: true })
   @IsString()
   @MinLength(3)
   @ValidateIf((o) => o.username !== undefined)
-  base64Avatar: string;
+  base64Avatar?: string;
   @Field(() => String, { nullable: true })
   @IsString()
   @ValidateIf((o) => o.username !== undefined)
-  description: string;
+  description?: string;
+  @HideField()
+  role?: Role;
+  @HideField()
+  refreshTokens?: string[];
 }

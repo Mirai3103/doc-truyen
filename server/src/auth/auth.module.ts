@@ -18,8 +18,8 @@ import { LocalStrategy } from './local.strategy';
     CommonModule,
     PassportModule,
     JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '6000s' },
+      secret: process.env.JWT_SECRET_KEY || 'secret',
+      signOptions: { expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES || '30s' },
     }),
   ],
   providers: [

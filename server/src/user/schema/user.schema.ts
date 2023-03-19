@@ -1,6 +1,7 @@
 import { ObjectType, Field, HideField } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BaseSchema } from '@/base/schema/base.schema';
+import mongoose from 'mongoose';
 export enum Role {
   ADMIN = 10,
   CREATOR = 5,
@@ -39,6 +40,12 @@ export class User extends BaseSchema {
   })
   @Field()
   role: Role;
+  @HideField()
+  @Prop({
+    type: mongoose.Types.Array<string>,
+    default: [],
+  })
+  refreshTokens: string[];
 }
 export type UserDocument = User & Document;
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -1,19 +1,24 @@
 import {
   ExecutionContext,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Express } from 'express';
-type Request = Express.Request;
-type Response = Express.Response;
+import { TokenExpiredError } from 'jsonwebtoken';
+import { AuthService } from './auth.service';
+
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
+  constructor(@Inject(AuthService) private authService: AuthService) {
+    super();
+  }
   canActivate(context: ExecutionContext) {
     // Add your custom authentication logic here
     // for example, call super.logIn(request) to establish a session.
     // get request and response
-    console.log('secretkey', process.env.JWT_SECRET_KEY);
+    const body = context.switchToHttp().getRequest().body;
+    console.log(body);
     return super.canActivate(context);
   }
 

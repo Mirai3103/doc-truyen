@@ -1,7 +1,7 @@
 import { UtilService } from '@/common/util.service';
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { CreateUserDto } from './dto/createUser.dto';
 import { FindUserDto } from './dto/findUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
@@ -23,16 +23,26 @@ export class UserService {
     return newUser.save();
   }
   public async update(
-    id: string,
+    id: string | mongoose.Types.ObjectId,
     updateUserDto: UpdateUserDto,
   ): Promise<User | null> {
-    return this.userModel.findByIdAndUpdate(id, updateUserDto);
+    let avatarUrl: string | undefined;
+    if (updateUserDto.base64Avatar) {
+      avatarUrl = await this.utilService.saveFile(updateUserDto.base64Avatar);
+    }
+
+    return this.userModel.findByIdAndUpdate(id, {
+      ...updateUserDto,
+      avatarUrl,
+      base64Avatar: undefined,
+    });
   }
   public async findUser(findUserDto: FindUserDto): Promise<User | null> {
     return await this.userModel.findOne({
       ...findUserDto,
     });
   }
+
   public async findByUniqueField(
     userIdentification: string,
   ): Promise<User | null> {
