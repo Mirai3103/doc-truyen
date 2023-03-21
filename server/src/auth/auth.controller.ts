@@ -2,7 +2,9 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
+import { CreateUserDto } from '@/user/dto/createUser.dto';
 import {
+  Body,
   Controller,
   Get,
   Inject,
@@ -12,8 +14,8 @@ import {
 } from '@nestjs/common';
 import { Express } from 'express';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt-auth.guard';
-import { LocalAuthGuard } from './local-auth.guard';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
+import { LocalAuthGuard } from './guard/local-auth.guard';
 @Controller('auth')
 export class AuthController {
   constructor(@Inject(AuthService) private authService: AuthService) {}
@@ -36,5 +38,9 @@ export class AuthController {
   getNewAccessToken(@Request() req: any) {
     const { refreshToken } = req.body;
     return this.authService.refreshToken(refreshToken);
+  }
+  @Post('register')
+  register(@Body() createUserDto: CreateUserDto) {
+    return this.authService.register(createUserDto);
   }
 }

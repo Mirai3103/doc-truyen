@@ -7,10 +7,11 @@ import { PassportModule } from '@nestjs/passport/dist';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { jwtConstants } from './constant';
-import { JwtAuthGuard } from './jwt-auth.guard';
-import { JwtStrategy } from './jwt.strategy';
-import { LocalAuthGuard } from './local-auth.guard';
-import { LocalStrategy } from './local.strategy';
+import { GrapqlJwtAuthGuard } from './guard/grapql-jwt.auth.guard';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
+import { JwtStrategy } from './strategy/jwt.strategy';
+import { LocalAuthGuard } from './guard/local-auth.guard';
+import { LocalStrategy } from './strategy/local.strategy';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { LocalStrategy } from './local.strategy';
     LocalAuthGuard,
     JwtStrategy,
     JwtAuthGuard,
+    GrapqlJwtAuthGuard,
   ],
   controllers: [AuthController],
 })

@@ -3,6 +3,7 @@ https://docs.nestjs.com/providers#services
 */
 
 import { UtilService } from '@/common/util.service';
+import { CreateUserDto } from '@/user/dto/createUser.dto';
 import { User, UserDocument } from '@/user/schema/user.schema';
 import { UserService } from '@/user/user.service';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
@@ -79,5 +80,9 @@ export class AuthService {
     this.userService.update(userId as any, {
       refreshTokens: user.refreshTokens,
     });
+  }
+  async register(user: CreateUserDto) {
+    const newUser = await this.userService.create(user);
+    return newUser;
   }
 }

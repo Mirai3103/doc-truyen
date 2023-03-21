@@ -36,10 +36,10 @@ input CreateTagDto {
 }
 
 input CreateTeamDto {
-  description: String!
-  imageBase64: String!
+  description: String
+  imageBase64: String
   name: String!
-  officialUrl: String!
+  officialUrl: String
 }
 
 input CreateUserDto {
@@ -60,6 +60,7 @@ input FindUserDto {
 }
 
 type Mutation {
+  addUserToTeam(teamId: String!, userId: String!): Boolean!
   createArtist(createArtistInput: CreateArtistDto!): Artist!
   createAuthor(createAuthorInput: CreateAuthorDto!): Author!
   createTag(createTagInput: CreateTagDto!): Tag!
@@ -120,10 +121,11 @@ input UpdateTagDto {
 }
 
 input UpdateTeamDto {
+  createdBy: String
   description: String
-  imageBase64: String!
+  imageBase64: String
   name: String
-  officialUrl: String!
+  officialUrl: String
 }
 
 input UpdateUserDto {

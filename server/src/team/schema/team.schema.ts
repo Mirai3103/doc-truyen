@@ -2,6 +2,7 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { Schema as MongooseSchema } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BaseSchema } from '@/base/schema/base.schema';
+import { User } from '@/user/schema/user.schema';
 
 @Schema({
   timestamps: true,
@@ -18,13 +19,21 @@ export class Team extends BaseSchema {
 
   @Prop()
   @Field()
-  description: string;
+  description?: string;
   @Prop()
   @Field()
-  imageUrl: string;
+  imageUrl?: string;
   @Prop()
   @Field()
-  officialUrl: string;
+  officialUrl?: string;
+  @Prop({
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'User' }],
+  })
+  members: User[] = [];
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+  })
+  createdBy: User;
 }
 export type TeamDocument = Team & Document;
 export const TeamSchema = SchemaFactory.createForClass(Team);

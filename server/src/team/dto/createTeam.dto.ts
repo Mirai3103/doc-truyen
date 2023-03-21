@@ -1,11 +1,5 @@
-import {
-  IsBase64,
-  IsString,
-  IsUrl,
-  MinLength,
-  ValidateIf,
-} from 'class-validator';
-import { InputType, Field } from '@nestjs/graphql';
+import { IsString, IsUrl, MinLength, ValidateIf } from 'class-validator';
+import { InputType, Field, HideField } from '@nestjs/graphql';
 
 @InputType()
 export class CreateTeamDto {
@@ -14,17 +8,18 @@ export class CreateTeamDto {
   @MinLength(3)
   name: string;
   @IsString()
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @ValidateIf((o) => o.description !== undefined)
-  description: string;
+  description?: string;
   @IsString()
-  @Field(() => String)
-  @IsBase64()
-  @ValidateIf((o) => o.imageUrl !== undefined)
-  imageBase64: string;
+  @Field(() => String, { nullable: true })
+  @ValidateIf((o) => o.imageBase64 !== undefined)
+  imageBase64?: string;
   @IsString()
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @IsUrl()
   @ValidateIf((o) => o.officialUrl !== undefined)
-  officialUrl: string;
+  officialUrl?: string;
+  @HideField()
+  createdBy: string;
 }

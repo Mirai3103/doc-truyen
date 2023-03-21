@@ -19,13 +19,17 @@ export class UpdateTeamDto {
   @Field(() => String, { nullable: true })
   description: string;
   @IsString()
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @IsBase64()
   @ValidateIf((o) => o.imageUrl !== undefined)
   imageBase64: string;
   @IsString()
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @IsUrl()
   @ValidateIf((o) => o.officialUrl !== undefined)
   officialUrl: string;
+  @Field(() => String, { nullable: true })
+  @IsString()
+  @ValidateIf((o) => o.slug !== undefined)
+  createdBy: string;
 }
