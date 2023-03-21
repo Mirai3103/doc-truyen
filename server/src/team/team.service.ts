@@ -41,7 +41,11 @@ export class TeamService {
   }
 
   async findAll(): Promise<TeamDocument[]> {
-    return this.teamModel.find().exec();
+    return this.teamModel
+      .find()
+      .lean()
+      .populate(['createdBy', 'members'])
+      .exec();
   }
   async findOne(id: string): Promise<TeamDocument | null> {
     return this.teamModel
@@ -106,6 +110,7 @@ export class TeamService {
   ): Promise<boolean> {
     const user = await this.userModel.findById(userId);
     const team = await this.teamModel.findById(teamId);
+
     if (userId === senderUserId) {
       return false;
     }

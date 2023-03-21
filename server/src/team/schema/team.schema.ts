@@ -29,10 +29,12 @@ export class Team extends BaseSchema {
   @Prop({
     type: [{ type: MongooseSchema.Types.ObjectId, ref: 'User' }],
   })
+  @Field(() => [User])
   members: User[] = [];
   @Prop({
     type: MongooseSchema.Types.ObjectId,
   })
+  @Field(() => User)
   createdBy: User;
 }
 export type TeamDocument = Team & Document;

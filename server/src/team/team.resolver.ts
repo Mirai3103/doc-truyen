@@ -6,18 +6,24 @@ import {
   Resolver,
   Subscription,
   Context,
+  ResolveField,
 } from '@nestjs/graphql';
-import { TeamService } from '../../team/team.service';
-import { Team } from '../../team/schema/team.schema';
-import { CreateTeamDto } from '../../team/dto/createTeam.dto';
-import { UpdateTeamDto } from '../../team/dto/updateTeam.dto';
+import { TeamService } from './team.service';
+import { Team } from './schema/team.schema';
+import { CreateTeamDto } from './dto/createTeam.dto';
+import { UpdateTeamDto } from './dto/updateTeam.dto';
 import { GrapqlJwtAuthGuard } from '@/auth/guard/grapql-jwt.auth.guard';
 import { CurrentUser } from '@/common/decorator/graphql-user.decorator';
 import { UserPayload } from '@/auth/interface/user-payload.jwt';
+import { UserService } from '@/user/user.service';
+import { User } from '@/user/schema/user.schema';
 
 @Resolver(() => Team)
 export class TeamResolver {
-  constructor(private readonly teamService: TeamService) {}
+  constructor(
+    private readonly teamService: TeamService,
+    private readonly userService: UserService,
+  ) {}
   @Query(() => Team)
   async team(@Args('id') id: string) {
     const team = await this.teamService.findOne(id);
@@ -28,8 +34,10 @@ export class TeamResolver {
   }
   @Query(() => [Team])
   async teams() {
-    return await this.teamService.findAll();
+    const allTeams = await this.teamService.findAll();
+    return allTeams;
   }
+
   @UseGuards(GrapqlJwtAuthGuard)
   @Mutation(() => Team)
   async createTeam(

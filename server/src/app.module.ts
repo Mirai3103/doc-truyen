@@ -12,6 +12,7 @@ import { TeamModule } from './team/team.module';
 import { ArtistModule } from './artist/artist.module';
 import { TagModule } from './tag/tag.module';
 import { AuthModule } from './auth/auth.module';
+import { ComicModule } from './comic/comic.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { AuthModule } from './auth/auth.module';
     }),
 
     AuthModule,
+    ComicModule,
   ],
 })
 export class AppModule {}

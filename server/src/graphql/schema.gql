@@ -97,8 +97,10 @@ type Tag {
 type Team {
   _id: String!
   createdAt: DateTime!
+  createdBy: User!
   description: String!
   imageUrl: String!
+  members: [User!]!
   name: String!
   officialUrl: String!
   slug: String!
@@ -143,6 +145,7 @@ type User {
   displayName: String!
   email: String!
   role: Float!
+  teams: [Team!]!
   updatedAt: DateTime!
   username: String!
 }

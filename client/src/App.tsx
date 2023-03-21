@@ -1,28 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { Button } from "primereact/button";
-import { Image } from "primereact/image";
-import { useAppDispatch, useAppSelector } from "./redux/hook";
-import { themeSelector, toggleTheme } from "./redux/themeSplice";
-
+import React, { useState } from "react";
+import { themeOverride } from "./mantine.config";
+import { MantineProvider, ColorSchemeProvider, ColorScheme } from "@mantine/core";
+import { RouterProvider } from "react-router-dom";
+import routes from "./routes";
 function App() {
-    const mode = useAppSelector(themeSelector);
-    const dispatch = useAppDispatch();
-    const handleToggle = () => {
-        dispatch(toggleTheme());
-    };
-    useEffect(() => {
-        let themeLink = document.getElementById("app-theme") as HTMLLinkElement;
-        const darkTheme = "lara-dark-indigo";
-        const lightTheme = "lara-light-indigo";
-        if (themeLink) {
-            themeLink.href = `/themes/${mode === "dark" ? darkTheme : lightTheme}/theme.css`;
-        }
-    }, [mode]);
+    const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
+    const toggleColorScheme = (value?: ColorScheme) =>
+        setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+
     return (
-        <div className="App">
-            <Button className="" label="Click" onClick={handleToggle}></Button>
-            <Image src="https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png" />
-        </div>
+        <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+            <MantineProvider
+                theme={{
+                    ...themeOverride,
+                    colorScheme,
+                }}
+                withGlobalStyles
+                withNormalizeCSS
+            >
+                <RouterProvider router={routes} />
+            </MantineProvider>
+        </ColorSchemeProvider>
     );
 }
 

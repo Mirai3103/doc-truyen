@@ -47,6 +47,7 @@ export class User extends BaseSchema {
     default: [],
   })
   refreshTokens: string[];
+  @Field(() => [Team])
   @Prop({
     type: [{ type: mongoose.Types.ObjectId, ref: 'Team' }],
   })
