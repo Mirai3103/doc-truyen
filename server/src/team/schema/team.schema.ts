@@ -35,7 +35,7 @@ export class Team extends BaseSchema {
     type: MongooseSchema.Types.ObjectId,
   })
   @Field(() => User)
-  createdBy: User;
+  createdBy?: User;
 }
 export type TeamDocument = Team & Document;
 export const TeamSchema = SchemaFactory.createForClass(Team);

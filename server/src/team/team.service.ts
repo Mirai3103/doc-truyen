@@ -70,7 +70,7 @@ export class TeamService {
     if (!team) {
       return null;
     }
-    if (team.createdBy.toString() !== authId) {
+    if (team.createdBy!.toString() !== authId) {
       throw new ForbiddenException('You are not the owner of this team');
     }
     return this.teamModel.findByIdAndUpdate(id, {
@@ -89,7 +89,7 @@ export class TeamService {
     const team = await this.teamModel.findById(teamId);
 
     if (user !== null && team !== null) {
-      if (senderUserId !== team.createdBy._id.toString()) {
+      if (senderUserId !== team.createdBy!._id.toString()) {
         return false;
       }
       if (team.members.map((member) => member._id + '').includes(userId)) {
@@ -118,7 +118,7 @@ export class TeamService {
       return false;
     }
     if (
-      senderUserId !== team.createdBy._id.toString() &&
+      senderUserId !== team.createdBy!._id.toString() &&
       senderUserId !== userId
     ) {
       return false;

@@ -67,7 +67,7 @@ describe('TeamService', () => {
         await teamService.addUserToTeam(
           member!._id + '',
           team!._id + '',
-          team!.createdBy._id + '',
+          team!.createdBy!._id + '',
         ),
       ).toBeTruthy();
       const otherMenber = await userService.findByUniqueField('123@gmail.com');
@@ -82,14 +82,14 @@ describe('TeamService', () => {
         await teamService.addUserToTeam(
           otherMenber!._id + '',
           team!._id + '',
-          team!.createdBy._id + '',
+          team!.createdBy!._id + '',
         ),
       ).toBeTruthy();
       expect(
         await teamService.addUserToTeam(
           otherMenber!._id + '',
           team!._id + '',
-          team!.createdBy._id + '',
+          team!.createdBy!._id + '',
         ),
       ).toBeFalsy();
       const teamInDb = await teamService.findBySlug('ten-ne');
@@ -98,7 +98,7 @@ describe('TeamService', () => {
       await teamService.removeUserFromTeam(
         otherMenber!._id + '',
         team!._id + '',
-        team!.createdBy._id + '',
+        team!.createdBy!._id + '',
       );
       const teamInDb2 = await teamService.findBySlug('ten-ne');
       expect(teamInDb2!.members).not.toContainEqual(otherMenber!._id);

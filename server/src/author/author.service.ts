@@ -42,4 +42,19 @@ export class AuthorService {
   ): Promise<Author | null> {
     return this.authorModel.findByIdAndUpdate(id, updateAuthorDto);
   }
+  async createIfNotExist(authorName: string): Promise<AuthorDocument> {
+    const nameSlug = this.utilService.slugfy(authorName);
+    const author = await this.authorModel.findOne({
+      slug: nameSlug,
+    });
+    if (author) {
+      return author;
+    }
+    const createdAuthor = new this.authorModel({
+      name: authorName,
+      slug: nameSlug,
+      description: null,
+    });
+    return await createdAuthor.save();
+  }
 }

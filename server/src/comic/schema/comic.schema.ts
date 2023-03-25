@@ -5,7 +5,6 @@ import { BaseSchema } from '@/base/schema/base.schema';
 import { Tag } from '@/tag/schema/tag.schema';
 import { Team } from '@/team/schema/team.schema';
 import { Author } from '@/author/schema/author.schema';
-import { Artist } from '@/artist/schema/artist.schema';
 
 @Schema({
   timestamps: true,
@@ -15,6 +14,9 @@ export class Comic extends BaseSchema {
   @Prop()
   @Field()
   name: string;
+  @Prop({ type: [{ type: String }] })
+  @Field(() => [String])
+  otherNames: string[];
   @Prop()
   @Field()
   slug: string;
@@ -42,9 +44,15 @@ export class Comic extends BaseSchema {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Author' })
   @Field()
   author: Author;
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Artist' })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Author' })
   @Field()
-  artist: Artist;
+  artist?: Author;
+  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Tag' }] })
+  @Field(() => [Tag])
+  genres: Tag[] = [];
+  @Prop()
+  @Field()
+  followCount: number;
 }
 export enum Status {
   Paused = 'Tạm dừng',

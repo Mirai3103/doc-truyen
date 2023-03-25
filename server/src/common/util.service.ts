@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
 import fs from 'fs';
 import { Buffer } from 'buffer';
+import https from 'https';
 import axios from 'axios';
 @Injectable()
 export class UtilService {
@@ -37,6 +38,22 @@ export class UtilService {
     } else {
       throw new Error('Server not config upload');
     }
+  }
+  async downloadFile(url: string): Promise<string> {
+    const imageFolder = process.env.UPLOAD_FOLDER!;
+    const fileName = randomUUID() + '.' + url.split('.').pop();
+    // https.get(url, (res) => {
+    //   // Image will be stored at this path
+    //   const filePath = fs.createWriteStream(`${imageFolder}/${fileName}`);
+    //   res.pipe(filePath);
+    //   filePath.on('finish', () => {
+    //     filePath.close();
+    //   });
+    //   filePath.on('error', (e) => {
+    //     console.log(e);
+    //   });
+    // });
+    return fileName;
   }
   private async saveUseFolder(base64: string): Promise<string> {
     const imageFolder = process.env.UPLOAD_FOLDER;

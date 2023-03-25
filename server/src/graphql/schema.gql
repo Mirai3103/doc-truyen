@@ -20,6 +20,26 @@ type Author {
   updatedAt: DateTime!
 }
 
+type Comic {
+  _id: String!
+  artist: Artist!
+  author: Author!
+  category: Tag!
+  createdAt: DateTime!
+  description: String!
+  followCount: Float!
+  genres: [Tag!]!
+  imageCoverUrl: String!
+  imageThumbUrl: String!
+  name: String!
+  officeUrl: String!
+  otherNames: [String!]!
+  slug: String!
+  status: String!
+  team: Team!
+  updatedAt: DateTime!
+}
+
 input CreateArtistDto {
   description: String!
   name: String!
@@ -71,6 +91,11 @@ type Mutation {
   updateTag(id: String!, updateTagInput: UpdateTagDto!): Tag!
   updateTeam(id: String!, updateTeamInput: UpdateTeamDto!): Team!
   updateUser(id: String!, updateUserInput: UpdateUserDto!): User!
+}
+
+type Page {
+  order: Float!
+  url: String!
 }
 
 type Query {
@@ -144,6 +169,7 @@ type User {
   description: String!
   displayName: String!
   email: String!
+  followedComics: [Comic!]!
   role: Float!
   teams: [Team!]!
   updatedAt: DateTime!

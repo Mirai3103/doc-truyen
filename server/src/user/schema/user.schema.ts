@@ -3,6 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BaseSchema } from '@/base/schema/base.schema';
 import mongoose from 'mongoose';
 import { Team } from '@/team/schema/team.schema';
+import { Comic } from '@/comic/schema/comic.schema';
 export enum Role {
   ADMIN = 10,
   CREATOR = 5,
@@ -52,6 +53,11 @@ export class User extends BaseSchema {
     type: [{ type: mongoose.Types.ObjectId, ref: 'Team' }],
   })
   teams: Team[] = [];
+  @Field(() => [Comic])
+  @Prop({
+    type: [{ type: mongoose.Types.ObjectId, ref: 'Comic' }],
+  })
+  followedComics: Comic[] = [];
 }
 export type UserDocument = User & Document;
 export const UserSchema = SchemaFactory.createForClass(User);
