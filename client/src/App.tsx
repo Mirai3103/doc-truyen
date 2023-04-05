@@ -10,13 +10,13 @@ import "./index.css";
 import { themeOverride } from "./mantine.config";
 import routes from "./routes";
 const client = new ApolloClient({
-    uri: "http://192.168.2.131:3000/graphql",
+    uri: process.env.GRAPHQL_URL || "http://192.168.2.131:3000/graphql",
     cache: new InMemoryCache(),
     connectToDevTools: true,
     link: ApolloLink.from([
         authLink,
         new HttpLink({
-            uri: "http://192.168.2.131:3000/graphql",
+            uri: process.env.GRAPHQL_URL || "http://192.168.2.131:3000/graphql",
         }),
     ]),
 });
