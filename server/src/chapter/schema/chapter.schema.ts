@@ -19,7 +19,7 @@ export class Chapter extends BaseSchema {
   @Field()
   chapterNumber: string;
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Comic' })
-  @Field()
+  @Field(() => Comic)
   comic: Comic;
   @Prop({ type: [{ url: String, order: Number }] })
   @Field(() => [Page])

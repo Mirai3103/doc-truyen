@@ -3,13 +3,14 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      process.env.DATABASE_URI || 'mongodb://127.0.0.1:27017',
-      {
-        dbName: process.env.MONGO_DBNAME || 'DocTruyen',
-      },
-    ),
+    MongooseModule.forRoot(process.env.DATABASE_URI!, {
+      dbName: process.env.MONGO_DBNAME || 'comicDb',
+    }),
   ],
   providers: [],
 })
-export class DatabaseModule {}
+export class DatabaseModule {
+  constructor() {
+    console.log('DatabaseModule', process.env.DATABASE_URI);
+  }
+}

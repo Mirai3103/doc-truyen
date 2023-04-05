@@ -6,8 +6,8 @@ https://docs.nestjs.com/modules
 import { ComicModule } from '@/comic/comic.module';
 import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Chapter, ChapterSchema } from './schema/chapter.schema';
 import { ChapterResolver } from './chapter.resolver';
+import { Chapter, ChapterSchema } from './schema/chapter.schema';
 
 @Module({
   imports: [

@@ -1,24 +1,25 @@
-import { CrawlerModule } from './crawler/crawler.module';
-import { ChapterModule } from './chapter/chapter.module';
-import { UserModule } from './user/user.module';
-import { CommonModule } from './common/common.module';
-import { DatabaseModule } from './database/database.module';
-import { AuthorModule } from './author/author.module';
-import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriverConfig } from '@nestjs/apollo';
 import { ApolloDriver } from '@nestjs/apollo/dist/drivers';
-import { join } from 'path';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TeamModule } from './team/team.module';
-import { TagModule } from './tag/tag.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { join } from 'path';
+import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
+import { AuthorModule } from './author/author.module';
+import { ChapterModule } from './chapter/chapter.module';
 import { ComicModule } from './comic/comic.module';
+import { CommonModule } from './common/common.module';
+import { CrawlerModule } from './crawler/crawler.module';
+import { DatabaseModule } from './database/database.module';
+import { TagModule } from './tag/tag.module';
+import { TeamModule } from './team/team.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
     CrawlerModule,
-    ChapterModule,
+
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -40,7 +41,7 @@ import { ComicModule } from './comic/comic.module';
     AuthModule,
     ComicModule,
     ChapterModule,
-    CrawlerModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

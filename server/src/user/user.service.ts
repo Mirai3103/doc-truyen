@@ -1,5 +1,5 @@
 import { UtilService } from '@/common/util.service';
-import { Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { CreateUserDto } from './dto/createUser.dto';
@@ -15,6 +15,19 @@ export class UserService {
   ) {}
 
   public async create(createUserDto: CreateUserDto): Promise<User> {
+    //check if email is already taken
+    const emailExists = await this.userModel.findOne({
+      email: createUserDto.email,
+    });
+    if (emailExists) {
+      throw new ConflictException('Email đã tồn tại');
+    }
+    const usernameExists = await this.userModel.findOne({
+      username: createUserDto.username,
+    });
+    if (usernameExists) {
+      throw new ConflictException('Tên đăng nhập đã tồn tại');
+    }
     const newUser = new this.userModel({
       ...createUserDto,
       rawPassword: undefined,

@@ -2,8 +2,9 @@ import { authLink } from "@/utils/axios";
 import { ApolloClient, ApolloLink, ApolloProvider, HttpLink, InMemoryCache } from "@apollo/client";
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
+import { Notifications, notifications } from "@mantine/notifications";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { useState } from "react";
+import React, { useState } from "react";
 import { RouterProvider } from "react-router-dom";
 import "./index.css";
 import { themeOverride } from "./mantine.config";
@@ -24,7 +25,23 @@ function App() {
     const toggleColorScheme = (value?: ColorScheme) =>
         setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
     useHotkeys([["mod+J", () => toggleColorScheme()]]);
-
+    React.useEffect(() => {
+        notifications.show({
+            title: "Lưu ý",
+            message: "Tất cả dữ liệu ở web này được ăn cắp cho mục đích học tập, không có ý định nào khác cả :)",
+            color: "yellow",
+            autoClose: 15000,
+            styles: (theme) => ({
+                title: {
+                    fontSize: theme.fontSizes.xl,
+                    fontStyle: "700",
+                },
+                body: {
+                    fontSize: theme.fontSizes.lg,
+                },
+            }),
+        });
+    }, []);
     return (
         <GoogleOAuthProvider clientId="658600165325-3uk2cg496n3ed5n7snl0vi00suh7hd7r.apps.googleusercontent.com">
             <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
@@ -49,6 +66,7 @@ function App() {
                     withGlobalStyles
                     withNormalizeCSS
                 >
+                    <Notifications position="top-right" />
                     <ApolloProvider client={client}>
                         <RouterProvider router={routes} />
                     </ApolloProvider>
