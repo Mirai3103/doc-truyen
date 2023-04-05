@@ -45,7 +45,7 @@ api.interceptors.response.use(
 
 const reNewAccessToken = async () => {
     const refreshToken = store.getState().user.refreshToken;
-    const response = await api.post("http://localhost:3000/auth/getNewAccessToken", {
+    const response = await api.post(`${process.env.SERVER_URL || "http://localhost:3000"}/auth/getNewAccessToken`, {
         refreshToken,
     });
     if (response.status === 401) {
