@@ -21,7 +21,7 @@ export class Team extends BaseSchema {
   @Field()
   description?: string;
   @Prop()
-  @Field()
+  @Field({ nullable: true })
   imageUrl?: string;
   @Prop()
   @Field()

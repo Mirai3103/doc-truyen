@@ -3,7 +3,6 @@ https://docs.nestjs.com/providers#services
 */
 
 import { AuthorService } from '@/author/author.service';
-import { Author, AuthorDocument } from '@/author/schema/author.schema';
 import { Chapter, ChapterDocument } from '@/chapter/schema/chapter.schema';
 import { Comic, ComicDocument, Status } from '@/comic/schema/comic.schema';
 import { UtilService } from '@/common/util.service';
@@ -12,8 +11,6 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import axios from 'axios';
-import { writeFile } from 'fs';
-import { ObjectId } from 'mongodb';
 import mongoose, { Model } from 'mongoose';
 import {
   IChapter,
@@ -33,10 +30,10 @@ export class CrawlerService {
     @InjectModel(Team.name) private teamModel: Model<TeamDocument>,
     private readonly utilsService: UtilService,
   ) {}
-  private bindUrl: any[] = [];
+  // private bindUrl: any[] = [];
   private async getIds() {
     const ids: number[] = [];
-    for (let i = 1; i <= 1; i++) {
+    for (let i = 1; i <= 2; i++) {
       const url = `https://kakarot.cuutruyen.net/api/v2/mangas/recently_updated?page=${i}&per_page=${50}`;
       const response: any = await axios.get(url);
       const data = response.data.data as IPreviewManga[];
@@ -52,14 +49,13 @@ export class CrawlerService {
     for await (const id of ids) {
       await this.crawlManga(id);
       count++;
-      console.log('đã xong: ', count);
-      if (count == 50) break;
+      console.info('đã xong: ', count);
     }
-    writeFile('bindUrl.json', JSON.stringify(this.bindUrl), (err) => {
-      if (err) {
-        console.log(err);
-      }
-    });
+    // writeFile('bindUrl.json', JSON.stringify(this.bindUrl), (err) => {
+    //   if (err) {
+    //     console.log(err);
+    //   }
+    // });
   }
   private async crawlManga(id: number) {
     const res: any = await axios.get(
@@ -136,7 +132,6 @@ export class CrawlerService {
     mangaObjId: mongoose.Schema.Types.ObjectId,
   ) {
     try {
-      //https://kakarot.cuutruyen.net/api/v2/chapters/14962
       const res: any = await axios.get(
         `https://kakarot.cuutruyen.net/api/v2/chapters/${chapter.id}`,
       );
@@ -144,13 +139,13 @@ export class CrawlerService {
       const pages = [];
       for (let i = 0; i < chapterDetail.pages.length; i++) {
         const page = chapterDetail.pages[i];
-        const localName = await this.utilsService.downloadFile(page.image_url);
-        this.bindUrl.push({
-          url: page.image_url,
-          localName: localName,
-        });
+        // const localName = await this.utilsService.downloadFile(page.image_url);
+        // this.bindUrl.push({
+        //   url: page.image_url,
+        //   localName: localName,
+        // });
         pages.push({
-          url: localName,
+          url: page.image_url,
           order: page.order,
         });
       }
@@ -168,7 +163,7 @@ export class CrawlerService {
       await newChapter.save();
       console.log('done', chapterDetail.number);
     } catch (e) {
-      console.log('error', e);
+      console.error('error', e);
       throw e;
     }
   }

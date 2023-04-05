@@ -9,10 +9,12 @@ import {
   Get,
   Inject,
   Post,
+  Req,
   Request,
+  Res,
   UseGuards,
 } from '@nestjs/common';
-import { Express } from 'express';
+import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { LocalAuthGuard } from './guard/local-auth.guard';
@@ -42,5 +44,19 @@ export class AuthController {
   @Post('register')
   register(@Body() createUserDto: CreateUserDto) {
     return this.authService.register(createUserDto);
+  }
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth(@Req() req: Request) {
+    console.log('googleAuth');
+  }
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(@Req() req: any, @Res() res: any) {
+    const tokenObj = await this.authService.googleLogin(req); // this will return a JWT token
+    // redirect to frontend
+    return res.redirect(
+      `${process.env.CLIENT_URL}/login/callback?accesstoken=${tokenObj.accessToken}&refreshtoken=${tokenObj.refreshToken}`,
+    );
   }
 }

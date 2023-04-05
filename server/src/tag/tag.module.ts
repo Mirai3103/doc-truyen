@@ -1,10 +1,10 @@
-import { TagService } from './tag.service';
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from '../database/database.module';
-import { CommonModule } from '../common/common.module';
-import { TagResolver } from './tag.resolver';
 import { MongooseModule } from '@nestjs/mongoose';
+import { CommonModule } from '../common/common.module';
+import { DatabaseModule } from '../database/database.module';
 import { Tag, TagSchema } from './schema/tag.schema';
+import { TagResolver } from './tag.resolver';
+import { TagService } from './tag.service';
 
 @Module({
   imports: [
@@ -17,6 +17,7 @@ import { Tag, TagSchema } from './schema/tag.schema';
       },
     ]),
   ],
+  exports: [TagService],
   providers: [TagService, TagResolver],
 })
 export class TagModule {}

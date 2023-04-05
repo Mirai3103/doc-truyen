@@ -1,5 +1,5 @@
 import { UtilService } from '@/common/util.service';
-import { Injectable, Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { CreateUserDto } from './dto/createUser.dto';
@@ -43,19 +43,15 @@ export class UserService {
     });
   }
 
-  public async findByUniqueField(
-    userIdentification: string,
-  ): Promise<User | null> {
+  public async findByUniqueField(userIdentification: string) {
     //check if is mongoose.Types.ObjectId
-    let user: User | null = null;
+
     if (userIdentification.match(/^[0-9a-fA-F]{24}$/)) {
-      user = await this.userModel.findById(userIdentification);
-      return user;
+      return await this.userModel.findById(userIdentification);
     }
-    user = await this.userModel.findOne({
+    return await this.userModel.findOne({
       $or: [{ username: userIdentification }, { email: userIdentification }],
     });
-    return user;
   }
   public async findByIds(ids: string[]): Promise<User[]> {
     return await this.userModel.find({

@@ -5,6 +5,7 @@ import fs from 'fs';
 import { Buffer } from 'buffer';
 import https from 'https';
 import axios from 'axios';
+import { PageClass } from './dto/pagination.dto';
 @Injectable()
 export class UtilService {
   slugfy(str: string, separator = '-') {
@@ -76,5 +77,18 @@ export class UtilService {
       return res.data.filename;
     }
     return '';
+  }
+  async withPagination<T>(
+    query: any,
+    limit = 10,
+    page = 1,
+  ): Promise<PageClass<T>> {
+    const skip = (page - 1) * limit;
+    const total = await query.countDocuments();
+    const data = await query.skip(skip).limit(limit);
+    return {
+      data,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 }

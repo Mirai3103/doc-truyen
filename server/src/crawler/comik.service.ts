@@ -1,38 +1,28 @@
-import { AuthorService } from '@/author/author.service';
-import { Chapter, ChapterDocument } from '@/chapter/schema/chapter.schema';
-import { Comic, ComicDocument, Status } from '@/comic/schema/comic.schema';
+import { Comic, ComicDocument } from '@/comic/schema/comic.schema';
 import { UtilService } from '@/common/util.service';
-import { Team, TeamDocument } from '@/team/schema/team.schema';
-import { HttpService } from '@nestjs/axios';
+import { Tag, TagDocument } from '@/tag/schema/tag.schema';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import axios from 'axios';
 import { load } from 'cheerio';
-import { writeFile, writeFileSync } from 'fs';
+import { writeFileSync } from 'fs';
 import { Model } from 'mongoose';
 // https://api.comick.app/v1.0/search?q=blue+box&t=true
 @Injectable()
 export class ComikService {
   constructor(
-    private readonly httpService: HttpService,
     @InjectModel(Comic.name) private mangaModel: Model<ComicDocument>,
-    @InjectModel(Chapter.name) private chapterModel: Model<ChapterDocument>,
-    private readonly authorService: AuthorService,
-    @InjectModel(Team.name) private teamModel: Model<TeamDocument>,
     private readonly utilsService: UtilService,
+    @InjectModel(Tag.name) private tagModel: Model<TagDocument>,
   ) {}
   private async searchByName(name: string) {
     const url = `https://api.comick.app/v1.0/search?q=${name}&t=true`;
     const response = await axios.get(url);
     const { title, slug, id } = response.data[0];
     if (!title) return null;
-    if (
-      !this.utilsService
-        .slugfy(title)
-        .replace(/-/g, '')
-        .startsWith(this.utilsService.slugfy(name).replace(/-/g, ''))
-    )
-      return null;
+    const name1 = this.utilsService.slugfy(name).replace(/-/g, '');
+    const name2 = this.utilsService.slugfy(title).replace(/-/g, '');
+    if (!name1.includes(name2) && !name2.includes(name1)) return null;
     return {
       title,
       slug,
@@ -43,7 +33,9 @@ export class ComikService {
     const comics = await this.mangaModel.find();
     const listCrawled = [];
     const notFound = [];
-    for (const comic of comics) {
+    let i = 0;
+    for await (const comic of comics) {
+      if (comic.genres.length > 0) continue;
       const asciiName = comic.otherNames.find((name) => !this.hasUnicode(name));
       if (!asciiName) {
         notFound.push(comic.otherNames);
@@ -51,21 +43,55 @@ export class ComikService {
       }
       const rs = await this.searchByName(asciiName);
       if (!rs) {
-        notFound.push(asciiName);
+        notFound.push({
+          asciiName,
+          others: comic.otherNames,
+        });
         continue;
       }
       const { title, slug, id } = rs;
-      console.log('done id' + id);
       listCrawled.push({
         comikId: id,
         slug,
         comikTitle: title,
         name: asciiName,
-        _id: comic._id,
+        comic: comic,
       });
+      console.log(++i + ' doned');
     }
-    writeFileSync('comik.json', JSON.stringify(listCrawled, null, 2));
-    writeFileSync('notfound.json', JSON.stringify(notFound, null, 2));
+    i = 0;
+    for await (const item of listCrawled) {
+      console.log('start crawl', ++i);
+      const obj = await this.getData(item.slug);
+
+      const category = await this.createIfTagNotFound(obj.origination);
+      if (category) item.comic.category = category;
+      const tags = await Promise.all(
+        obj.listSpanGenres.map((tag) => this.createIfTagNotFound(tag)),
+      );
+      item.comic.genres = [];
+      tags.forEach((tag) => {
+        if (tag) item.comic.genres.push(tag);
+      });
+      await item.comic.save();
+    }
+    //write not found
+    writeFileSync('not-found.json', JSON.stringify(notFound, null, 2), 'utf-8');
+
+    console.log('done');
+  }
+  private async createIfTagNotFound(tag: string) {
+    if (tag === '') return null;
+
+    const slug = this.utilsService.slugfy(tag);
+    const existed = await this.tagModel.findOne({ slug });
+    if (existed) return existed;
+    const newTag = new this.tagModel({
+      name: tag,
+      slug,
+      description: null,
+    });
+    return await newTag.save();
   }
   private hasUnicode(str: string) {
     for (let i = 0; i < str.length; i++) {
@@ -75,65 +101,33 @@ export class ComikService {
     }
     return false;
   }
-  private async getData(slug: string): Promise<IPageProps> {
-    //https://comick.app/comic/
+  private async getData(slug: string) {
     const url = `https://comick.app/comic/${slug}`;
     const response = await axios.get(url);
     const $ = load(response.data);
-    const jsonStr = $('script#__NEXT_DATA__').text();
-    const regex = /Origination:<!-- -->\s+<\/span><span>(.*)<\/span>/;
-    const origination = regex.exec(response.data)![1];
+    const origination = $('.text-gray-500:contains("Origination:")')
+      .first()
+      .next()
+      .text()
+      .trim();
+    const listSpanGenres = $(
+      '.text-gray-500.w-16.flex-shrink-0:contains("Genres:")',
+    )
+      .first()
+      .next()
+      .children()
+      .map((i, el) => {
+        const text = $(el).text().trim();
+        const indexOfStartCut = text
+          .split('')
+          .findIndex((c) => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
+        return text.slice(indexOfStartCut);
+      })
+      .toArray();
 
-    const json = JSON.parse(jsonStr) as IRoot;
-    json.props.pageProps.origination = origination;
-    return json.props.pageProps;
+    return {
+      listSpanGenres,
+      origination,
+    };
   }
-}
-interface IRoot {
-  props: IProps;
-}
-
-interface IProps {
-  pageProps: IPageProps;
-}
-
-interface IPageProps {
-  comic: Comic;
-  artists: IArtist[];
-  authors: IAuthor[];
-  genres: IGenre[];
-  origination: string;
-}
-
-interface IComic {
-  hentai: boolean;
-  slug: string;
-  year: number;
-  md_comic_md_genres: MdComicMdGenre[];
-}
-
-interface MdComicMdGenre {
-  md_genres: MdGenres;
-}
-
-interface MdGenres {
-  name: string;
-  type?: string;
-  slug: string;
-  group: string;
-}
-
-interface IArtist {
-  name: string;
-  slug: string;
-}
-
-interface IAuthor {
-  name: string;
-  slug: string;
-}
-
-interface IGenre {
-  slug: string;
-  name: string;
 }

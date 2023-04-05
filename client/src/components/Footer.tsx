@@ -1,5 +1,5 @@
-import { createStyles, Anchor, Group, ActionIcon, rem } from "@mantine/core";
-import { IconBrandTwitter, IconBrandYoutube, IconBrandInstagram } from "@tabler/icons-react";
+import { ActionIcon, Anchor, createStyles, Group, rem } from "@mantine/core";
+import { IconBrandInstagram, IconBrandTwitter, IconBrandYoutube } from "@tabler/icons-react";
 import Logo from "./Logo";
 
 const useStyles = createStyles((theme) => ({
@@ -29,9 +29,10 @@ const useStyles = createStyles((theme) => ({
 
 interface FooterCenteredProps {
     links: { link: string; label: string }[];
+    className?: string;
 }
 
-export function Footer({ links }: FooterCenteredProps) {
+export function Footer({ links, className = "" }: FooterCenteredProps) {
     const { classes } = useStyles();
     const items = links.map((link) => (
         <Anchor<"a">
@@ -45,14 +46,11 @@ export function Footer({ links }: FooterCenteredProps) {
             {link.label}
         </Anchor>
     ));
-
     return (
-        <div className={classes.footer}>
+        <div className={classes.footer + " " + className}>
             <div className={classes.inner}>
                 <Logo w={80} />
-
                 <Group className={classes.links}>{items}</Group>
-
                 <Group spacing="xs" position="right" noWrap>
                     <ActionIcon size="lg" variant="default" radius="xl">
                         <IconBrandTwitter size="1.05rem" stroke={1.5} />
@@ -65,6 +63,7 @@ export function Footer({ links }: FooterCenteredProps) {
                     </ActionIcon>
                 </Group>
             </div>
+            <div className="mb-20"></div>
         </div>
     );
 }

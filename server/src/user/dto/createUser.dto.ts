@@ -30,4 +30,8 @@ export class CreateUserDto {
   @Field()
   @IsEmail()
   email: string;
+  @Field({ nullable: true })
+  displayName?: string;
+  @Field({ nullable: true })
+  avatarUrl?: string;
 }

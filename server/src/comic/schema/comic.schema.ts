@@ -1,10 +1,11 @@
-import { ObjectType, Field } from '@nestjs/graphql';
-import { Schema as MongooseSchema } from 'mongoose';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Author } from '@/author/schema/author.schema';
 import { BaseSchema } from '@/base/schema/base.schema';
+import { Chapter } from '@/chapter/schema/chapter.schema';
 import { Tag } from '@/tag/schema/tag.schema';
 import { Team } from '@/team/schema/team.schema';
-import { Author } from '@/author/schema/author.schema';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Schema as MongooseSchema } from 'mongoose';
 
 @Schema({
   timestamps: true,
@@ -36,7 +37,7 @@ export class Comic extends BaseSchema {
   @Field()
   status: Status;
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Tag' })
-  @Field()
+  @Field({ nullable: true })
   category: Tag;
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Team' })
   @Field()
@@ -45,7 +46,7 @@ export class Comic extends BaseSchema {
   @Field()
   author: Author;
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Author' })
-  @Field()
+  @Field({ nullable: true })
   artist?: Author;
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Tag' }] })
   @Field(() => [Tag])
@@ -53,6 +54,8 @@ export class Comic extends BaseSchema {
   @Prop()
   @Field()
   followCount: number;
+  @Field(() => Chapter)
+  recentChapter: Chapter;
 }
 export enum Status {
   Paused = 'Tạm dừng',

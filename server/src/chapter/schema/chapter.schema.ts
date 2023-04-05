@@ -1,8 +1,8 @@
-import { ObjectType, Field } from '@nestjs/graphql';
-import { Schema as MongooseSchema } from 'mongoose';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BaseSchema } from '@/base/schema/base.schema';
 import { Comic } from '@/comic/schema/comic.schema';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Schema as MongooseSchema } from 'mongoose';
 
 @Schema({
   timestamps: true,
@@ -13,8 +13,8 @@ export class Chapter extends BaseSchema {
   @Field()
   order: number;
   @Prop()
-  @Field()
-  name: string;
+  @Field({ nullable: true })
+  name?: string;
   @Prop()
   @Field()
   chapterNumber: string;
@@ -24,6 +24,10 @@ export class Chapter extends BaseSchema {
   @Prop({ type: [{ url: String, order: Number }] })
   @Field(() => [Page])
   pages: Page[];
+  @Field(() => Chapter, { nullable: true })
+  nextChapter?: Chapter;
+  @Field(() => Chapter, { nullable: true })
+  previousChapter?: Chapter;
 }
 
 @ObjectType()

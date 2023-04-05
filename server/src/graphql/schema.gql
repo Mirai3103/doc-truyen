@@ -2,15 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Artist {
-  _id: String!
-  createdAt: DateTime!
-  description: String!
-  name: String!
-  slug: String!
-  updatedAt: DateTime!
-}
-
 type Author {
   _id: String!
   createdAt: DateTime!
@@ -20,11 +11,24 @@ type Author {
   updatedAt: DateTime!
 }
 
+type Chapter {
+  _id: String!
+  chapterNumber: String!
+  comic: Comic!
+  createdAt: DateTime!
+  name: String
+  nextChapter: Chapter
+  order: Float!
+  pages: [Page!]!
+  previousChapter: Chapter
+  updatedAt: DateTime!
+}
+
 type Comic {
   _id: String!
-  artist: Artist!
+  artist: Author
   author: Author!
-  category: Tag!
+  category: Tag
   createdAt: DateTime!
   description: String!
   followCount: Float!
@@ -34,15 +38,11 @@ type Comic {
   name: String!
   officeUrl: String!
   otherNames: [String!]!
+  recentChapter: Chapter!
   slug: String!
   status: String!
   team: Team!
   updatedAt: DateTime!
-}
-
-input CreateArtistDto {
-  description: String!
-  name: String!
 }
 
 input CreateAuthorDto {
@@ -63,6 +63,8 @@ input CreateTeamDto {
 }
 
 input CreateUserDto {
+  avatarUrl: String
+  displayName: String
   email: String!
   rawPassword: String!
   username: String!
@@ -81,12 +83,10 @@ input FindUserDto {
 
 type Mutation {
   addUserToTeam(teamId: String!, userId: String!): Boolean!
-  createArtist(createArtistInput: CreateArtistDto!): Artist!
   createAuthor(createAuthorInput: CreateAuthorDto!): Author!
   createTag(createTagInput: CreateTagDto!): Tag!
   createTeam(createTeamInput: CreateTeamDto!): Team!
   createUser(createUserInput: CreateUserDto!): User!
-  updateArtist(id: String!, updateArtistInput: UpdateArtistDto!): Artist!
   updateAuthor(id: String!, updateAuthorInput: UpdateAuthorDto!): Author!
   updateTag(id: String!, updateTagInput: UpdateTagDto!): Tag!
   updateTeam(id: String!, updateTeamInput: UpdateTeamDto!): Team!
@@ -99,10 +99,16 @@ type Page {
 }
 
 type Query {
-  artist(id: String!): Artist!
-  artists: [Artist!]!
   author(id: String!): Author!
   authors: [Author!]!
+  getAllChapters(comicId: String!): [Chapter!]!
+  getAllComics: [Comic!]!
+  getChapterById(chapterId: String!): Chapter!
+  getComicById(id: String!): Comic!
+  getComicBySlug(slug: String!): Comic!
+  getRecentComics(limit: Float = 10, page: Float = 1): [Comic!]!
+  getTopComics(limit: Float = 10, page: Float = 1): [Comic!]!
+  getTrendingComics(input: TrendingSortInput!): [Comic!]!
   tag(id: String!): Tag!
   tags: [Tag!]!
   team(id: String!): Team!
@@ -124,7 +130,7 @@ type Team {
   createdAt: DateTime!
   createdBy: User!
   description: String!
-  imageUrl: String!
+  imageUrl: String
   members: [User!]!
   name: String!
   officialUrl: String!
@@ -132,9 +138,10 @@ type Team {
   updatedAt: DateTime!
 }
 
-input UpdateArtistDto {
-  description: String
-  name: String
+input TrendingSortInput {
+  limit: Float = 5
+  page: Float = 5
+  type: String!
 }
 
 input UpdateAuthorDto {

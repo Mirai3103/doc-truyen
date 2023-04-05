@@ -13,6 +13,7 @@ import { Team, TeamSchema } from '@/team/schema/team.schema';
 import { CommonModule } from '@/common/common.module';
 import { AuthorModule } from '@/author/author.module';
 import { ComikService } from './comik.service';
+import { Tag, TagSchema } from '@/tag/schema/tag.schema';
 
 @Module({
   imports: [
@@ -25,6 +26,10 @@ import { ComikService } from './comik.service';
       {
         name: Chapter.name,
         schema: ChapterSchema,
+      },
+      {
+        name: Tag.name,
+        schema: TagSchema,
       },
       {
         name: Author.name,

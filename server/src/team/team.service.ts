@@ -1,10 +1,5 @@
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import mongoose, { Model } from 'mongoose';
+import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
+import { Model } from 'mongoose';
 import { TeamDocument } from './schema/team.schema';
 import { CreateTeamDto } from './dto/createTeam.dto';
 import { UtilService } from '../common/util.service';

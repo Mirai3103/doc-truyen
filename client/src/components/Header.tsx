@@ -1,35 +1,7 @@
-import {
-    createStyles,
-    Header,
-    HoverCard,
-    Group,
-    Button,
-    UnstyledButton,
-    Text,
-    SimpleGrid,
-    ThemeIcon,
-    Anchor,
-    Divider,
-    Center,
-    Box,
-    Burger,
-    Drawer,
-    Collapse,
-    ScrollArea,
-    rem,
-    Autocomplete,
-} from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import {
-    IconNotification,
-    IconCode,
-    IconBook,
-    IconChartPie3,
-    IconFingerprint,
-    IconCoin,
-    IconChevronDown,
-    IconSearch,
-} from "@tabler/icons-react";
+import { Autocomplete, Box, BoxProps, Button, createStyles, Flex, Group, Header, Menu, rem } from "@mantine/core";
+import { IconMenu2, IconSearch } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
+import { menuData, noAuthMenu } from "./layouts/SideBar";
 import Logo from "./Logo";
 
 const useStyles = createStyles((theme) => ({
@@ -90,68 +62,21 @@ const useStyles = createStyles((theme) => ({
     },
 }));
 
-const mockdata = [
-    {
-        icon: IconCode,
-        title: "Open source",
-        description: "This Pokémon’s cry is very loud and distracting",
-    },
-    {
-        icon: IconCoin,
-        title: "Free for everyone",
-        description: "The fluid of Smeargle’s tail secretions changes",
-    },
-    {
-        icon: IconBook,
-        title: "Documentation",
-        description: "Yanma is capable of seeing 360 degrees without",
-    },
-    {
-        icon: IconFingerprint,
-        title: "Security",
-        description: "The shell’s rounded shape and the grooves on its.",
-    },
-    {
-        icon: IconChartPie3,
-        title: "Analytics",
-        description: "This Pokémon uses its flying ability to quickly chase",
-    },
-    {
-        icon: IconNotification,
-        title: "Notifications",
-        description: "Combusken battles with the intensely hot flames it spews",
-    },
-];
+interface Props extends BoxProps {
+    withBurgerMenu?: boolean;
+}
 
-export default function MyHeader() {
-    const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
-    const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
-    const { classes, theme } = useStyles();
-
-    const links = mockdata.map((item) => (
-        <UnstyledButton className={classes.subLink} key={item.title}>
-            <Group noWrap align="flex-start">
-                <ThemeIcon size={34} variant="default" radius="md">
-                    <item.icon size={rem(22)} color={theme.fn.primaryColor()} />
-                </ThemeIcon>
-                <div>
-                    <Text size="sm" fw={500}>
-                        {item.title}
-                    </Text>
-                    <Text size="xs" color="dimmed">
-                        {item.description}
-                    </Text>
-                </div>
-            </Group>
-        </UnstyledButton>
-    ));
-
+export default function MyHeader({ withBurgerMenu = false, ...props }: Props) {
+    const { classes } = useStyles();
+    const navigate = useNavigate();
     return (
-        <Box pb={120}>
+        <Box {...props}>
             <Header height={60} px="md">
                 <Group position="apart" sx={{ height: "100%" }}>
-                    <Logo w={150} />
-                    <Group className="grow" maw={"400px"} spacing={0}>
+                    <Flex columnGap={"lg"} justify={"center"} align="center" sx={{ height: "100%" }}>
+                        <Logo w={150} />
+                    </Flex>
+                    <Group className={"hidden sm:flex items-center grow"} maw={"700px"} spacing={0}>
                         <Autocomplete
                             w={"100%"}
                             placeholder="Search"
@@ -159,106 +84,75 @@ export default function MyHeader() {
                             data={["React", "Angular", "Vue", "Next.js", "Riot.js", "Svelte", "Blitz.js"]}
                         />
                     </Group>
-                    <Group sx={{ height: "100%" }} spacing={0} className={classes.hiddenMobile}>
-                        <a href="/" className={classes.link}>
-                            Home
-                        </a>
-                        <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
-                            <HoverCard.Target>
-                                <a href="/" className={classes.link}>
-                                    <Center inline>
-                                        <Box component="span" mr={5}>
-                                            Features
-                                        </Box>
-                                        <IconChevronDown size={16} color={theme.fn.primaryColor()} />
-                                    </Center>
-                                </a>
-                            </HoverCard.Target>
 
-                            <HoverCard.Dropdown sx={{ overflow: "hidden" }}>
-                                <Group position="apart" px="md">
-                                    <Text fw={500}>Features</Text>
-                                    <Anchor href="/" fz="xs">
-                                        View all
-                                    </Anchor>
-                                </Group>
-
-                                <Divider my="sm" mx="-md" color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"} />
-
-                                <SimpleGrid cols={2} spacing={0}>
-                                    {links}
-                                </SimpleGrid>
-
-                                <div className={classes.dropdownFooter}>
-                                    <Group position="apart">
-                                        <div>
-                                            <Text fw={500} fz="sm">
-                                                Get started
-                                            </Text>
-                                            <Text size="xs" color="dimmed">
-                                                Their food sources have decreased, and their numbers
-                                            </Text>
-                                        </div>
-                                        <Button variant="default">Get started</Button>
-                                    </Group>
-                                </div>
-                            </HoverCard.Dropdown>
-                        </HoverCard>
-                        <a href="/" className={classes.link}>
-                            Learn
-                        </a>
-                        <a href="/" className={classes.link}>
-                            Academy
-                        </a>
+                    <Group
+                        sx={{ height: "100%" }}
+                        spacing={0}
+                        className={withBurgerMenu ? "hidden" : classes.hiddenMobile}
+                    >
                         <Group mx={4} spacing={4}>
-                            <Button variant="outline">Log in</Button>
-                            <Button>Sign up</Button>
+                            <Button color={"blue"} variant="default">
+                                Log in
+                            </Button>
+                            <Button color={"blue"} variant={"filled"}>
+                                Sign up
+                            </Button>
                         </Group>
                     </Group>
+                    <Group className={"sm:hidden flex justify-end items-center grow"} maw={"400px"} spacing={0}>
+                        <Menu shadow="md" width={300} withArrow>
+                            <Menu.Target>
+                                <IconSearch size={"25"} stroke={1.5} />
+                            </Menu.Target>
+                            <Menu.Dropdown>
+                                <Autocomplete
+                                    w={"100%"}
+                                    placeholder="Search"
+                                    icon={<IconSearch size="1rem" stroke={1.5} />}
+                                    data={["React", "Angular", "Vue", "Next.js", "Riot.js", "Svelte", "Blitz.js"]}
+                                />
+                            </Menu.Dropdown>
+                        </Menu>
+                    </Group>
+                    <Menu shadow="md" width={300} withArrow>
+                        <Menu.Target>
+                            <IconMenu2 size={"35"} className={withBurgerMenu ? "" : classes.hiddenDesktop} />
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                            <Menu.Label>Chung</Menu.Label>
 
-                    <Burger opened={drawerOpened} onClick={toggleDrawer} className={classes.hiddenDesktop} />
+                            {menuData.map((item) => {
+                                return (
+                                    <Menu.Item
+                                        onClick={item.link ? () => navigate(item.link) : () => {}}
+                                        className="md:text-lg"
+                                        key={item.label}
+                                        icon={<item.icon />}
+                                    >
+                                        <div>{item.label}</div>
+                                    </Menu.Item>
+                                );
+                            })}
+
+                            <Menu.Divider />
+
+                            <Menu.Label>Tài khoản</Menu.Label>
+                            {noAuthMenu.map((item) => {
+                                return (
+                                    <Menu.Item
+                                        onClick={item.link ? () => navigate(item.link) : () => {}}
+                                        className="text-lg"
+                                        key={item.label}
+                                        icon={<item.icon />}
+                                    >
+                                        <div>{item.label}</div>
+                                    </Menu.Item>
+                                );
+                            })}
+                        </Menu.Dropdown>
+                    </Menu>
                 </Group>
             </Header>
-
-            <Drawer
-                opened={drawerOpened}
-                onClose={closeDrawer}
-                size="100%"
-                padding="md"
-                title="Navigation"
-                className={classes.hiddenDesktop}
-                zIndex={1000000}
-            >
-                <ScrollArea h={`calc(100vh - ${rem(60)})`} mx="-md">
-                    <Divider my="sm" color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"} />
-
-                    <a href="/" className={classes.link}>
-                        Home
-                    </a>
-                    <UnstyledButton className={classes.link} onClick={toggleLinks}>
-                        <Center inline>
-                            <Box component="span" mr={5}>
-                                Features
-                            </Box>
-                            <IconChevronDown size={16} color={theme.fn.primaryColor()} />
-                        </Center>
-                    </UnstyledButton>
-                    <Collapse in={linksOpened}>{links}</Collapse>
-                    <a href="/" className={classes.link}>
-                        Learn
-                    </a>
-                    <a href="/" className={classes.link}>
-                        Academy
-                    </a>
-
-                    <Divider my="sm" color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"} />
-
-                    <Group position="center" grow pb="xl" px="md">
-                        <Button variant="default">Log in</Button>
-                        <Button>Sign up</Button>
-                    </Group>
-                </ScrollArea>
-            </Drawer>
         </Box>
     );
 }
