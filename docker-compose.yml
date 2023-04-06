@@ -7,6 +7,8 @@ services:
       - 3000:3000
     volumes:
       - ./server:/usr/src/app/server
+    env_file:
+      - .env
   client:
     # load react from ./client/Dockerfile
     build: ./client
@@ -14,6 +16,8 @@ services:
       - 80:80
     volumes:
       - ./client:/usr/src/app/client
+    env_file:
+      - .env
     depends_on:
       - server
 
