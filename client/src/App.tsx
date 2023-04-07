@@ -10,17 +10,18 @@ import "./index.css";
 import { themeOverride } from "./mantine.config";
 import routes from "./routes";
 const client = new ApolloClient({
-    uri: process.env.GRAPHQL_URL || "http://192.168.2.131:3000/graphql",
+    uri: process.env.VITE_GRAPHQL_URL || "http://localhost:3000/graphql",
     cache: new InMemoryCache(),
     connectToDevTools: true,
     link: ApolloLink.from([
         authLink,
         new HttpLink({
-            uri: process.env.GRAPHQL_URL || "http://192.168.2.131:3000/graphql",
+            uri: process.env.VITE_GRAPHQL_URL || "http://localhost:3000/graphql",
         }),
     ]),
 });
 function App() {
+    console.log(process.env);
     const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
     const toggleColorScheme = (value?: ColorScheme) =>
         setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));

@@ -9,8 +9,4 @@ import { MongooseModule } from '@nestjs/mongoose';
   ],
   providers: [],
 })
-export class DatabaseModule {
-  constructor() {
-    console.log('DatabaseModule', process.env.DATABASE_URI);
-  }
-}
+export class DatabaseModule {}

@@ -2,7 +2,10 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
-dotenv.config();
+dotenv.config({
+  path: 'E:\\personal projects\\doc-truyen\\dev.env',
+  override: true,
+});
 
 import { AppModule } from './app.module';
 

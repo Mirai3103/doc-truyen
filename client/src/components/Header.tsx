@@ -1,7 +1,10 @@
-import { Autocomplete, Box, BoxProps, Button, createStyles, Flex, Group, Header, Menu, rem } from "@mantine/core";
+import { useAppSelector } from "@/redux/hook";
+import { selectIsAuthenticated } from "@/redux/userSplice";
+import { Autocomplete, Box, BoxProps, createStyles, Flex, Group, Header, Menu, rem } from "@mantine/core";
 import { IconMenu2, IconSearch } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
-import { menuData, noAuthMenu } from "./layouts/SideBar";
+import AuthMenu from "./AuthMenu";
+import { authMenu, menuData, noAuthMenu } from "./layouts/appMenuItems";
 import Logo from "./Logo";
 
 const useStyles = createStyles((theme) => ({
@@ -69,6 +72,7 @@ interface Props extends BoxProps {
 export default function MyHeader({ withBurgerMenu = false, ...props }: Props) {
     const { classes } = useStyles();
     const navigate = useNavigate();
+    const isAuthenticated = useAppSelector(selectIsAuthenticated);
     return (
         <Box {...props}>
             <Header height={60} px="md">
@@ -90,14 +94,7 @@ export default function MyHeader({ withBurgerMenu = false, ...props }: Props) {
                         spacing={0}
                         className={withBurgerMenu ? "hidden" : classes.hiddenMobile}
                     >
-                        <Group mx={4} spacing={4}>
-                            <Button color={"blue"} variant="default">
-                                Log in
-                            </Button>
-                            <Button color={"blue"} variant={"filled"}>
-                                Sign up
-                            </Button>
-                        </Group>
+                        <AuthMenu />
                     </Group>
                     <Group className={"sm:hidden flex justify-end items-center grow"} maw={"400px"} spacing={0}>
                         <Menu shadow="md" width={300} withArrow>
@@ -124,7 +121,7 @@ export default function MyHeader({ withBurgerMenu = false, ...props }: Props) {
                             {menuData.map((item) => {
                                 return (
                                     <Menu.Item
-                                        onClick={item.link ? () => navigate(item.link) : () => {}}
+                                        onClick={item.action}
                                         className="md:text-lg"
                                         key={item.label}
                                         icon={<item.icon />}
@@ -137,11 +134,11 @@ export default function MyHeader({ withBurgerMenu = false, ...props }: Props) {
                             <Menu.Divider />
 
                             <Menu.Label>Tài khoản</Menu.Label>
-                            {noAuthMenu.map((item) => {
+                            {(isAuthenticated ? authMenu : noAuthMenu).map((item) => {
                                 return (
                                     <Menu.Item
-                                        onClick={item.link ? () => navigate(item.link) : () => {}}
-                                        className="text-lg"
+                                        onClick={item.action}
+                                        className="md:text-lg"
                                         key={item.label}
                                         icon={<item.icon />}
                                     >

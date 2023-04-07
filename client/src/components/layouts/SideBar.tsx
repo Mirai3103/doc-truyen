@@ -1,23 +1,17 @@
+import { useAppSelector } from "@/redux/hook";
+import { selectIsAuthenticated } from "@/redux/userSplice";
 import {
-    createStyles,
     FlexProps,
-    getStylesRef,
     Navbar,
+    createStyles,
+    getStylesRef,
     rem,
     useMantineColorScheme,
     useMantineTheme,
 } from "@mantine/core";
-import {
-    IconCreditCard,
-    IconFingerprint,
-    IconHome,
-    IconKey,
-    IconListSearch,
-    IconMessage,
-    IconTrendingUp,
-} from "@tabler/icons-react";
 
 import { Link, useLocation } from "react-router-dom";
+import { authMenu, menuData, noAuthMenu } from "./appMenuItems";
 
 const useStyles = createStyles((theme) => ({
     navbar: {
@@ -89,24 +83,17 @@ const useStyles = createStyles((theme) => ({
         },
     },
 }));
-export const menuData = [
-    { link: "/", label: "Trang chủ", icon: IconHome },
-    { link: "/trending", label: "Trending", icon: IconTrendingUp },
-    { link: "/noitificaton", label: "Thông báo", icon: IconMessage },
-    { link: "/advance-search", label: "Tìm kiếm ", icon: IconListSearch },
-    { link: "/donate", label: "Ủng hộ", icon: IconCreditCard },
-];
-export const noAuthMenu = [
-    { link: "/login", label: "Đăng nhập", icon: IconFingerprint },
-    { link: "/register", label: "Đăng ký", icon: IconKey },
-];
+
 interface SideBarProps extends FlexProps {}
 
 export function SideBar({ className, ...props }: SideBarProps) {
     const { classes } = useStyles();
     const { colorScheme } = useMantineColorScheme();
+    const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const linksMenu = menuData.map((item) => <SideBarItem item={item} key={item.label} />);
-    const noAuthLinksMenu = noAuthMenu.map((item) => <SideBarItem item={item} key={item.label} />);
+    const noAuthLinksMenu = (isAuthenticated ? authMenu : noAuthMenu).map((item) => (
+        <SideBarItem item={item} key={item.label} />
+    ));
     const { primaryColor } = useMantineTheme();
 
     const background: any = colorScheme === "dark" ? "dark.9" : primaryColor + ".6";

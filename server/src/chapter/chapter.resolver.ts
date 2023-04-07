@@ -1,6 +1,10 @@
+import { GrapqlMayBeNeedIdentityGuard } from '@/auth/guard/grapql-jwt.auth.guard';
+import { UserPayload } from '@/auth/interface/user-payload.jwt';
 import { ComicService } from '@/comic/comic.service';
 import { Comic } from '@/comic/schema/comic.schema';
-import { Inject } from '@nestjs/common';
+import { CurrentUser } from '@/common/decorator/graphql-user.decorator';
+import { ReadingHistoryService } from '@/readingHistory/reading-history.service';
+import { Inject, UseGuards } from '@nestjs/common';
 import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { ChapterService } from './chapter.service';
 import { Chapter } from './schema/chapter.schema';
@@ -10,6 +14,8 @@ export class ChapterResolver {
   constructor(
     @Inject(ChapterService) private readonly chapterService: ChapterService,
     @Inject(ComicService) private readonly comicService: ComicService,
+    @Inject(ReadingHistoryService)
+    private readonly readingHistoryService: ReadingHistoryService,
   ) {}
   @Query(() => [Chapter])
   async getAllChapters(
@@ -22,7 +28,14 @@ export class ChapterResolver {
   }
 
   @Query(() => Chapter)
-  async getChapterById(@Args('chapterId') chapterId: string) {
+  @UseGuards(GrapqlMayBeNeedIdentityGuard)
+  async getChapterById(
+    @Args('chapterId') chapterId: string,
+    @CurrentUser() user: UserPayload | null,
+  ) {
+    if (user) {
+      this.readingHistoryService.markAsRead(user._id, chapterId);
+    }
     return await this.chapterService.getChapterById(chapterId);
   }
   @ResolveField(() => Comic)

@@ -1,9 +1,13 @@
-import { ObjectType, Field, HideField } from '@nestjs/graphql';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BaseSchema } from '@/base/schema/base.schema';
-import mongoose from 'mongoose';
-import { Team } from '@/team/schema/team.schema';
 import { Comic } from '@/comic/schema/comic.schema';
+import {
+  ReadingHistory,
+  ReadingHistorySchema,
+} from '@/readingHistory/schema/reading-history.schema';
+import { Team } from '@/team/schema/team.schema';
+import { Field, HideField, ObjectType } from '@nestjs/graphql';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose from 'mongoose';
 export enum Role {
   ADMIN = 10,
   CREATOR = 5,
@@ -58,6 +62,11 @@ export class User extends BaseSchema {
     type: [{ type: mongoose.Types.ObjectId, ref: 'Comic' }],
   })
   followedComics: Comic[] = [];
+  @Field(() => [ReadingHistory])
+  @Prop({
+    type: [ReadingHistorySchema],
+  })
+  readingHistories: ReadingHistory[] = [];
 }
 export type UserDocument = User & Document;
 export const UserSchema = SchemaFactory.createForClass(User);

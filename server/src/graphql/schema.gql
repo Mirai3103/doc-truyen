@@ -103,6 +103,7 @@ type Query {
   authors: [Author!]!
   getAllChapters(comicId: String!): [Chapter!]!
   getAllComics: [Comic!]!
+  getAllHistories(limit: Float = 30, page: Float = 1, userId: String!): [ReadingHistory!]!
   getChapterById(chapterId: String!): Chapter!
   getComicById(id: String!): Comic!
   getComicBySlug(slug: String!): Comic!
@@ -114,6 +115,12 @@ type Query {
   team(id: String!): Team!
   teams: [Team!]!
   user(findUserInput: FindUserDto!): User!
+}
+
+type ReadingHistory {
+  chapter: Chapter!
+  comic: Comic!
+  createdAt: DateTime!
 }
 
 type Tag {
@@ -177,6 +184,7 @@ type User {
   displayName: String!
   email: String!
   followedComics: [Comic!]!
+  readingHistories: [ReadingHistory!]!
   role: Float!
   teams: [Team!]!
   updatedAt: DateTime!

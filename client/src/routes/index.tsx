@@ -83,3 +83,5 @@ const routes = createBrowserRouter(
     {}
 );
 export default routes;
+const appNavigate = routes.navigate;
+export { appNavigate };
