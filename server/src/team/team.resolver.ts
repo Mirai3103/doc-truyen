@@ -1,22 +1,13 @@
+import { GrapqlJwtAuthGuard } from '@/auth/guard/grapql-jwt.auth.guard';
+import { UserPayload } from '@/auth/interface/user-payload.jwt';
+import { CurrentUser } from '@/common/decorator/graphql-user.decorator';
+import { UserService } from '@/user/user.service';
 import { NotFoundException, UseGuards } from '@nestjs/common';
-import {
-  Args,
-  Mutation,
-  Query,
-  Resolver,
-  Subscription,
-  Context,
-  ResolveField,
-} from '@nestjs/graphql';
-import { TeamService } from './team.service';
-import { Team } from './schema/team.schema';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateTeamDto } from './dto/createTeam.dto';
 import { UpdateTeamDto } from './dto/updateTeam.dto';
-import { GrapqlJwtAuthGuard } from '@/auth/guard/grapql-jwt.auth.guard';
-import { CurrentUser } from '@/common/decorator/graphql-user.decorator';
-import { UserPayload } from '@/auth/interface/user-payload.jwt';
-import { UserService } from '@/user/user.service';
-import { User } from '@/user/schema/user.schema';
+import { Team } from './schema/team.schema';
+import { TeamService } from './team.service';
 
 @Resolver(() => Team)
 export class TeamResolver {

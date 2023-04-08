@@ -2,6 +2,7 @@
 https://docs.nestjs.com/providers#services
 */
 
+import { UserService } from '@/user/user.service';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
@@ -11,6 +12,7 @@ import { Comic } from './schema/comic.schema';
 export class ComicService {
   constructor(
     @InjectModel(Comic.name) private readonly comicModal: Model<Comic>,
+    private readonly userService: UserService,
   ) {}
   public async getAll() {
     return await this.comicModal.find();
@@ -91,5 +93,35 @@ export class ComicService {
       default:
         return [];
     }
+  }
+  public async getComicsByTeamId(
+    teamId: string | ObjectId,
+    limit = 10,
+    page = 1,
+  ) {
+    return await this.comicModal
+      .find({
+        team: {
+          _id: teamId,
+        },
+      })
+      .skip(page)
+      .limit(limit);
+  }
+  public async getContributedComics(
+    userId: string | ObjectId,
+    limit = 20,
+    page = 1,
+  ) {
+    return await this.comicModal
+      .find({
+        contributors: {
+          $elemMatch: {
+            _id: userId,
+          },
+        },
+      })
+      .skip(page)
+      .limit(limit);
   }
 }

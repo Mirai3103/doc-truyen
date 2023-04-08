@@ -93,4 +93,8 @@ export class ComicResolver {
   async getTrendingComics(@Args('input') input: TrendingSortInput) {
     return await this.commicService.getTrendingComics(input);
   }
+  @Query(() => [Comic])
+  async getComicsByTeamId(@Args('teamId') teamId: string) {
+    return await this.commicService.getComicsByTeamId(teamId);
+  }
 }
