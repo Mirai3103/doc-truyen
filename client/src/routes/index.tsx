@@ -1,3 +1,4 @@
+import AdminLayout from "@/components/layouts/AdminLayout";
 import ReadingLayout from "@/components/layouts/ReadingLayout";
 import LoginPage from "@/pages/auth";
 import Callback from "@/pages/auth/callback";
@@ -75,6 +76,20 @@ const routes = createBrowserRouter(
             ],
         },
         {
+            path: "/admin",
+            element: (
+                <ScrollToTopWrapper>
+                    <AdminLayout />
+                </ScrollToTopWrapper>
+            ),
+            children: [
+                {
+                    path: "upload-comic",
+                    element: <div>Admin</div>,
+                },
+            ],
+        },
+        {
             path: "*",
             element: <NotFoundPage />,
             errorElement: <ErrorPage />,
@@ -83,5 +98,7 @@ const routes = createBrowserRouter(
     {}
 );
 export default routes;
-const appNavigate = routes.navigate;
-export { appNavigate };
+
+export const appNavigate = (path: string) => {
+    routes.navigate(path);
+};

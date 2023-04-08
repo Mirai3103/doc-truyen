@@ -68,11 +68,11 @@ export const userSlice = createSlice({
 });
 
 export const { setToken, setAccessToken } = userSlice.actions;
-
+export const selectRole = (state: RootState) => state.user.userProfile?.role || 1;
 export const selectUser = (state: RootState) => state.user;
 export const selectUserProfile = (state: RootState) => state.user.userProfile;
 export const selectIsAuthenticated = (state: RootState) => state.user.isAuthenticated;
-
+export const isHasPermission = (userRole: Role, requiredRole: Role) => userRole >= requiredRole;
 interface JwtPayload {
     username: string;
     sub: string;

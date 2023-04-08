@@ -1,9 +1,10 @@
 import store from "@/redux/store";
 import { setToken } from "@/redux/userSplice";
 import { appNavigate } from "@/routes";
+
 import {
     IconBookmark,
-    IconCreditCard,
+    IconFileUpload,
     IconFingerprint,
     IconHistory,
     IconHome,
@@ -15,7 +16,7 @@ import {
     IconUser,
 } from "@tabler/icons-react";
 
-interface MenuItemProps {
+export interface MenuItemProps {
     link: string;
     label: string;
     icon: React.FC<{ size?: number }>;
@@ -54,14 +55,14 @@ export const menuData: MenuItemProps[] = [
             appNavigate("/advance-search");
         },
     },
-    {
-        link: "/donate",
-        label: "Ủng hộ",
-        icon: IconCreditCard,
-        action: () => {
-            appNavigate("/donate");
-        },
-    },
+    // {
+    //     link: "/donate",
+    //     label: "Ủng hộ",
+    //     icon: IconCreditCard,
+    //     action: () => {
+    //         appNavigate("/donate");
+    //     },
+    // },
 ];
 export const noAuthMenu: MenuItemProps[] = [
     {
@@ -91,6 +92,7 @@ export const authMenu: MenuItemProps[] = [
             appNavigate("/profile");
         },
     },
+
     {
         link: "/follow",
         label: "Truyện đã theo dõi",
@@ -120,5 +122,31 @@ export const authMenu: MenuItemProps[] = [
             );
             appNavigate("/");
         },
+    },
+    {
+        link: "/admin/upload-comic",
+        label: "Upload truyện",
+        icon: IconFileUpload,
+        action: () => {
+            appNavigate("/admin/upload-comic");
+        },
+    },
+];
+
+export const defaultSection = [
+    {
+        withAuth: false,
+        items: menuData,
+        name: "Chung",
+    },
+    {
+        withAuth: true,
+        items: authMenu,
+        name: "Cá nhân",
+    },
+    {
+        withNoAuth: true,
+        items: noAuthMenu,
+        name: "Cá nhân",
     },
 ];

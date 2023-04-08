@@ -3,7 +3,6 @@ import { ApolloClient, ApolloLink, ApolloProvider, HttpLink, InMemoryCache } fro
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import { Notifications, notifications } from "@mantine/notifications";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import React, { useState } from "react";
 import { RouterProvider } from "react-router-dom";
 import "./index.css";
@@ -44,36 +43,34 @@ function App() {
         });
     }, []);
     return (
-        <GoogleOAuthProvider clientId="658600165325-3uk2cg496n3ed5n7snl0vi00suh7hd7r.apps.googleusercontent.com">
-            <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-                <MantineProvider
-                    theme={{
-                        ...themeOverride,
-                        colorScheme,
-                        components: {
-                            Title: {
-                                defaultProps: {
-                                    color: colorScheme === "dark" ? "gray.1" : "dark",
-                                },
-                            },
-                            Text: {
-                                defaultProps: {
-                                    color: colorScheme === "dark" ? "gray.1" : "dark",
-                                },
+        <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+            <MantineProvider
+                theme={{
+                    ...themeOverride,
+                    colorScheme,
+                    components: {
+                        Title: {
+                            defaultProps: {
+                                color: colorScheme === "dark" ? "gray.1" : "dark",
                             },
                         },
-                    }}
-                    withCSSVariables
-                    withGlobalStyles
-                    withNormalizeCSS
-                >
-                    <Notifications position="top-right" />
-                    <ApolloProvider client={client}>
-                        <RouterProvider router={routes} />
-                    </ApolloProvider>
-                </MantineProvider>
-            </ColorSchemeProvider>
-        </GoogleOAuthProvider>
+                        Text: {
+                            defaultProps: {
+                                color: colorScheme === "dark" ? "gray.1" : "dark",
+                            },
+                        },
+                    },
+                }}
+                withCSSVariables
+                withGlobalStyles
+                withNormalizeCSS
+            >
+                <Notifications position="top-right" />
+                <ApolloProvider client={client}>
+                    <RouterProvider router={routes} />
+                </ApolloProvider>
+            </MantineProvider>
+        </ColorSchemeProvider>
     );
 }
 

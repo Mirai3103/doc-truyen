@@ -1,11 +1,12 @@
 import { useAppSelector } from "@/redux/hook";
-import { selectIsAuthenticated } from "@/redux/userSplice";
-import { Autocomplete, Box, BoxProps, createStyles, Flex, Group, Header, Menu, rem } from "@mantine/core";
+import { selectIsAuthenticated, selectUserProfile } from "@/redux/userSplice";
+import { Autocomplete, Avatar, Box, BoxProps, Flex, Group, Header, Menu, Text, createStyles, rem } from "@mantine/core";
 import { IconMenu2, IconSearch } from "@tabler/icons-react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import AuthMenu from "./AuthMenu";
-import { authMenu, menuData, noAuthMenu } from "./layouts/appMenuItems";
 import Logo from "./Logo";
+import { MenuItemProps, defaultSection } from "./layouts/appMenuItems";
 
 const useStyles = createStyles((theme) => ({
     link: {
@@ -67,12 +68,18 @@ const useStyles = createStyles((theme) => ({
 
 interface Props extends BoxProps {
     withBurgerMenu?: boolean;
+    burgerMenuItems?: {
+        withAuth?: boolean;
+        withNoAuth?: boolean;
+        items: MenuItemProps[];
+        name: string;
+    }[];
 }
-
-export default function MyHeader({ withBurgerMenu = false, ...props }: Props) {
+export default function MyHeader({ withBurgerMenu = false, burgerMenuItems = defaultSection, ...props }: Props) {
     const { classes } = useStyles();
     const navigate = useNavigate();
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
+    const userProfile = useAppSelector(selectUserProfile);
     return (
         <Box {...props}>
             <Header height={60} px="md">
@@ -116,34 +123,38 @@ export default function MyHeader({ withBurgerMenu = false, ...props }: Props) {
                             <IconMenu2 size={"35"} className={withBurgerMenu ? "" : classes.hiddenDesktop} />
                         </Menu.Target>
                         <Menu.Dropdown>
-                            <Menu.Label>Chung</Menu.Label>
+                            {isAuthenticated && (
+                                <Menu.Item>
+                                    <Group spacing="sm" className="cursor-pointer">
+                                        <Avatar size={40} src={userProfile?.avatarUrl} radius={30} />
+                                        <Text fz="md" fw={700}>
+                                            {userProfile?.displayName}
+                                        </Text>
+                                    </Group>
+                                </Menu.Item>
+                            )}
 
-                            {menuData.map((item) => {
+                            {burgerMenuItems.map((section, index) => {
+                                if (!isAuthenticated && section.withAuth) return <div key={section.name}></div>;
+                                if (isAuthenticated && section.withNoAuth) return <div key={section.name}></div>;
+                                const list = section.items.map((item) => {
+                                    return (
+                                        <Menu.Item
+                                            onClick={item.action}
+                                            className="md:text-lg"
+                                            key={item.label}
+                                            icon={<item.icon />}
+                                        >
+                                            <div>{item.label}</div>
+                                        </Menu.Item>
+                                    );
+                                });
                                 return (
-                                    <Menu.Item
-                                        onClick={item.action}
-                                        className="md:text-lg"
-                                        key={item.label}
-                                        icon={<item.icon />}
-                                    >
-                                        <div>{item.label}</div>
-                                    </Menu.Item>
-                                );
-                            })}
-
-                            <Menu.Divider />
-
-                            <Menu.Label>Tài khoản</Menu.Label>
-                            {(isAuthenticated ? authMenu : noAuthMenu).map((item) => {
-                                return (
-                                    <Menu.Item
-                                        onClick={item.action}
-                                        className="md:text-lg"
-                                        key={item.label}
-                                        icon={<item.icon />}
-                                    >
-                                        <div>{item.label}</div>
-                                    </Menu.Item>
+                                    <React.Fragment key={section.name}>
+                                        <Menu.Divider />
+                                        <Menu.Label>{section.name}</Menu.Label>
+                                        {list}
+                                    </React.Fragment>
                                 );
                             })}
                         </Menu.Dropdown>

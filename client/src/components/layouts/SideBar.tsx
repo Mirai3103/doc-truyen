@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 
 import { Link, useLocation } from "react-router-dom";
-import { authMenu, menuData, noAuthMenu } from "./appMenuItems";
+import { MenuItemProps, defaultSection } from "./appMenuItems";
 
 const useStyles = createStyles((theme) => ({
     navbar: {
@@ -36,7 +36,7 @@ const useStyles = createStyles((theme) => ({
         )}`,
     },
 
-    footer: {
+    section: {
         paddingTop: theme.spacing.md,
         marginTop: theme.spacing.md,
         borderTop: `${rem(1)} solid ${theme.fn.lighten(
@@ -84,24 +84,34 @@ const useStyles = createStyles((theme) => ({
     },
 }));
 
-interface SideBarProps extends FlexProps {}
+interface SideBarProps extends FlexProps {
+    sections?: {
+        withAuth?: boolean;
+        withNoAuth?: boolean;
+        items: MenuItemProps[];
+    }[];
+}
 
-export function SideBar({ className, ...props }: SideBarProps) {
-    const { classes } = useStyles();
+export function SideBar({ className, sections = defaultSection, ...props }: SideBarProps) {
     const { colorScheme } = useMantineColorScheme();
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
-    const linksMenu = menuData.map((item) => <SideBarItem item={item} key={item.label} />);
-    const noAuthLinksMenu = (isAuthenticated ? authMenu : noAuthMenu).map((item) => (
-        <SideBarItem item={item} key={item.label} />
-    ));
+    const { classes, cx } = useStyles();
     const { primaryColor } = useMantineTheme();
 
     const background: any = colorScheme === "dark" ? "dark.9" : primaryColor + ".6";
     return (
         <Navbar height={700} width={{ sm: 250 }} bg={background} p="md" className={" " + (className || "")} {...props}>
-            <Navbar.Section grow>{linksMenu}</Navbar.Section>
+            {sections.map((section, index) => {
+                if (section.withAuth && !isAuthenticated) return <div key={index}></div>;
+                if (section.withNoAuth && isAuthenticated) return <div key={index}></div>;
+                const items = section.items.map((item) => <SideBarItem item={item} key={item.label} />);
 
-            <Navbar.Section className={classes.footer}>{noAuthLinksMenu}</Navbar.Section>
+                return (
+                    <Navbar.Section grow key={index} className={index !== 0 ? classes.section : ""}>
+                        {items}
+                    </Navbar.Section>
+                );
+            })}
         </Navbar>
     );
 }

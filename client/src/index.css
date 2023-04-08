@@ -12,6 +12,7 @@
 
     .has-scrollbar::-webkit-scrollbar {
         width: 8px;
+        max-height: 8px;
     }
 
     .has-scrollbar::-webkit-scrollbar-track {
