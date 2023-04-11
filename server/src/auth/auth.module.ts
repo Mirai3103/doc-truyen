@@ -8,6 +8,7 @@ import { AuthService } from './auth.service';
 import { GrapqlJwtAuthGuard } from './guard/grapql-jwt.auth.guard';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { LocalAuthGuard } from './guard/local-auth.guard';
+import { WithRoleGuard } from './guard/roles.guard';
 import { GoogleStrategy } from './strategy/google.strategy';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { LocalStrategy } from './strategy/local.strategy';
@@ -30,6 +31,7 @@ import { LocalStrategy } from './strategy/local.strategy';
     JwtAuthGuard,
     GrapqlJwtAuthGuard,
     GoogleStrategy,
+    WithRoleGuard,
   ],
   controllers: [AuthController],
 })

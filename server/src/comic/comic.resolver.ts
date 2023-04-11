@@ -6,11 +6,20 @@ import { Chapter } from '@/chapter/schema/chapter.schema';
 import { CurrentUser } from '@/common/decorator/graphql-user.decorator';
 import { Tag } from '@/tag/schema/tag.schema';
 import { TagService } from '@/tag/tag.service';
-import { Team } from '@/team/schema/team.schema';
-import { TeamService } from '@/team/team.service';
+
+import { User } from '@/user/schema/user.schema';
+import { UserService } from '@/user/user.service';
 import { Inject, UseGuards } from '@nestjs/common';
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { ComicService } from './comic.service';
+import CreateComicInput from './dto/create-comic-input.dto';
 import { TrendingSortInput } from './dto/trendingSort.dto';
 import { Comic } from './schema/comic.schema';
 @Resolver(() => Comic)
@@ -18,9 +27,9 @@ export class ComicResolver {
   constructor(
     @Inject(ComicService) private readonly commicService: ComicService,
     @Inject(AuthorService) private readonly authorService: AuthorService,
-    @Inject(TeamService) private readonly teamService: TeamService,
     @Inject(TagService) private readonly tagService: TagService,
     @Inject(ChapterService) private readonly chapterService: ChapterService,
+    private readonly userService: UserService,
   ) {}
   @Query(() => Comic)
   async getComicById(@Args('id') id: string) {
@@ -43,11 +52,13 @@ export class ComicResolver {
     const author = await this.authorService.findOne(comic.artist._id + '');
     return author;
   }
-  @ResolveField(() => Team)
-  async team(@Parent() comic: Comic) {
-    if (!comic.team) return null;
-    const team = await this.teamService.findOne(comic.team._id + '');
-    return team;
+  @ResolveField(() => User)
+  async createdBy(@Parent() comic: Comic) {
+    if (!comic.createdBy) return null;
+    const user = await this.userService.findByUniqueField(
+      comic.createdBy._id + '',
+    );
+    return user;
   }
   @ResolveField(() => [Tag])
   async genres(@Parent() comic: Comic) {
@@ -94,7 +105,17 @@ export class ComicResolver {
     return await this.commicService.getTrendingComics(input);
   }
   @Query(() => [Comic])
-  async getComicsByTeamId(@Args('teamId') teamId: string) {
-    return await this.commicService.getComicsByTeamId(teamId);
+  async getComicsCreatedByUser(
+    @Args('userId') userId: string,
+    @Args('limit', { type: () => Number, nullable: true, defaultValue: 10 })
+    limit: number,
+    @Args('page', { type: () => Number, nullable: true, defaultValue: 1 })
+    page: number,
+  ) {
+    return await this.commicService.getContributedComics(userId, limit, page);
+  }
+  @Mutation(() => Comic)
+  async createComic(@Args('input') input: CreateComicInput) {
+    return await this.commicService.createNewComic(input);
   }
 }

@@ -124,9 +124,9 @@ export default function ComicDetail() {
                             {!loading ? (
                                 <>
                                     {" "}
-                                    Nhóm dịch:{" "}
-                                    <Link to={`/team/${data!.getComicBySlug.team.slug}`}>
-                                        {data!.getComicBySlug.team.name}
+                                    Người dịch:{" "}
+                                    <Link to={`/team/${data!.getComicBySlug.createdBy._id}`}>
+                                        {data!.getComicBySlug.createdBy.displayName}
                                     </Link>
                                 </>
                             ) : (

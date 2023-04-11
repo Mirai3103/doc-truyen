@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import axios from 'axios';
 import * as bcrypt from 'bcrypt';
+import { Buffer } from 'buffer';
 import { randomUUID } from 'crypto';
 import fs from 'fs';
-import { Buffer } from 'buffer';
-import https from 'https';
-import axios from 'axios';
 import { PageClass } from './dto/pagination.dto';
 @Injectable()
 export class UtilService {

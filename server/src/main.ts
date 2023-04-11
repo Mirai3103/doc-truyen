@@ -28,9 +28,9 @@ bootstrap();
 // async function runCrwaler() {
 //   const app = await NestFactory.create(AppModule);
 //   const crawlerService = app.get(ComikService);
-//   // const cuuService = app.get(CrawlerService);
+//   const cuuService = app.get(CrawlerService);
 //   console.log('Start crawl data');
-//   // await cuuService.crawlData();
+//   await cuuService.crawlData();
 //   console.log('Start generate json');
 //   await crawlerService.generateJson();
 // }

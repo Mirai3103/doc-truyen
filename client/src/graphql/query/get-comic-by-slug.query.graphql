@@ -24,12 +24,11 @@ query getComicBySlug($slug: String!) {
         imageCoverUrl
         imageThumbUrl
         name
-        team {
+        createdBy {
+            _id
             description
-            imageUrl
-            name
-            officialUrl
-            slug
+            avatarUrl
+            displayName
         }
         otherNames
         status

@@ -48,6 +48,7 @@ export type Comic = {
   author: Author;
   category?: Maybe<Tag>;
   createdAt: Scalars['DateTime'];
+  createdBy: User;
   description: Scalars['String'];
   followCount: Scalars['Float'];
   genres: Array<Tag>;
@@ -59,7 +60,6 @@ export type Comic = {
   recentChapter: Chapter;
   slug: Scalars['String'];
   status: Scalars['String'];
-  team: Team;
   updatedAt: Scalars['DateTime'];
 };
 
@@ -68,16 +68,23 @@ export type CreateAuthorDto = {
   name: Scalars['String'];
 };
 
+export type CreateComicInput = {
+  artistId?: InputMaybe<Scalars['String']>;
+  authorId: Scalars['String'];
+  categoryId: Scalars['String'];
+  description?: Scalars['String'];
+  genreIds: Array<Scalars['String']>;
+  imageCoverUrl: Scalars['String'];
+  imageThumbUrl: Scalars['String'];
+  name: Scalars['String'];
+  officeUrl?: InputMaybe<Scalars['String']>;
+  otherNames?: InputMaybe<Array<Scalars['String']>>;
+  status: Scalars['String'];
+};
+
 export type CreateTagDto = {
   description: Scalars['String'];
   name: Scalars['String'];
-};
-
-export type CreateTeamDto = {
-  description?: InputMaybe<Scalars['String']>;
-  imageBase64?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  officialUrl?: InputMaybe<Scalars['String']>;
 };
 
 export type CreateUserDto = {
@@ -96,21 +103,13 @@ export type FindUserDto = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addUserToTeam: Scalars['Boolean'];
   createAuthor: Author;
+  createComic: Comic;
   createTag: Tag;
-  createTeam: Team;
   createUser: User;
   updateAuthor: Author;
   updateTag: Tag;
-  updateTeam: Team;
   updateUser: User;
-};
-
-
-export type MutationAddUserToTeamArgs = {
-  teamId: Scalars['String'];
-  userId: Scalars['String'];
 };
 
 
@@ -119,13 +118,13 @@ export type MutationCreateAuthorArgs = {
 };
 
 
-export type MutationCreateTagArgs = {
-  createTagInput: CreateTagDto;
+export type MutationCreateComicArgs = {
+  input: CreateComicInput;
 };
 
 
-export type MutationCreateTeamArgs = {
-  createTeamInput: CreateTeamDto;
+export type MutationCreateTagArgs = {
+  createTagInput: CreateTagDto;
 };
 
 
@@ -146,12 +145,6 @@ export type MutationUpdateTagArgs = {
 };
 
 
-export type MutationUpdateTeamArgs = {
-  id: Scalars['String'];
-  updateTeamInput: UpdateTeamDto;
-};
-
-
 export type MutationUpdateUserArgs = {
   id: Scalars['String'];
   updateUserInput: UpdateUserDto;
@@ -169,16 +162,16 @@ export type Query = {
   authors: Array<Author>;
   getAllChapters: Array<Chapter>;
   getAllComics: Array<Comic>;
+  getAllHistories: Array<ReadingHistory>;
   getChapterById: Chapter;
   getComicById: Comic;
   getComicBySlug: Comic;
+  getComicsCreatedByUser: Array<Comic>;
   getRecentComics: Array<Comic>;
   getTopComics: Array<Comic>;
   getTrendingComics: Array<Comic>;
   tag: Tag;
   tags: Array<Tag>;
-  team: Team;
-  teams: Array<Team>;
   user: User;
 };
 
@@ -190,6 +183,13 @@ export type QueryAuthorArgs = {
 
 export type QueryGetAllChaptersArgs = {
   comicId: Scalars['String'];
+};
+
+
+export type QueryGetAllHistoriesArgs = {
+  limit?: InputMaybe<Scalars['Float']>;
+  page?: InputMaybe<Scalars['Float']>;
+  userId: Scalars['String'];
 };
 
 
@@ -205,6 +205,13 @@ export type QueryGetComicByIdArgs = {
 
 export type QueryGetComicBySlugArgs = {
   slug: Scalars['String'];
+};
+
+
+export type QueryGetComicsCreatedByUserArgs = {
+  limit?: InputMaybe<Scalars['Float']>;
+  page?: InputMaybe<Scalars['Float']>;
+  userId: Scalars['String'];
 };
 
 
@@ -230,13 +237,15 @@ export type QueryTagArgs = {
 };
 
 
-export type QueryTeamArgs = {
-  id: Scalars['String'];
-};
-
-
 export type QueryUserArgs = {
   findUserInput: FindUserDto;
+};
+
+export type ReadingHistory = {
+  __typename?: 'ReadingHistory';
+  chapter: Chapter;
+  comic: Comic;
+  createdAt: Scalars['DateTime'];
 };
 
 export type Tag = {
@@ -245,20 +254,6 @@ export type Tag = {
   createdAt: Scalars['DateTime'];
   description: Scalars['String'];
   name: Scalars['String'];
-  slug: Scalars['String'];
-  updatedAt: Scalars['DateTime'];
-};
-
-export type Team = {
-  __typename?: 'Team';
-  _id: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  createdBy: User;
-  description: Scalars['String'];
-  imageUrl?: Maybe<Scalars['String']>;
-  members: Array<User>;
-  name: Scalars['String'];
-  officialUrl: Scalars['String'];
   slug: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
@@ -279,14 +274,6 @@ export type UpdateTagDto = {
   name?: InputMaybe<Scalars['String']>;
 };
 
-export type UpdateTeamDto = {
-  createdBy?: InputMaybe<Scalars['String']>;
-  description?: InputMaybe<Scalars['String']>;
-  imageBase64?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  officialUrl?: InputMaybe<Scalars['String']>;
-};
-
 export type UpdateUserDto = {
   base64Avatar?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['String']>;
@@ -297,17 +284,24 @@ export type UpdateUserDto = {
 export type User = {
   __typename?: 'User';
   _id: Scalars['String'];
-  avatarUrl: Scalars['String'];
+  avatarUrl?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   description: Scalars['String'];
   displayName: Scalars['String'];
   email: Scalars['String'];
   followedComics: Array<Comic>;
+  readingHistories: Array<ReadingHistory>;
   role: Scalars['Float'];
-  teams: Array<Team>;
   updatedAt: Scalars['DateTime'];
   username: Scalars['String'];
 };
+
+export type CreateComicMutationVariables = Exact<{
+  input: CreateComicInput;
+}>;
+
+
+export type CreateComicMutation = { __typename?: 'Mutation', createComic: { __typename?: 'Comic', name: string } };
 
 export type GetAllChaptersQueryVariables = Exact<{
   comicId: Scalars['String'];
@@ -323,12 +317,17 @@ export type GetChapterByIdQueryVariables = Exact<{
 
 export type GetChapterByIdQuery = { __typename?: 'Query', getChapterById: { __typename?: 'Chapter', chapterNumber: string, order: number, name?: string | null, nextChapter?: { __typename?: 'Chapter', chapterNumber: string } | null, previousChapter?: { __typename?: 'Chapter', chapterNumber: string } | null, comic: { __typename?: 'Comic', name: string, slug: string, _id: string }, pages: Array<{ __typename?: 'Page', order: number, url: string }> } };
 
+export type GetGeneralInfoQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetGeneralInfoQuery = { __typename?: 'Query', authors: Array<{ __typename?: 'Author', name: string, slug: string, _id: string }>, tags: Array<{ __typename?: 'Tag', name: string, slug: string, _id: string }> };
+
 export type GetComicBySlugQueryVariables = Exact<{
   slug: Scalars['String'];
 }>;
 
 
-export type GetComicBySlugQuery = { __typename?: 'Query', getComicBySlug: { __typename?: 'Comic', _id: string, createdAt: any, updatedAt: any, description: string, followCount: number, imageCoverUrl: string, imageThumbUrl: string, name: string, otherNames: Array<string>, status: string, artist?: { __typename?: 'Author', name: string, slug: string } | null, author: { __typename?: 'Author', name: string, slug: string }, category?: { __typename?: 'Tag', name: string, slug: string } | null, genres: Array<{ __typename?: 'Tag', name: string, slug: string }>, team: { __typename?: 'Team', description: string, imageUrl?: string | null, name: string, officialUrl: string, slug: string } } };
+export type GetComicBySlugQuery = { __typename?: 'Query', getComicBySlug: { __typename?: 'Comic', _id: string, createdAt: any, updatedAt: any, description: string, followCount: number, imageCoverUrl: string, imageThumbUrl: string, name: string, otherNames: Array<string>, status: string, artist?: { __typename?: 'Author', name: string, slug: string } | null, author: { __typename?: 'Author', name: string, slug: string }, category?: { __typename?: 'Tag', name: string, slug: string } | null, genres: Array<{ __typename?: 'Tag', name: string, slug: string }>, createdBy: { __typename?: 'User', _id: string, description: string, avatarUrl?: string | null, displayName: string } } };
 
 export type GetRecentComicsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Float']>;
@@ -395,6 +394,39 @@ export type GetNewestQueryVariables = Exact<{
 export type GetNewestQuery = { __typename?: 'Query', getTrendingComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any }, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
 
 
+export const CreateComicDocument = gql`
+    mutation createComic($input: CreateComicInput!) {
+  createComic(input: $input) {
+    name
+  }
+}
+    `;
+export type CreateComicMutationFn = Apollo.MutationFunction<CreateComicMutation, CreateComicMutationVariables>;
+
+/**
+ * __useCreateComicMutation__
+ *
+ * To run a mutation, you first call `useCreateComicMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateComicMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createComicMutation, { data, loading, error }] = useCreateComicMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateComicMutation(baseOptions?: Apollo.MutationHookOptions<CreateComicMutation, CreateComicMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateComicMutation, CreateComicMutationVariables>(CreateComicDocument, options);
+      }
+export type CreateComicMutationHookResult = ReturnType<typeof useCreateComicMutation>;
+export type CreateComicMutationResult = Apollo.MutationResult<CreateComicMutation>;
+export type CreateComicMutationOptions = Apollo.BaseMutationOptions<CreateComicMutation, CreateComicMutationVariables>;
 export const GetAllChaptersDocument = gql`
     query getAllChapters($comicId: String!) {
   getAllChapters(comicId: $comicId) {
@@ -486,6 +518,47 @@ export function useGetChapterByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetChapterByIdQueryHookResult = ReturnType<typeof useGetChapterByIdQuery>;
 export type GetChapterByIdLazyQueryHookResult = ReturnType<typeof useGetChapterByIdLazyQuery>;
 export type GetChapterByIdQueryResult = Apollo.QueryResult<GetChapterByIdQuery, GetChapterByIdQueryVariables>;
+export const GetGeneralInfoDocument = gql`
+    query GetGeneralInfo {
+  authors {
+    name
+    slug
+    _id
+  }
+  tags {
+    name
+    slug
+    _id
+  }
+}
+    `;
+
+/**
+ * __useGetGeneralInfoQuery__
+ *
+ * To run a query within a React component, call `useGetGeneralInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetGeneralInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetGeneralInfoQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetGeneralInfoQuery(baseOptions?: Apollo.QueryHookOptions<GetGeneralInfoQuery, GetGeneralInfoQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetGeneralInfoQuery, GetGeneralInfoQueryVariables>(GetGeneralInfoDocument, options);
+      }
+export function useGetGeneralInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetGeneralInfoQuery, GetGeneralInfoQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetGeneralInfoQuery, GetGeneralInfoQueryVariables>(GetGeneralInfoDocument, options);
+        }
+export type GetGeneralInfoQueryHookResult = ReturnType<typeof useGetGeneralInfoQuery>;
+export type GetGeneralInfoLazyQueryHookResult = ReturnType<typeof useGetGeneralInfoLazyQuery>;
+export type GetGeneralInfoQueryResult = Apollo.QueryResult<GetGeneralInfoQuery, GetGeneralInfoQueryVariables>;
 export const GetComicBySlugDocument = gql`
     query getComicBySlug($slug: String!) {
   getComicBySlug(slug: $slug) {
@@ -513,12 +586,11 @@ export const GetComicBySlugDocument = gql`
     imageCoverUrl
     imageThumbUrl
     name
-    team {
+    createdBy {
+      _id
       description
-      imageUrl
-      name
-      officialUrl
-      slug
+      avatarUrl
+      displayName
     }
     otherNames
     status

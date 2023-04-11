@@ -12,13 +12,14 @@ import { ComicModule } from './comic/comic.module';
 import { CommonModule } from './common/common.module';
 import { CrawlerModule } from './crawler/crawler.module';
 import { DatabaseModule } from './database/database.module';
+import { FileModule } from './file/file.module';
 import { ReadingHistoryModule } from './readingHistory/reading-history.module';
 import { TagModule } from './tag/tag.module';
-import { TeamModule } from './team/team.module';
 import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
+    FileModule,
     ReadingHistoryModule,
     CrawlerModule,
 
@@ -27,10 +28,10 @@ import { UserModule } from './user/user.module';
       isGlobal: true,
     }),
     UserModule,
+
     CommonModule,
     DatabaseModule,
     AuthorModule,
-    TeamModule,
     TagModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

@@ -7,7 +7,7 @@ import { AuthorModule } from '@/author/author.module';
 import { ChapterModule } from '@/chapter/chapter.module';
 import { CommonModule } from '@/common/common.module';
 import { TagModule } from '@/tag/tag.module';
-import { TeamModule } from '@/team/team.module';
+import { UserModule } from '@/user/user.module';
 import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ComicResolver } from './comic.resolver';
@@ -22,7 +22,7 @@ import { Comic, ComicSchema } from './schema/comic.schema';
       },
     ]),
     AuthorModule,
-    TeamModule,
+    UserModule,
     TagModule,
     CommonModule,
     forwardRef(() => ChapterModule),

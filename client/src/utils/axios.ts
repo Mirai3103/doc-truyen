@@ -45,25 +45,28 @@ api.interceptors.response.use(
 
 const reNewAccessToken = async () => {
     const refreshToken = store.getState().user.refreshToken;
-    const response = await api.post(
-        `${process.env.VITE_SERVER_URL || "http://localhost:3000"}/auth/getNewAccessToken`,
-        {
-            refreshToken,
-        }
-    );
-    if (response.status === 401) {
-        localStorage.removeItem("refreshToken");
-
-        store.dispatch(
-            setToken({
-                accessToken: "",
-                refreshToken: "",
-            })
+    try {
+        const response = await axios.post(
+            `${process.env.VITE_SERVER_URL || "http://localhost:3000"}/auth/getNewAccessToken`,
+            {
+                refreshToken,
+            }
         );
-        return null;
-    }
+        return response.data.accessToken;
+    } catch (e: any) {
+        console.log(e);
+        if (e.response.status === 401) {
+            localStorage.removeItem("refreshToken");
 
-    return response.data.accessToken;
+            store.dispatch(
+                setToken({
+                    accessToken: "",
+                    refreshToken: "",
+                })
+            );
+            return null;
+        }
+    }
 };
 
 export default api;

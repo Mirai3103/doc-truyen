@@ -30,6 +30,7 @@ type Comic {
   author: Author!
   category: Tag
   createdAt: DateTime!
+  createdBy: User!
   description: String!
   followCount: Float!
   genres: [Tag!]!
@@ -41,7 +42,6 @@ type Comic {
   recentChapter: Chapter!
   slug: String!
   status: String!
-  team: Team!
   updatedAt: DateTime!
 }
 
@@ -50,16 +50,23 @@ input CreateAuthorDto {
   name: String!
 }
 
+input CreateComicInput {
+  artistId: String
+  authorId: String!
+  categoryId: String!
+  description: String! = ""
+  genreIds: [String!]!
+  imageCoverUrl: String!
+  imageThumbUrl: String!
+  name: String!
+  officeUrl: String
+  otherNames: [String!]
+  status: String!
+}
+
 input CreateTagDto {
   description: String!
   name: String!
-}
-
-input CreateTeamDto {
-  description: String
-  imageBase64: String
-  name: String!
-  officialUrl: String
 }
 
 input CreateUserDto {
@@ -82,14 +89,12 @@ input FindUserDto {
 }
 
 type Mutation {
-  addUserToTeam(teamId: String!, userId: String!): Boolean!
   createAuthor(createAuthorInput: CreateAuthorDto!): Author!
+  createComic(input: CreateComicInput!): Comic!
   createTag(createTagInput: CreateTagDto!): Tag!
-  createTeam(createTeamInput: CreateTeamDto!): Team!
   createUser(createUserInput: CreateUserDto!): User!
   updateAuthor(id: String!, updateAuthorInput: UpdateAuthorDto!): Author!
   updateTag(id: String!, updateTagInput: UpdateTagDto!): Tag!
-  updateTeam(id: String!, updateTeamInput: UpdateTeamDto!): Team!
   updateUser(id: String!, updateUserInput: UpdateUserDto!): User!
 }
 
@@ -107,14 +112,12 @@ type Query {
   getChapterById(chapterId: String!): Chapter!
   getComicById(id: String!): Comic!
   getComicBySlug(slug: String!): Comic!
-  getComicsByTeamId(teamId: String!): [Comic!]!
+  getComicsCreatedByUser(limit: Float = 10, page: Float = 1, userId: String!): [Comic!]!
   getRecentComics(limit: Float = 10, page: Float = 1): [Comic!]!
   getTopComics(limit: Float = 10, page: Float = 1): [Comic!]!
   getTrendingComics(input: TrendingSortInput!): [Comic!]!
   tag(id: String!): Tag!
   tags: [Tag!]!
-  team(id: String!): Team!
-  teams: [Team!]!
   user(findUserInput: FindUserDto!): User!
 }
 
@@ -129,19 +132,6 @@ type Tag {
   createdAt: DateTime!
   description: String!
   name: String!
-  slug: String!
-  updatedAt: DateTime!
-}
-
-type Team {
-  _id: String!
-  createdAt: DateTime!
-  createdBy: User!
-  description: String!
-  imageUrl: String
-  members: [User!]!
-  name: String!
-  officialUrl: String!
   slug: String!
   updatedAt: DateTime!
 }
@@ -162,14 +152,6 @@ input UpdateTagDto {
   name: String
 }
 
-input UpdateTeamDto {
-  createdBy: String
-  description: String
-  imageBase64: String
-  name: String
-  officialUrl: String
-}
-
 input UpdateUserDto {
   base64Avatar: String
   description: String
@@ -179,7 +161,7 @@ input UpdateUserDto {
 
 type User {
   _id: String!
-  avatarUrl: String!
+  avatarUrl: String
   createdAt: DateTime!
   description: String!
   displayName: String!
@@ -187,7 +169,6 @@ type User {
   followedComics: [Comic!]!
   readingHistories: [ReadingHistory!]!
   role: Float!
-  teams: [Team!]!
   updatedAt: DateTime!
   username: String!
 }

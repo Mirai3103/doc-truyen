@@ -6,6 +6,7 @@ import { UserService } from '@/user/user.service';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
+import CreateComicInput from './dto/create-comic-input.dto';
 import { TrendingSortInput, TrendingSortType } from './dto/trendingSort.dto';
 import { Comic } from './schema/comic.schema';
 @Injectable()
@@ -94,34 +95,59 @@ export class ComicService {
         return [];
     }
   }
-  public async getComicsByTeamId(
-    teamId: string | ObjectId,
-    limit = 10,
-    page = 1,
-  ) {
-    return await this.comicModal
-      .find({
-        team: {
-          _id: teamId,
-        },
-      })
-      .skip(page)
-      .limit(limit);
-  }
+
   public async getContributedComics(
     userId: string | ObjectId,
     limit = 20,
     page = 1,
   ) {
-    return await this.comicModal
+    const result = await this.comicModal
       .find({
-        contributors: {
-          $elemMatch: {
-            _id: userId,
-          },
+        createdBy: {
+          _id: userId,
         },
       })
-      .skip(page)
-      .limit(limit);
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+    return result;
+  }
+  public async createNewComic(input: CreateComicInput) {
+    console.log(input);
+    return input;
+    // const comic = new this.comicModal({
+    //   author: {
+    //     _id: input.authorId,
+    //   },
+    //   category: {
+    //     _id: input.categoryId,
+    //   },
+    //   name: input.name,
+    //   createdAt: new Date(),
+    //   updatedAt: new Date(),
+    //   createdBy: {
+    //     _id: input.userId,
+    //   },
+    //   description: input.description,
+    //   followCount: 0,
+    //   genres: input.genreIds.map((id) => {
+    //     return {
+    //       _id: id,
+    //     };
+    //   }),
+    //   imageCoverUrl: input.imageCoverUrl,
+    //   imageThumbUrl: input.imageThumbUrl,
+    //   otherNames: input.otherNames,
+    //   recentChapter: null,
+    //   slug: slugfy(input.name),
+    //   status: input.status,
+    //   officeUrl: input.officeUrl || null,
+    //   artist: input.artistId
+    //     ? {
+    //         _id: input.artistId,
+    //       }
+    //     : null,
+    // });
+    // return await comic.save();
   }
 }

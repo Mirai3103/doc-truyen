@@ -1,0 +1,5 @@
+mutation createComic($input: CreateComicInput!) {
+    createComic(input: $input) {
+        name
+    }
+}

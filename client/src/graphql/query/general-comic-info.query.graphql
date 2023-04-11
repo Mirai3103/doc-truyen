@@ -1,0 +1,12 @@
+query GetGeneralInfo {
+    authors {
+        name
+        slug
+        _id
+    }
+    tags {
+        name
+        slug
+        _id
+    }
+}

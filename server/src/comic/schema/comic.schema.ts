@@ -2,7 +2,8 @@ import { Author } from '@/author/schema/author.schema';
 import { BaseSchema } from '@/base/schema/base.schema';
 import { Chapter } from '@/chapter/schema/chapter.schema';
 import { Tag } from '@/tag/schema/tag.schema';
-import { Team } from '@/team/schema/team.schema';
+import { User } from '@/user/schema/user.schema';
+
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as MongooseSchema } from 'mongoose';
@@ -39,9 +40,9 @@ export class Comic extends BaseSchema {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Tag' })
   @Field({ nullable: true })
   category: Tag;
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Team' })
-  @Field()
-  team: Team;
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
+  @Field(() => User)
+  createdBy: User;
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Author' })
   @Field()
   author: Author;

@@ -6,7 +6,7 @@ import { AuthorService } from '@/author/author.service';
 import { Chapter, ChapterDocument } from '@/chapter/schema/chapter.schema';
 import { Comic, ComicDocument, Status } from '@/comic/schema/comic.schema';
 import { UtilService } from '@/common/util.service';
-import { Team, TeamDocument } from '@/team/schema/team.schema';
+import { Role, User } from '@/user/schema/user.schema';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -27,14 +27,14 @@ export class CrawlerService {
     @InjectModel(Comic.name) private mangaModel: Model<ComicDocument>,
     @InjectModel(Chapter.name) private chapterModel: Model<ChapterDocument>,
     private readonly authorService: AuthorService,
-    @InjectModel(Team.name) private teamModel: Model<TeamDocument>,
+    @InjectModel(User.name) private readonly userModel: Model<User>,
     private readonly utilsService: UtilService,
   ) {}
   // private bindUrl: any[] = [];
   private async getIds() {
     const ids: number[] = [];
     for (let i = 1; i <= 2; i++) {
-      const url = `https://kakarot.cuutruyen.net/api/v2/mangas/recently_updated?page=${i}&per_page=${50}`;
+      const url = `https://kakarot.cuutruyen.net/api/v2/mangas/recently_updated?page=${i}&per_page=${25}`;
       const response: any = await axios.get(url);
       const data = response.data.data as IPreviewManga[];
       data.forEach((item) => {
@@ -44,6 +44,7 @@ export class CrawlerService {
     return ids;
   }
   async crawlData() {
+    this.mangaModel.deleteMany({}).exec();
     const ids: number[] = await this.getIds();
     let count = 0;
     for await (const id of ids) {
@@ -73,7 +74,7 @@ export class CrawlerService {
     const author = await this.authorService.createIfNotExist(
       manga.author.name || 'unknown',
     );
-    const team = await this.createTeamIfNotExist(manga.team);
+    const team = await this.createCreatorIfNotExist(manga.team);
     const newMangaObj = {
       createdAt: new Date(manga.created_at),
       updatedAt: new Date(manga.updated_at),
@@ -90,29 +91,34 @@ export class CrawlerService {
       status: Status.Ongoing,
       otherNames: manga.titles.map((title) => title.name),
       author: author,
-      team: team,
+      createdBy: team,
     };
     const newManga = new this.mangaModel(newMangaObj);
     const mangaSaved = await newManga.save();
     await this.crawlChapter(id, mangaSaved);
   }
-  private async createTeamIfNotExist(iteam: ITeam): Promise<TeamDocument> {
-    const nameSlug = this.utilsService.slugfy(iteam.name);
-    const team = await this.teamModel.findOne({
-      slug: nameSlug,
+  private async createCreatorIfNotExist(iteam: ITeam) {
+    const team = await this.userModel.findOne({
+      displayName: iteam.name,
     });
     if (team) {
       return team;
     }
+    const slug = this.utilsService.slugfy(iteam.name).replace(/-/g, '');
     const newTeamObj = {
-      name: iteam.name,
-      slug: nameSlug,
+      displayName: iteam.name,
       createdAt: new Date(iteam.created_at),
       updatedAt: new Date(iteam.updated_at),
-      description: iteam.description,
-      officialUrl: iteam.facebook_address,
+      description:
+        iteam.description + iteam.facebook_address
+          ? `<br/> <a href="${iteam.facebook_address}" target="_blank">Facebook</a>`
+          : '',
+      email: slug + '@gmail.com',
+      hashPassword: await this.utilsService.hash('123456'),
+      username: slug,
+      role: Role.CREATOR,
     };
-    const newTeam = new this.teamModel(newTeamObj);
+    const newTeam = new this.userModel(newTeamObj);
     return await newTeam.save();
   }
   private async crawlChapter(mangaId: number, mangaDoc: ComicDocument) {

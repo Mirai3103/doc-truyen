@@ -3,13 +3,12 @@ import { UserService } from './user.service';
 https://docs.nestjs.com/modules
 */
 
-import { Module } from '@nestjs/common';
-import { DatabaseModule } from '@/database/database.module';
 import { CommonModule } from '@/common/common.module';
+import { DatabaseModule } from '@/database/database.module';
+import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schema/user.schema';
 import { UserResolver } from './user.resolver';
-import { Team, TeamSchema } from '@/team/schema/team.schema';
 
 @Module({
   imports: [
@@ -19,12 +18,6 @@ import { Team, TeamSchema } from '@/team/schema/team.schema';
       {
         name: User.name,
         schema: UserSchema,
-      },
-    ]),
-    MongooseModule.forFeature([
-      {
-        name: Team.name,
-        schema: TeamSchema,
       },
     ]),
   ],

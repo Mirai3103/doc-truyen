@@ -4,6 +4,7 @@ import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core
 import { useHotkeys } from "@mantine/hooks";
 import { Notifications, notifications } from "@mantine/notifications";
 import React, { useState } from "react";
+import "react-image-crop/dist/ReactCrop.css";
 import { RouterProvider } from "react-router-dom";
 import "./index.css";
 import { themeOverride } from "./mantine.config";

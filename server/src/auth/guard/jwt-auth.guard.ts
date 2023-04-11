@@ -5,7 +5,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { TokenExpiredError } from 'jsonwebtoken';
 import { AuthService } from '../auth.service';
 
 @Injectable()
@@ -18,7 +17,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     // for example, call super.logIn(request) to establish a session.
     // get request and response
     const body = context.switchToHttp().getRequest().body;
-    console.log(body);
     return super.canActivate(context);
   }
 

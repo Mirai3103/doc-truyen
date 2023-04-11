@@ -1,3 +1,4 @@
+import FallBackLoader from "@/components/FallbackLoader";
 import AdminLayout from "@/components/layouts/AdminLayout";
 import ReadingLayout from "@/components/layouts/ReadingLayout";
 import LoginPage from "@/pages/auth";
@@ -6,11 +7,12 @@ import ChapterPage from "@/pages/chapter";
 import ComicDetail from "@/pages/comicDetail";
 import Home from "@/pages/home";
 import TrendingPage from "@/pages/trending";
-import { useLayoutEffect } from "react";
-import { createBrowserRouter, NavigationType, useLocation, useNavigationType } from "react-router-dom";
+import React, { Suspense, useLayoutEffect } from "react";
+import { NavigationType, createBrowserRouter, useLocation, useNavigationType } from "react-router-dom";
 import MainLayout from "../components/layouts/MainLayout";
 import ErrorPage from "../pages/error";
 import NotFoundPage from "../pages/error/404";
+const CreateComicPage = React.lazy(() => import("@/pages/admin/CreateComic"));
 const ScrollToTopWrapper = ({ children }: { children: JSX.Element }) => {
     const location = useLocation();
     const navigationType = useNavigationType();
@@ -85,7 +87,11 @@ const routes = createBrowserRouter(
             children: [
                 {
                     path: "upload-comic",
-                    element: <div>Admin</div>,
+                    element: (
+                        <Suspense fallback={<FallBackLoader />}>
+                            <CreateComicPage />
+                        </Suspense>
+                    ),
                 },
             ],
         },

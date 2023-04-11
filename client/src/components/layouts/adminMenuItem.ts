@@ -1,5 +1,5 @@
 import { appNavigate } from "@/routes";
-import { IconBookUpload, IconChartAreaFilled, IconHome, IconTag, IconUserEdit, IconUsers } from "@tabler/icons-react";
+import { IconBookUpload, IconChartAreaFilled, IconHome, IconTag, IconUserEdit } from "@tabler/icons-react";
 import { MenuItemProps } from "./appMenuItems";
 export const menuData: MenuItemProps[] = [
     {
@@ -32,14 +32,6 @@ export const menuData: MenuItemProps[] = [
         icon: IconUserEdit,
         action: () => {
             appNavigate("/admin/user-management");
-        },
-    },
-    {
-        link: "/admin/team-management",
-        label: "Quản lý nhóm",
-        icon: IconUsers,
-        action: () => {
-            appNavigate("/admin/team-management");
         },
     },
     {

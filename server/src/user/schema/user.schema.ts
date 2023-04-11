@@ -4,7 +4,6 @@ import {
   ReadingHistory,
   ReadingHistorySchema,
 } from '@/readingHistory/schema/reading-history.schema';
-import { Team } from '@/team/schema/team.schema';
 import { Field, HideField, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
@@ -34,9 +33,9 @@ export class User extends BaseSchema {
   @Prop()
   @Field()
   displayName: string;
-  @Prop()
-  @Field()
-  avatarUrl: string;
+  @Prop({ default: null })
+  @Field({ nullable: true })
+  avatarUrl?: string;
   @Prop()
   @Field()
   description: string;
@@ -52,11 +51,6 @@ export class User extends BaseSchema {
     default: [],
   })
   refreshTokens: string[];
-  @Field(() => [Team])
-  @Prop({
-    type: [{ type: mongoose.Types.ObjectId, ref: 'Team' }],
-  })
-  teams: Team[] = [];
   @Field(() => [Comic])
   @Prop({
     type: [{ type: mongoose.Types.ObjectId, ref: 'Comic' }],
