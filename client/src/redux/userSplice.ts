@@ -73,6 +73,8 @@ export const selectUser = (state: RootState) => state.user;
 export const selectUserProfile = (state: RootState) => state.user.userProfile;
 export const selectIsAuthenticated = (state: RootState) => state.user.isAuthenticated;
 export const isHasPermission = (userRole: Role, requiredRole: Role) => userRole >= requiredRole;
+export const selectRefreshToken = (state: RootState) => state.user.refreshToken;
+export const selectAccessToken = (state: RootState) => state.user.accessToken;
 interface JwtPayload {
     username: string;
     sub: string;

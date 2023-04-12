@@ -15,6 +15,7 @@ import {
     IconTrendingUp,
     IconUser,
 } from "@tabler/icons-react";
+import axios from "axios";
 
 export interface MenuItemProps {
     link: string;
@@ -114,21 +115,23 @@ export const authMenu: MenuItemProps[] = [
         label: "Đăng xuất",
         icon: IconLogout,
         action: () => {
+            axios.post("auth/logout", {
+                refreshToken: store.getState().user.refreshToken,
+            });
             store.dispatch(
                 setToken({
                     accessToken: "",
                     refreshToken: "",
                 })
             );
-            appNavigate("/");
         },
     },
     {
-        link: "/admin/upload-comic",
+        link: "/admin/comic-manage",
         label: "Upload truyện",
         icon: IconFileUpload,
         action: () => {
-            appNavigate("/admin/upload-comic");
+            appNavigate("/admin/comic-manage");
         },
     },
 ];

@@ -1,4 +1,7 @@
-import { GrapqlMayBeNeedIdentityGuard } from '@/auth/guard/grapql-jwt.auth.guard';
+import {
+  GrapqlMayBeNeedIdentityGuard,
+  WithRoleGuardGQL,
+} from '@/auth/guard/grapql-jwt.auth.guard';
 import { AuthorService } from '@/author/author.service';
 import { Author } from '@/author/schema/author.schema';
 import { ChapterService } from '@/chapter/chapter.service';
@@ -7,7 +10,8 @@ import { CurrentUser } from '@/common/decorator/graphql-user.decorator';
 import { Tag } from '@/tag/schema/tag.schema';
 import { TagService } from '@/tag/tag.service';
 
-import { User } from '@/user/schema/user.schema';
+import { UserPayload } from '@/auth/interface/user-payload.jwt';
+import { Role, User } from '@/user/schema/user.schema';
 import { UserService } from '@/user/user.service';
 import { Inject, UseGuards } from '@nestjs/common';
 import {
@@ -54,7 +58,6 @@ export class ComicResolver {
   }
   @ResolveField(() => User)
   async createdBy(@Parent() comic: Comic) {
-    if (!comic.createdBy) return null;
     const user = await this.userService.findByUniqueField(
       comic.createdBy._id + '',
     );
@@ -115,7 +118,27 @@ export class ComicResolver {
     return await this.commicService.getContributedComics(userId, limit, page);
   }
   @Mutation(() => Comic)
-  async createComic(@Args('input') input: CreateComicInput) {
-    return await this.commicService.createNewComic(input);
+  @UseGuards(new WithRoleGuardGQL(Role.CREATOR))
+  async createComic(
+    @Args('input') input: CreateComicInput,
+    @CurrentUser() user: UserPayload,
+  ) {
+    input.userId = user._id;
+    const result = await this.commicService.createNewComic(input);
+    return result;
+  }
+  @ResolveField(() => Number)
+  async chapterCount(@Parent() comic: Comic) {
+    return await this.chapterService.countChapterByComicId(comic._id);
+  }
+  @Mutation(() => Comic)
+  @UseGuards(new WithRoleGuardGQL(Role.CREATOR))
+  async updateComic(
+    @Args('id') id: string,
+    @Args('input') input: CreateComicInput,
+    @CurrentUser() user: UserPayload,
+  ) {
+    const result = await this.commicService.updateComic(id, input, user._id);
+    return result;
   }
 }

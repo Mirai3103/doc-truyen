@@ -19,11 +19,11 @@ export const menuData: MenuItemProps[] = [
         },
     },
     {
-        link: "/admin/upload-comic",
+        link: "/admin/comic-manage",
         label: "Đăng truyện",
         icon: IconBookUpload,
         action: () => {
-            appNavigate("/admin/upload-comic");
+            appNavigate("/admin/comic-manage");
         },
     },
     {

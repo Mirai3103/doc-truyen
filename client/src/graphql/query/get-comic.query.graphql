@@ -1,0 +1,73 @@
+query getComicBySlug($slug: String!) {
+    getComicBySlug(slug: $slug) {
+        _id
+        artist {
+            name
+            slug
+        }
+        author {
+            name
+            slug
+        }
+        category {
+            name
+            slug
+        }
+        genres {
+            name
+            slug
+        }
+        artist {
+            name
+        }
+        createdAt
+        updatedAt
+        description
+        followCount
+        imageCoverUrl
+        imageThumbUrl
+        name
+        createdBy {
+            _id
+            description
+            avatarUrl
+            displayName
+        }
+        otherNames
+        status
+    }
+}
+query getComicById($id: String!) {
+    comic: getComicById(id: $id) {
+        _id
+        author {
+            _id
+            name
+        }
+        name
+        otherNames
+        category {
+            _id
+            name
+        }
+        artist {
+            name
+            _id
+        }
+        createdBy {
+            _id
+        }
+        createdAt
+        updatedAt
+        description
+        imageCoverUrl
+        imageThumbUrl
+        status
+        slug
+        officeUrl
+        genres {
+            name
+            _id
+        }
+    }
+}

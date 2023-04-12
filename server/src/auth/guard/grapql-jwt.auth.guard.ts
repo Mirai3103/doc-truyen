@@ -1,4 +1,10 @@
-import { ExecutionContext, Inject, Injectable } from '@nestjs/common';
+import { Role } from '@/user/schema/user.schema';
+import {
+  ExecutionContext,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
@@ -21,7 +27,7 @@ export class GrapqlJwtAuthGuard extends AuthGuard('jwt') {
 
 @Injectable()
 export class GrapqlMayBeNeedIdentityGuard extends AuthGuard('jwt') {
-  constructor(@Inject(AuthService) private authService: AuthService) {
+  constructor() {
     super();
   }
   canActivate(ctx: ExecutionContext) {
@@ -33,6 +39,27 @@ export class GrapqlMayBeNeedIdentityGuard extends AuthGuard('jwt') {
     return super.canActivate(new ExecutionContextHost([req]));
   }
   handleRequest(err: any, user: any, info: any) {
+    if (err || !user) return null;
+    return user;
+  }
+}
+@Injectable()
+export class WithRoleGuardGQL extends GrapqlMayBeNeedIdentityGuard {
+  constructor(private role?: Role) {
+    super();
+  }
+
+  handleRequest(err: any, user: any, info: any) {
+    console.log('user', user);
+    if (!this.role) {
+      return user;
+    }
+    if (!user) {
+      throw err || new UnauthorizedException();
+    }
+    if (user.role < this.role) {
+      throw err || new UnauthorizedException();
+    }
     if (err || !user) return null;
     return user;
   }

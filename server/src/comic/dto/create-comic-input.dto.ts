@@ -1,5 +1,5 @@
 import { Field, HideField, InputType } from '@nestjs/graphql';
-import { IsArray, IsString, ValidateBy, ValidateIf } from 'class-validator';
+import { IsArray, IsString, ValidateIf } from 'class-validator';
 import { Status } from '../schema/comic.schema';
 
 @InputType()
@@ -25,19 +25,19 @@ export default class CreateComicInput {
   @ValidateIf((o) => o.officeUrl)
   @Field({ nullable: true })
   officeUrl?: string;
-  @Field()
-  @ValidateBy({
-    name: 'isStatus',
-    validator: {
-      validate(value: any) {
-        return Object.values(Status).includes(value);
-      },
-      defaultMessage() {
-        return 'Trạng thái truyện không hợp lệ';
-      },
-    },
-  })
-  status: Status;
+  @Field({ defaultValue: Status.NonPublished, nullable: true })
+  // @ValidateBy({
+  //   name: 'isStatus',
+  //   validator: {
+  //     validate(value: any) {
+  //       return Object.values(Status).includes(value);
+  //     },
+  //     defaultMessage() {
+  //       return 'Trạng thái truyện không hợp lệ';
+  //     },
+  //   },
+  // })
+  status: Status = Status.NonPublished;
   @IsString({
     message: 'Thể loại không được để trống',
   })

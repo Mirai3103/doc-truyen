@@ -1,8 +1,11 @@
-import { ObjectType, Field } from '@nestjs/graphql';
-import { Schema as MongooseSchema } from 'mongoose';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BaseSchema } from '@/base/schema/base.schema';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
+export enum TagType {
+  Category = 'category',
+  Genre = 'genre',
+}
 @Schema({
   timestamps: true,
 })
@@ -19,6 +22,9 @@ export class Tag extends BaseSchema {
   @Prop()
   @Field()
   description: string;
+  @Prop({ default: TagType.Genre })
+  @Field()
+  type: TagType;
 }
 export type TagDocument = Tag & Document;
 export const TagSchema = SchemaFactory.createForClass(Tag);

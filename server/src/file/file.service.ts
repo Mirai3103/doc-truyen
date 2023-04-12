@@ -13,8 +13,8 @@ export interface FilesUploadMapResult {
 @Injectable()
 export class FileService {
   public async saveFile(file: Express.Multer.File): Promise<string> {
-    const { originalname } = file;
-    const ext = originalname.split('.').pop();
+    const { mimetype } = file;
+    const ext = mimetype.split('/')[1];
     const newFilename = `${randomUUID()}.${ext}`;
     this.saveFileToDisk(file, newFilename);
     return newFilename;

@@ -4,7 +4,7 @@ import { Model, ObjectId } from 'mongoose';
 import { UtilService } from '../common/util.service';
 import { CreateTagDto } from './dto/createTag.dto';
 import { UpdateTagDto } from './dto/updateTag.dto';
-import { Tag, TagDocument } from './schema/tag.schema';
+import { Tag, TagDocument, TagType } from './schema/tag.schema';
 @Injectable()
 export class TagService {
   constructor(
@@ -39,6 +39,16 @@ export class TagService {
       _id: {
         $in: listId,
       },
+    });
+  }
+  async getCategories() {
+    return await this.tagModel.find({
+      type: TagType.Category,
+    });
+  }
+  async getGenres() {
+    return await this.tagModel.find({
+      type: TagType.Genre,
     });
   }
 }

@@ -1,9 +1,9 @@
 import { NotFoundException } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
-import { TagService } from './tag.service';
-import { Tag } from './schema/tag.schema';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateTagDto } from './dto/createTag.dto';
 import { UpdateTagDto } from './dto/updateTag.dto';
+import { Tag } from './schema/tag.schema';
+import { TagService } from './tag.service';
 
 @Resolver(() => Tag)
 export class TagResolver {
@@ -34,5 +34,13 @@ export class TagResolver {
       throw new NotFoundException(id);
     }
     return tag;
+  }
+  @Query(() => [Tag])
+  async getCategories() {
+    return await this.tagService.getCategories();
+  }
+  @Query(() => [Tag])
+  async getGenres() {
+    return await this.tagService.getGenres();
   }
 }

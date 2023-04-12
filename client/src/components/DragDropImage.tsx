@@ -15,9 +15,10 @@ interface DragDropFileProps {
     withCrop?: boolean;
     aspect?: number;
     onChange?: (blob: Blob | null) => void;
+    value: Blob | null;
 }
 
-export default function DragDropImage({
+function DragDropImage({
     title,
     description,
     w = "200px",
@@ -25,6 +26,7 @@ export default function DragDropImage({
     aspect = 2 / 3,
     withCrop = false,
     onChange,
+    value,
 }: DragDropFileProps) {
     const theme = useMantineTheme();
     const [isOpenedCroper, setIsOpenedCroper] = React.useState(false);
@@ -34,7 +36,6 @@ export default function DragDropImage({
     const imgRef = React.useRef<HTMLImageElement>(null);
     const onCrop = (croppedAreaPixels: PixelCrop | null) => {
         setCroppedImage(croppedAreaPixels);
-        console.log(croppedAreaPixels);
     };
     const onClose = () => {
         setIsOpenedCroper(false);
@@ -47,18 +48,24 @@ export default function DragDropImage({
     React.useEffect(() => {
         if (croppedImage && rawImageUrl !== "") {
             canvasPreview(rawImageUrl, croppedImage, 1, 0).then((blob) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(blob!);
-                reader.onloadend = () => {
-                    const base64data = reader.result;
-                    imgRef.current!.src = base64data as string;
-                };
-
                 onChange && onChange(blob);
             });
         }
     }, [croppedImage, rawImageUrl, onChange]);
 
+    React.useEffect(() => {
+        if (value) {
+            const reader = new FileReader();
+            reader.readAsDataURL(value);
+            reader.onloadend = () => {
+                const base64data = reader.result;
+                imgRef.current!.src = base64data as string;
+            };
+        } else {
+            setFile(null);
+            setCroppedImage(null);
+        }
+    }, [setFile, value]);
     return (
         <>
             {withCrop && (
@@ -139,3 +146,6 @@ export default function DragDropImage({
         </>
     );
 }
+
+const DragDropImageMemo = React.memo(DragDropImage);
+export default DragDropImageMemo;

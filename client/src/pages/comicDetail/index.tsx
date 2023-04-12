@@ -1,5 +1,6 @@
 import { useGetComicBySlugQuery } from "@/gql/generated/graphql";
 import { getDiffStr } from "@/utils/dateUtils";
+import { getImageUrl } from "@/utils/imageUtils";
 import {
     BackgroundImage,
     Box,
@@ -40,7 +41,7 @@ export default function ComicDetail() {
                         radius={"md"}
                         w={"100%"}
                         h="400px"
-                        src={data!.getComicBySlug.imageThumbUrl}
+                        src={getImageUrl(data!.getComicBySlug.imageThumbUrl)}
                         pos="relative"
                     >
                         <Flex
@@ -72,7 +73,7 @@ export default function ComicDetail() {
                     {!loading ? (
                         <img
                             className="shadow-lg border rounded-md mt-[-168.5px] more-md:mr-0 mx-auto more-md:ml-[112.5px] w-[225px] h-[337px] object-cover"
-                            src={data!.getComicBySlug.imageCoverUrl || "no-image.png"}
+                            src={getImageUrl(data!.getComicBySlug.imageCoverUrl) || "no-image.png"}
                             alt={data!.getComicBySlug.name}
                         />
                     ) : (

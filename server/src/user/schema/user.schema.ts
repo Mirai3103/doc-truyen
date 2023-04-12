@@ -37,7 +37,7 @@ export class User extends BaseSchema {
   @Field({ nullable: true })
   avatarUrl?: string;
   @Prop()
-  @Field()
+  @Field({ nullable: true })
   description: string;
   @Prop({
     default: Role.USER,

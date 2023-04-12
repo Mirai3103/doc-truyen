@@ -1,3 +1,4 @@
+import axios from "axios";
 import api from "./axios";
 
 const SERVER_URL = process.env.VITE_SERVER_URL || "http://localhost:3000";
@@ -11,11 +12,17 @@ export const getImageUrl = (name: string) => {
 
 export const uploadImage = async (blob: Blob) => {
     const formData = new FormData();
-    formData.append("image", blob);
+    formData.append("file", blob);
     const response = await api.post(`${SERVER_URL}/file/upload`, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         },
+    });
+    return response.data.url;
+};
+export const getBlob = async (url: string) => {
+    const response = await axios.get(url, {
+        responseType: "blob",
     });
     return response.data;
 };

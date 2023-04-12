@@ -4,11 +4,18 @@ https://docs.nestjs.com/providers#services
 
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { Model, ObjectId, Schema } from 'mongoose';
 import { Chapter } from './schema/chapter.schema';
 
 @Injectable()
 export class ChapterService {
+  countChapterByComicId(_id: Schema.Types.ObjectId) {
+    return this.chapterModal.countDocuments({
+      comic: {
+        _id,
+      },
+    });
+  }
   constructor(
     @InjectModel(Chapter.name) private readonly chapterModal: Model<Chapter>,
   ) {}

@@ -1,6 +1,6 @@
 import { Comic, ComicDocument } from '@/comic/schema/comic.schema';
 import { UtilService } from '@/common/util.service';
-import { Tag, TagDocument } from '@/tag/schema/tag.schema';
+import { Tag, TagDocument, TagType } from '@/tag/schema/tag.schema';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import axios from 'axios';
@@ -64,7 +64,12 @@ export class ComikService {
       console.log('start crawl', ++i);
       const obj = await this.getData(item.slug);
 
-      const category = await this.createIfTagNotFound(obj.origination);
+      let category = await this.createIfTagNotFound(obj.origination);
+      if (!category) {
+        category = await this.createIfTagNotFound('manga');
+      }
+      category!.type = TagType.Category;
+      category?.save();
       if (category) item.comic.category = category;
       const tags = await Promise.all(
         obj.listSpanGenres.map((tag) => this.createIfTagNotFound(tag)),
@@ -110,21 +115,12 @@ export class ComikService {
       .next()
       .text()
       .trim();
-    const listSpanGenres = $(
-      '.text-gray-500.w-16.flex-shrink-0:contains("Genres:")',
-    )
+    const listSpanGenres = $('.text-gray-500.flex-shrink-0:contains("Genres:")')
       .first()
       .next()
-      .children()
-      .map((i, el) => {
-        const text = $(el).text().trim();
-        const indexOfStartCut = text
-          .split('')
-          .findIndex((c) => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
-        return text.slice(indexOfStartCut);
-      })
-      .toArray();
-
+      .text()
+      .split(',')
+      .map((item) => item.trim());
     return {
       listSpanGenres,
       origination,

@@ -3,3 +3,8 @@ mutation createComic($input: CreateComicInput!) {
         name
     }
 }
+mutation updateComic($id: String!, $input: CreateComicInput!) {
+    updateComic(id: $id, input: $input) {
+        name
+    }
+}

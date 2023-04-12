@@ -1,5 +1,9 @@
 import { Role } from '@/user/schema/user.schema';
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
@@ -9,20 +13,19 @@ export class WithRoleGuard extends AuthGuard('jwt') {
   }
 
   canActivate(context: ExecutionContext): boolean {
-    if (!this.role) {
-      return true;
-    }
-    const request = context.switchToHttp().getRequest();
-    const user = request.user;
-    if (!user) {
-      return false;
-    }
-    if (user.role < this.role) {
-      return false;
-    }
     return true;
   }
   handleRequest(err: any, user: any, info: any) {
+    console.log('user', user);
+    if (!this.role) {
+      return user;
+    }
+    if (!user) {
+      throw err || new UnauthorizedException();
+    }
+    if (user.role < this.role) {
+      throw err || new UnauthorizedException();
+    }
     if (err || !user) return null;
     return user;
   }

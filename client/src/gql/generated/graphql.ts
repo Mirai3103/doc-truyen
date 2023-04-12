@@ -47,6 +47,7 @@ export type Comic = {
   artist?: Maybe<Author>;
   author: Author;
   category?: Maybe<Tag>;
+  chapterCount: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   createdBy: User;
   description: Scalars['String'];
@@ -57,7 +58,7 @@ export type Comic = {
   name: Scalars['String'];
   officeUrl: Scalars['String'];
   otherNames: Array<Scalars['String']>;
-  recentChapter: Chapter;
+  recentChapter?: Maybe<Chapter>;
   slug: Scalars['String'];
   status: Scalars['String'];
   updatedAt: Scalars['DateTime'];
@@ -79,7 +80,7 @@ export type CreateComicInput = {
   name: Scalars['String'];
   officeUrl?: InputMaybe<Scalars['String']>;
   otherNames?: InputMaybe<Array<Scalars['String']>>;
-  status: Scalars['String'];
+  status?: InputMaybe<Scalars['String']>;
 };
 
 export type CreateTagDto = {
@@ -108,6 +109,7 @@ export type Mutation = {
   createTag: Tag;
   createUser: User;
   updateAuthor: Author;
+  updateComic: Comic;
   updateTag: Tag;
   updateUser: User;
 };
@@ -139,6 +141,12 @@ export type MutationUpdateAuthorArgs = {
 };
 
 
+export type MutationUpdateComicArgs = {
+  id: Scalars['String'];
+  input: CreateComicInput;
+};
+
+
 export type MutationUpdateTagArgs = {
   id: Scalars['String'];
   updateTagInput: UpdateTagDto;
@@ -163,10 +171,12 @@ export type Query = {
   getAllChapters: Array<Chapter>;
   getAllComics: Array<Comic>;
   getAllHistories: Array<ReadingHistory>;
+  getCategories: Array<Tag>;
   getChapterById: Chapter;
   getComicById: Comic;
   getComicBySlug: Comic;
   getComicsCreatedByUser: Array<Comic>;
+  getGenres: Array<Tag>;
   getRecentComics: Array<Comic>;
   getTopComics: Array<Comic>;
   getTrendingComics: Array<Comic>;
@@ -255,6 +265,7 @@ export type Tag = {
   description: Scalars['String'];
   name: Scalars['String'];
   slug: Scalars['String'];
+  type: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
 
@@ -286,7 +297,7 @@ export type User = {
   _id: Scalars['String'];
   avatarUrl?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
-  description: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   displayName: Scalars['String'];
   email: Scalars['String'];
   followedComics: Array<Comic>;
@@ -302,6 +313,14 @@ export type CreateComicMutationVariables = Exact<{
 
 
 export type CreateComicMutation = { __typename?: 'Mutation', createComic: { __typename?: 'Comic', name: string } };
+
+export type UpdateComicMutationVariables = Exact<{
+  id: Scalars['String'];
+  input: CreateComicInput;
+}>;
+
+
+export type UpdateComicMutation = { __typename?: 'Mutation', updateComic: { __typename?: 'Comic', name: string } };
 
 export type GetAllChaptersQueryVariables = Exact<{
   comicId: Scalars['String'];
@@ -320,14 +339,30 @@ export type GetChapterByIdQuery = { __typename?: 'Query', getChapterById: { __ty
 export type GetGeneralInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetGeneralInfoQuery = { __typename?: 'Query', authors: Array<{ __typename?: 'Author', name: string, slug: string, _id: string }>, tags: Array<{ __typename?: 'Tag', name: string, slug: string, _id: string }> };
+export type GetGeneralInfoQuery = { __typename?: 'Query', authors: Array<{ __typename?: 'Author', name: string, slug: string, _id: string }>, genres: Array<{ __typename?: 'Tag', name: string, slug: string, _id: string }>, categories: Array<{ __typename?: 'Tag', name: string, slug: string, _id: string }> };
 
 export type GetComicBySlugQueryVariables = Exact<{
   slug: Scalars['String'];
 }>;
 
 
-export type GetComicBySlugQuery = { __typename?: 'Query', getComicBySlug: { __typename?: 'Comic', _id: string, createdAt: any, updatedAt: any, description: string, followCount: number, imageCoverUrl: string, imageThumbUrl: string, name: string, otherNames: Array<string>, status: string, artist?: { __typename?: 'Author', name: string, slug: string } | null, author: { __typename?: 'Author', name: string, slug: string }, category?: { __typename?: 'Tag', name: string, slug: string } | null, genres: Array<{ __typename?: 'Tag', name: string, slug: string }>, createdBy: { __typename?: 'User', _id: string, description: string, avatarUrl?: string | null, displayName: string } } };
+export type GetComicBySlugQuery = { __typename?: 'Query', getComicBySlug: { __typename?: 'Comic', _id: string, createdAt: any, updatedAt: any, description: string, followCount: number, imageCoverUrl: string, imageThumbUrl: string, name: string, otherNames: Array<string>, status: string, artist?: { __typename?: 'Author', name: string, slug: string } | null, author: { __typename?: 'Author', name: string, slug: string }, category?: { __typename?: 'Tag', name: string, slug: string } | null, genres: Array<{ __typename?: 'Tag', name: string, slug: string }>, createdBy: { __typename?: 'User', _id: string, description?: string | null, avatarUrl?: string | null, displayName: string } } };
+
+export type GetComicByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetComicByIdQuery = { __typename?: 'Query', comic: { __typename?: 'Comic', _id: string, name: string, otherNames: Array<string>, createdAt: any, updatedAt: any, description: string, imageCoverUrl: string, imageThumbUrl: string, status: string, slug: string, officeUrl: string, author: { __typename?: 'Author', _id: string, name: string }, category?: { __typename?: 'Tag', _id: string, name: string } | null, artist?: { __typename?: 'Author', name: string, _id: string } | null, createdBy: { __typename?: 'User', _id: string }, genres: Array<{ __typename?: 'Tag', name: string, _id: string }> } };
+
+export type GetComicsCreatedByUserQueryVariables = Exact<{
+  userId: Scalars['String'];
+  limit?: InputMaybe<Scalars['Float']>;
+  page?: InputMaybe<Scalars['Float']>;
+}>;
+
+
+export type GetComicsCreatedByUserQuery = { __typename?: 'Query', comics: Array<{ __typename?: 'Comic', _id: string, slug: string, name: string, chapterCount: number, updatedAt: any, followCount: number, imageCoverUrl: string, status: string, author: { __typename?: 'Author', name: string }, category?: { __typename?: 'Tag', name: string } | null, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null } | null }> };
 
 export type GetRecentComicsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Float']>;
@@ -335,7 +370,7 @@ export type GetRecentComicsQueryVariables = Exact<{
 }>;
 
 
-export type GetRecentComicsQuery = { __typename?: 'Query', getRecentComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any }, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
+export type GetRecentComicsQuery = { __typename?: 'Query', getRecentComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
 
 export type GetTopComicsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Float']>;
@@ -343,7 +378,7 @@ export type GetTopComicsQueryVariables = Exact<{
 }>;
 
 
-export type GetTopComicsQuery = { __typename?: 'Query', getTopComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any }, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string } }> };
+export type GetTopComicsQuery = { __typename?: 'Query', getTopComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string } }> };
 
 export type GetTrendingComicsQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Float']>;
@@ -351,7 +386,7 @@ export type GetTrendingComicsQueryVariables = Exact<{
 }>;
 
 
-export type GetTrendingComicsQuery = { __typename?: 'Query', TopFollow: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any }, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }>, TopWeek: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any }, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }>, TopMonth: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any }, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }>, TopYear: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any }, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }>, Newest: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any }, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
+export type GetTrendingComicsQuery = { __typename?: 'Query', TopFollow: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }>, TopWeek: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }>, TopMonth: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }>, TopYear: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }>, Newest: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
 
 export type GetTopFollowQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Float']>;
@@ -359,7 +394,7 @@ export type GetTopFollowQueryVariables = Exact<{
 }>;
 
 
-export type GetTopFollowQuery = { __typename?: 'Query', getTrendingComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any }, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
+export type GetTopFollowQuery = { __typename?: 'Query', getTrendingComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
 
 export type GetTopWeekQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Float']>;
@@ -367,7 +402,7 @@ export type GetTopWeekQueryVariables = Exact<{
 }>;
 
 
-export type GetTopWeekQuery = { __typename?: 'Query', getTrendingComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any }, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
+export type GetTopWeekQuery = { __typename?: 'Query', getTrendingComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
 
 export type GetTopMonthQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Float']>;
@@ -375,7 +410,7 @@ export type GetTopMonthQueryVariables = Exact<{
 }>;
 
 
-export type GetTopMonthQuery = { __typename?: 'Query', getTrendingComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any }, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
+export type GetTopMonthQuery = { __typename?: 'Query', getTrendingComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
 
 export type GetTopYearQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Float']>;
@@ -383,7 +418,7 @@ export type GetTopYearQueryVariables = Exact<{
 }>;
 
 
-export type GetTopYearQuery = { __typename?: 'Query', getTrendingComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any }, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
+export type GetTopYearQuery = { __typename?: 'Query', getTrendingComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
 
 export type GetNewestQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Float']>;
@@ -391,7 +426,7 @@ export type GetNewestQueryVariables = Exact<{
 }>;
 
 
-export type GetNewestQuery = { __typename?: 'Query', getTrendingComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any }, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
+export type GetNewestQuery = { __typename?: 'Query', getTrendingComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
 
 
 export const CreateComicDocument = gql`
@@ -427,6 +462,40 @@ export function useCreateComicMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateComicMutationHookResult = ReturnType<typeof useCreateComicMutation>;
 export type CreateComicMutationResult = Apollo.MutationResult<CreateComicMutation>;
 export type CreateComicMutationOptions = Apollo.BaseMutationOptions<CreateComicMutation, CreateComicMutationVariables>;
+export const UpdateComicDocument = gql`
+    mutation updateComic($id: String!, $input: CreateComicInput!) {
+  updateComic(id: $id, input: $input) {
+    name
+  }
+}
+    `;
+export type UpdateComicMutationFn = Apollo.MutationFunction<UpdateComicMutation, UpdateComicMutationVariables>;
+
+/**
+ * __useUpdateComicMutation__
+ *
+ * To run a mutation, you first call `useUpdateComicMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateComicMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateComicMutation, { data, loading, error }] = useUpdateComicMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateComicMutation(baseOptions?: Apollo.MutationHookOptions<UpdateComicMutation, UpdateComicMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateComicMutation, UpdateComicMutationVariables>(UpdateComicDocument, options);
+      }
+export type UpdateComicMutationHookResult = ReturnType<typeof useUpdateComicMutation>;
+export type UpdateComicMutationResult = Apollo.MutationResult<UpdateComicMutation>;
+export type UpdateComicMutationOptions = Apollo.BaseMutationOptions<UpdateComicMutation, UpdateComicMutationVariables>;
 export const GetAllChaptersDocument = gql`
     query getAllChapters($comicId: String!) {
   getAllChapters(comicId: $comicId) {
@@ -525,7 +594,12 @@ export const GetGeneralInfoDocument = gql`
     slug
     _id
   }
-  tags {
+  genres: getGenres {
+    name
+    slug
+    _id
+  }
+  categories: getCategories {
     name
     slug
     _id
@@ -579,6 +653,9 @@ export const GetComicBySlugDocument = gql`
       name
       slug
     }
+    artist {
+      name
+    }
     createdAt
     updatedAt
     description
@@ -625,6 +702,125 @@ export function useGetComicBySlugLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetComicBySlugQueryHookResult = ReturnType<typeof useGetComicBySlugQuery>;
 export type GetComicBySlugLazyQueryHookResult = ReturnType<typeof useGetComicBySlugLazyQuery>;
 export type GetComicBySlugQueryResult = Apollo.QueryResult<GetComicBySlugQuery, GetComicBySlugQueryVariables>;
+export const GetComicByIdDocument = gql`
+    query getComicById($id: String!) {
+  comic: getComicById(id: $id) {
+    _id
+    author {
+      _id
+      name
+    }
+    name
+    otherNames
+    category {
+      _id
+      name
+    }
+    artist {
+      name
+      _id
+    }
+    createdBy {
+      _id
+    }
+    createdAt
+    updatedAt
+    description
+    imageCoverUrl
+    imageThumbUrl
+    status
+    slug
+    officeUrl
+    genres {
+      name
+      _id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetComicByIdQuery__
+ *
+ * To run a query within a React component, call `useGetComicByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetComicByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetComicByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetComicByIdQuery(baseOptions: Apollo.QueryHookOptions<GetComicByIdQuery, GetComicByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetComicByIdQuery, GetComicByIdQueryVariables>(GetComicByIdDocument, options);
+      }
+export function useGetComicByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetComicByIdQuery, GetComicByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetComicByIdQuery, GetComicByIdQueryVariables>(GetComicByIdDocument, options);
+        }
+export type GetComicByIdQueryHookResult = ReturnType<typeof useGetComicByIdQuery>;
+export type GetComicByIdLazyQueryHookResult = ReturnType<typeof useGetComicByIdLazyQuery>;
+export type GetComicByIdQueryResult = Apollo.QueryResult<GetComicByIdQuery, GetComicByIdQueryVariables>;
+export const GetComicsCreatedByUserDocument = gql`
+    query GetComicsCreatedByUser($userId: String!, $limit: Float, $page: Float) {
+  comics: getComicsCreatedByUser(userId: $userId, limit: $limit, page: $page) {
+    _id
+    slug
+    name
+    author {
+      name
+    }
+    category {
+      name
+    }
+    chapterCount
+    updatedAt
+    followCount
+    imageCoverUrl
+    name
+    recentChapter {
+      chapterNumber
+      name
+    }
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetComicsCreatedByUserQuery__
+ *
+ * To run a query within a React component, call `useGetComicsCreatedByUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetComicsCreatedByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetComicsCreatedByUserQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      limit: // value for 'limit'
+ *      page: // value for 'page'
+ *   },
+ * });
+ */
+export function useGetComicsCreatedByUserQuery(baseOptions: Apollo.QueryHookOptions<GetComicsCreatedByUserQuery, GetComicsCreatedByUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetComicsCreatedByUserQuery, GetComicsCreatedByUserQueryVariables>(GetComicsCreatedByUserDocument, options);
+      }
+export function useGetComicsCreatedByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetComicsCreatedByUserQuery, GetComicsCreatedByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetComicsCreatedByUserQuery, GetComicsCreatedByUserQueryVariables>(GetComicsCreatedByUserDocument, options);
+        }
+export type GetComicsCreatedByUserQueryHookResult = ReturnType<typeof useGetComicsCreatedByUserQuery>;
+export type GetComicsCreatedByUserLazyQueryHookResult = ReturnType<typeof useGetComicsCreatedByUserLazyQuery>;
+export type GetComicsCreatedByUserQueryResult = Apollo.QueryResult<GetComicsCreatedByUserQuery, GetComicsCreatedByUserQueryVariables>;
 export const GetRecentComicsDocument = gql`
     query GetRecentComics($limit: Float, $page: Float) {
   getRecentComics(limit: $limit, page: $page) {

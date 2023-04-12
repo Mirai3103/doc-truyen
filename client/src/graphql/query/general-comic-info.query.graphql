@@ -4,7 +4,12 @@ query GetGeneralInfo {
         slug
         _id
     }
-    tags {
+    genres: getGenres {
+        name
+        slug
+        _id
+    }
+    categories: getCategories {
         name
         slug
         _id

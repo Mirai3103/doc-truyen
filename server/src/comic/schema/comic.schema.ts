@@ -4,10 +4,16 @@ import { Chapter } from '@/chapter/schema/chapter.schema';
 import { Tag } from '@/tag/schema/tag.schema';
 import { User } from '@/user/schema/user.schema';
 
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as MongooseSchema } from 'mongoose';
-
+export enum Status {
+  Paused = 'Tạm dừng',
+  Completed = 'Hoàn thành',
+  Ongoing = 'Đang tiến hành',
+  Drop = 'Drop',
+  NonPublished = 'Chưa xuất bản',
+}
 @Schema({
   timestamps: true,
 })
@@ -34,9 +40,9 @@ export class Comic extends BaseSchema {
   @Prop()
   @Field()
   officeUrl?: string;
-  @Prop()
+  @Prop({ default: Status.NonPublished })
   @Field()
-  status: Status;
+  status: Status = Status.NonPublished;
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Tag' })
   @Field({ nullable: true })
   category: Tag;
@@ -55,14 +61,11 @@ export class Comic extends BaseSchema {
   @Prop()
   @Field()
   followCount: number;
-  @Field(() => Chapter)
+  @Field(() => Chapter, { nullable: true })
   recentChapter: Chapter;
+  @Field(() => Int)
+  chapterCount: number;
 }
-export enum Status {
-  Paused = 'Tạm dừng',
-  Completed = 'Hoàn thành',
-  Ongoing = 'Đang tiến hành',
-  Drop = 'Drop',
-}
+
 export type ComicDocument = Comic & Document;
 export const ComicSchema = SchemaFactory.createForClass(Comic);

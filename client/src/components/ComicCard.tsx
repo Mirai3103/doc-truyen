@@ -1,4 +1,5 @@
 import { Comic } from "@/gql/generated/graphql";
+import { getImageUrl } from "@/utils/imageUtils";
 import {
     AspectRatio,
     BackgroundImage,
@@ -51,7 +52,7 @@ function ComicCard({ comic, w = 200, ...props }: ComicCardProps) {
                     pos="relative"
                     h={300}
                     radius="sm"
-                    src={comic.imageCoverUrl}
+                    src={getImageUrl(comic.imageCoverUrl)}
                 >
                     <Badge variant={"filled"} pos={"absolute"} top="7px" right="7px" color="green" radius="sm">
                         {comic.category?.name || "manga"}

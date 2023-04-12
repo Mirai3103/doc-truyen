@@ -7,12 +7,14 @@ import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import React from "react";
 
 interface TextEditorProps {
     onChange?: (value: string) => void;
+    value?: string;
 }
 
-export default function TextEditor({ onChange }: TextEditorProps) {
+export default function TextEditor({ onChange, value }: TextEditorProps) {
     const editor = useEditor({
         extensions: [
             StarterKit,
@@ -26,7 +28,11 @@ export default function TextEditor({ onChange }: TextEditorProps) {
         onUpdate: ({ editor }) => {
             onChange?.(editor.getHTML());
         },
+        content: "",
     });
+    React.useEffect(() => {
+        editor?.commands.setContent(value || "");
+    }, [value, editor]);
 
     return (
         <RichTextEditor editor={editor}>
