@@ -24,6 +24,11 @@ type Chapter {
   updatedAt: DateTime!
 }
 
+input ChapterOrder {
+  id: String!
+  order: Float!
+}
+
 type Comic {
   _id: String!
   artist: Author
@@ -95,6 +100,7 @@ type Mutation {
   createTag(createTagInput: CreateTagDto!): Tag!
   createUser(createUserInput: CreateUserDto!): User!
   updateAuthor(id: String!, updateAuthorInput: UpdateAuthorDto!): Author!
+  updateChaptersOrder(input: UpdateChaptersOrderInput!): [Chapter!]!
   updateComic(id: String!, input: CreateComicInput!): Comic!
   updateTag(id: String!, updateTagInput: UpdateTagDto!): Tag!
   updateUser(id: String!, updateUserInput: UpdateUserDto!): User!
@@ -150,6 +156,10 @@ input TrendingSortInput {
 input UpdateAuthorDto {
   description: String
   name: String
+}
+
+input UpdateChaptersOrderInput {
+  chapters: [ChapterOrder!]!
 }
 
 input UpdateTagDto {

@@ -1,13 +1,26 @@
-import { GrapqlMayBeNeedIdentityGuard } from '@/auth/guard/grapql-jwt.auth.guard';
+import {
+  GrapqlMayBeNeedIdentityGuard,
+  WithRoleGuardGQL,
+} from '@/auth/guard/grapql-jwt.auth.guard';
 import { UserPayload } from '@/auth/interface/user-payload.jwt';
 import { ComicService } from '@/comic/comic.service';
 import { Comic } from '@/comic/schema/comic.schema';
 import { CurrentUser } from '@/common/decorator/graphql-user.decorator';
 import { ReadingHistoryService } from '@/readingHistory/reading-history.service';
 import { Inject, UseGuards } from '@nestjs/common';
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { ChapterService } from './chapter.service';
 import { Chapter } from './schema/chapter.schema';
+import UpdateChapterOrderInput from './dto/update-chapter-order';
+import { Role } from '@/user/schema/user.schema';
+import UpdateChaptersOrderInput from './dto/update-chapter-order';
 
 @Resolver(() => Chapter)
 export class ChapterResolver {
@@ -49,5 +62,11 @@ export class ChapterResolver {
   @ResolveField(() => Chapter, { nullable: true })
   async nextChapter(@Parent() chapter: Chapter) {
     return await this.chapterService.getNextChapter(chapter);
+  }
+  @Mutation(() => [Chapter])
+  @UseGuards(new WithRoleGuardGQL(Role.CREATOR))
+  async updateChaptersOrder(@Args('input') input: UpdateChaptersOrderInput) {
+    const a = await this.chapterService.changeChaptersOrder(input.chapters);
+    return a;
   }
 }

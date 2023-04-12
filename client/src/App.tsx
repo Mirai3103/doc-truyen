@@ -1,7 +1,10 @@
 import { authLink } from "@/utils/axios";
+// eslint-disable-next-line
+
 import { ApolloClient, ApolloLink, ApolloProvider, HttpLink, InMemoryCache } from "@apollo/client";
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
+import { ModalsProvider } from "@mantine/modals";
 import { Notifications, notifications } from "@mantine/notifications";
 import React, { useState } from "react";
 import "react-image-crop/dist/ReactCrop.css";
@@ -66,10 +69,12 @@ function App() {
                 withGlobalStyles
                 withNormalizeCSS
             >
-                <Notifications position="top-right" />
-                <ApolloProvider client={client}>
-                    <RouterProvider router={routes} />
-                </ApolloProvider>
+                <ModalsProvider>
+                    <Notifications position="top-right" />
+                    <ApolloProvider client={client}>
+                        <RouterProvider router={routes} />
+                    </ApolloProvider>
+                </ModalsProvider>
             </MantineProvider>
         </ColorSchemeProvider>
     );

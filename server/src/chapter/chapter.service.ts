@@ -6,6 +6,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId, Schema } from 'mongoose';
 import { Chapter } from './schema/chapter.schema';
+import { ChapterOrder } from './dto/update-chapter-order';
 
 @Injectable()
 export class ChapterService {
@@ -68,5 +69,20 @@ export class ChapterService {
       })
       .sort({ order: 1 })
       .exec();
+  }
+  private async updateChapterOrder(
+    chapterId: string | ObjectId,
+    order: number,
+  ) {
+    const chapter = await this.chapterModal.findByIdAndUpdate(chapterId, {
+      order,
+    });
+    return chapter;
+  }
+  public async changeChaptersOrder(chaptersOrderInput: ChapterOrder[]) {
+    const promises = chaptersOrderInput.map((chapterOrderInput) =>
+      this.updateChapterOrder(chapterOrderInput.id, chapterOrderInput.order),
+    );
+    return await Promise.all(promises);
   }
 }

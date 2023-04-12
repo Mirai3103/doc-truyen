@@ -329,6 +329,13 @@ export type GetAllChaptersQueryVariables = Exact<{
 
 export type GetAllChaptersQuery = { __typename?: 'Query', getAllChapters: Array<{ __typename?: 'Chapter', _id: string, chapterNumber: string, createdAt: any, order: number, name?: string | null }> };
 
+export type GetAllChaptersAdminQueryVariables = Exact<{
+  comicId: Scalars['String'];
+}>;
+
+
+export type GetAllChaptersAdminQuery = { __typename?: 'Query', chapters: Array<{ __typename?: 'Chapter', _id: string, chapterNumber: string, createdAt: any, order: number, name?: string | null, updatedAt: any, pages: Array<{ __typename?: 'Page', order: number, url: string }> }> };
+
 export type GetChapterByIdQueryVariables = Exact<{
   chapterId: Scalars['String'];
 }>;
@@ -535,6 +542,50 @@ export function useGetAllChaptersLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetAllChaptersQueryHookResult = ReturnType<typeof useGetAllChaptersQuery>;
 export type GetAllChaptersLazyQueryHookResult = ReturnType<typeof useGetAllChaptersLazyQuery>;
 export type GetAllChaptersQueryResult = Apollo.QueryResult<GetAllChaptersQuery, GetAllChaptersQueryVariables>;
+export const GetAllChaptersAdminDocument = gql`
+    query getAllChaptersAdmin($comicId: String!) {
+  chapters: getAllChapters(comicId: $comicId) {
+    _id
+    chapterNumber
+    createdAt
+    order
+    name
+    updatedAt
+    pages {
+      order
+      url
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllChaptersAdminQuery__
+ *
+ * To run a query within a React component, call `useGetAllChaptersAdminQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllChaptersAdminQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllChaptersAdminQuery({
+ *   variables: {
+ *      comicId: // value for 'comicId'
+ *   },
+ * });
+ */
+export function useGetAllChaptersAdminQuery(baseOptions: Apollo.QueryHookOptions<GetAllChaptersAdminQuery, GetAllChaptersAdminQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllChaptersAdminQuery, GetAllChaptersAdminQueryVariables>(GetAllChaptersAdminDocument, options);
+      }
+export function useGetAllChaptersAdminLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllChaptersAdminQuery, GetAllChaptersAdminQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllChaptersAdminQuery, GetAllChaptersAdminQueryVariables>(GetAllChaptersAdminDocument, options);
+        }
+export type GetAllChaptersAdminQueryHookResult = ReturnType<typeof useGetAllChaptersAdminQuery>;
+export type GetAllChaptersAdminLazyQueryHookResult = ReturnType<typeof useGetAllChaptersAdminLazyQuery>;
+export type GetAllChaptersAdminQueryResult = Apollo.QueryResult<GetAllChaptersAdminQuery, GetAllChaptersAdminQueryVariables>;
 export const GetChapterByIdDocument = gql`
     query getChapterById($chapterId: String!) {
   getChapterById(chapterId: $chapterId) {

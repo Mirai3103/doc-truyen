@@ -2,7 +2,9 @@ import FallBackLoader from "@/components/FallbackLoader";
 import AdminLayout from "@/components/layouts/AdminLayout";
 import ReadingLayout from "@/components/layouts/ReadingLayout";
 import Logout from "@/pages/Logout";
+import Test from "@/pages/Test";
 import ComicManage from "@/pages/admin/ComicManage";
+import ChapterManage from "@/pages/admin/ComicManage/ChapterManage";
 import EditComicPage from "@/pages/admin/ComicManage/EditComic";
 import LoginPage from "@/pages/auth";
 import Callback from "@/pages/auth/callback";
@@ -64,6 +66,10 @@ const routes = createBrowserRouter(
                     path: "/trending",
                     element: <TrendingPage />,
                 },
+                {
+                    path: "test",
+                    element: <Test />,
+                },
             ],
         },
         {
@@ -109,6 +115,14 @@ const routes = createBrowserRouter(
                             element: (
                                 <Suspense fallback={<FallBackLoader />}>
                                     <EditComicPage />
+                                </Suspense>
+                            ),
+                        },
+                        {
+                            path: "edit/chapters/:comicId",
+                            element: (
+                                <Suspense fallback={<FallBackLoader />}>
+                                    <ChapterManage />
                                 </Suspense>
                             ),
                         },

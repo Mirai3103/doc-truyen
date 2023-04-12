@@ -7,6 +7,20 @@ query getAllChapters($comicId: String!) {
         name
     }
 }
+query getAllChaptersAdmin($comicId: String!) {
+    chapters: getAllChapters(comicId: $comicId) {
+        _id
+        chapterNumber
+        createdAt
+        order
+        name
+        updatedAt
+        pages {
+            order
+            url
+        }
+    }
+}
 query getChapterById($chapterId: String!) {
     getChapterById(chapterId: $chapterId) {
         chapterNumber

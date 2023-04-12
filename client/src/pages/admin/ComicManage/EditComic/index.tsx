@@ -175,7 +175,7 @@ export default function EditComicPage() {
                 <Title order={2} mb={"2rem"}>
                     Đăng truyện mới
                 </Title>
-                <Link to={`/admin/comic-manage/${comicId}/chapter-manage`}>
+                <Link to={`/admin/comic-manage/edit/chapters/${comicId}`}>
                     <Button size="md" color="teal">
                         Quản lý chương
                     </Button>

@@ -64,12 +64,24 @@ export default function ComicManage() {
                     </thead>
                     <tbody>
                         {data?.comics.map((comic, index) => (
-                            <tr key={comic._id} onClick={() => navigate(`/admin/comic-manage/edit/${comic._id}`)}>
+                            <tr
+                                className="cursor-pointer"
+                                key={comic._id}
+                                onClick={() => navigate(`/admin/comic-manage/edit/${comic._id}`)}
+                            >
                                 <td>{index + 1}</td>
                                 <td>
                                     <Flex align={"center"} gap={"md"}>
                                         <Image width={100} src={comic.imageCoverUrl} />
-                                        <Text>{comic.name}</Text>
+                                        <Text
+                                            className="hover:underline"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                navigate(`/comic/${comic.slug}`);
+                                            }}
+                                        >
+                                            {comic.name}
+                                        </Text>
                                     </Flex>
                                 </td>
                                 <td>{comic.category?.name}</td>

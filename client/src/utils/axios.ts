@@ -58,12 +58,14 @@ const reNewAccessToken = async () => {
         if (e.response.status === 401) {
             localStorage.removeItem("refreshToken");
 
+            window.location.reload();
             store.dispatch(
                 setToken({
                     accessToken: "",
                     refreshToken: "",
                 })
             );
+
             return null;
         }
     }

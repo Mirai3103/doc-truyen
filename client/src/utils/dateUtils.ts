@@ -27,3 +27,11 @@ export const getDiffStr = (oldDate: Date | string) => {
     const diffInYears = Math.floor(diffInMonths / 12);
     return `${diffInYears} năm trước`;
 };
+
+export const toDateTimeFormat = (date: Date | string) => {
+    if (typeof date === "string") {
+        date = new Date(date);
+    }
+    // dd/mm/yyyy - hh:mm
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} - ${date.getHours()}:${date.getMinutes()}`;
+};
