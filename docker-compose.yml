@@ -1,7 +1,6 @@
 version: '3.7'
 services:
   server:
-    # load nestjs from ./server/Dockerfile
     build: ./server
     ports:
       - 3000:3000
@@ -10,7 +9,6 @@ services:
     env_file:
       - .env
   client:
-    # load react from ./client/Dockerfile
     build: ./client
     ports:
       - 80:80

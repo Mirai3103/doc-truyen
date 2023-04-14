@@ -1,5 +1,11 @@
 import FallBackLoader from "@/components/FallbackLoader";
-import { Chapter, useGetAllChaptersAdminQuery, useGetComicByIdQuery } from "@/gql/generated/graphql";
+import {
+    Chapter,
+    ChapterOrder,
+    useGetAllChaptersAdminQuery,
+    useGetComicByIdQuery,
+    useUpdateChaptersOrderMutation,
+} from "@/gql/generated/graphql";
 import { getDiffStr } from "@/utils/dateUtils";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import {
@@ -23,13 +29,14 @@ import React from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 export default function ChapterManage() {
     const { comicId } = useParams();
-    const { data, loading } = useGetComicByIdQuery({ variables: { id: comicId! } });
+    const { data, loading, refetch } = useGetComicByIdQuery({ variables: { id: comicId! } });
     const { data: chapters, loading: chapterLoading } = useGetAllChaptersAdminQuery({
         variables: { comicId: comicId! },
     });
     const navigate = useNavigate();
     const { classes } = useStyles();
     const [state, handlers] = useListState<Chapter>();
+    const [updateChapterOrder, { loading: updateLoading }] = useUpdateChaptersOrderMutation();
 
     React.useEffect(() => {
         if (comicId === undefined) {
@@ -71,7 +78,30 @@ export default function ChapterManage() {
             labels: { confirm: "Lưu", cancel: "Hủy" },
             confirmProps: { color: "red" },
             onCancel: () => console.log("Cancel"),
-            onConfirm: () => console.log("Confirmed"),
+            onConfirm: () => {
+                const length = state.length;
+                const chapterOrderInput: ChapterOrder[] = state.map((c, index) => ({
+                    id: c._id,
+                    order: length - index,
+                }));
+                console.log(chapters);
+                updateChapterOrder({
+                    variables: {
+                        input: {
+                            chapters: chapterOrderInput,
+                        },
+                    },
+                }).then((res) => {
+                    refetch();
+                    notifications.show({
+                        title: "ok",
+                        color: "green",
+                        message: "ok",
+                    });
+                });
+
+                console.log(chapterOrderInput);
+            },
         });
     };
 
@@ -88,7 +118,7 @@ export default function ChapterManage() {
                     <td>{item.chapterNumber}</td>
                     <td>{item.name}</td>
                     <td>4200</td>
-                    <td>{item.pages.length}</td>
+                    <td>{item.pageCount}</td>
                     <td>{getDiffStr(item.updatedAt)}</td>
                     <td>
                         <IconDots cursor={"pointer"} />

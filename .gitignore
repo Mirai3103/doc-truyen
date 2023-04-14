@@ -6,6 +6,7 @@ node_modules
 # Logs
 logs
 *.log
+build
 npm-debug.log*
 pnpm-debug.log*
 yarn-debug.log*
@@ -14,7 +15,7 @@ lerna-debug.log*
 server/uploads
 # OS
 .DS_Store
-
+dev.env
 # Tests
 coverage
 .nyc_output

@@ -3,6 +3,7 @@ https://docs.nestjs.com/providers#services
 */
 
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { randomUUID } from 'crypto';
 import fs from 'fs';
 import sharp from 'sharp';

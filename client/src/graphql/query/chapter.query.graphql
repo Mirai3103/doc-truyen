@@ -15,10 +15,7 @@ query getAllChaptersAdmin($comicId: String!) {
         order
         name
         updatedAt
-        pages {
-            order
-            url
-        }
+        pageCount
     }
 }
 query getChapterById($chapterId: String!) {

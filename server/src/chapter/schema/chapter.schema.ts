@@ -1,6 +1,6 @@
 import { BaseSchema } from '@/base/schema/base.schema';
 import { Comic } from '@/comic/schema/comic.schema';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as MongooseSchema } from 'mongoose';
 
@@ -28,6 +28,8 @@ export class Chapter extends BaseSchema {
   nextChapter?: Chapter;
   @Field(() => Chapter, { nullable: true })
   previousChapter?: Chapter;
+  @Field(() => Int)
+  pageCount: number;
 }
 
 @ObjectType()

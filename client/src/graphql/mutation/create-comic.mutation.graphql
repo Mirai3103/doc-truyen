@@ -8,3 +8,9 @@ mutation updateComic($id: String!, $input: CreateComicInput!) {
         name
     }
 }
+
+mutation updateChaptersOrder($input: UpdateChaptersOrderInput!) {
+    data: updateChaptersOrder(input: $input) {
+        order
+    }
+}

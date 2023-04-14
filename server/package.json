@@ -16,7 +16,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test": "jest --config ./jest.config.js --runInBand --detectOpenHandles --forceExit"
+    "test": "jest --config ./jest.config.js --runInBand --detectOpenHandles --forceExit",
+    "build:minify": "yarn build --webpack && ncc build dist/main.js -o build"
   },
   "dependencies": {
     "@apollo/server": "^4.5.0",

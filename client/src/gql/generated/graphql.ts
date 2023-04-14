@@ -36,9 +36,15 @@ export type Chapter = {
   name?: Maybe<Scalars['String']>;
   nextChapter?: Maybe<Chapter>;
   order: Scalars['Float'];
+  pageCount: Scalars['Int'];
   pages: Array<Page>;
   previousChapter?: Maybe<Chapter>;
   updatedAt: Scalars['DateTime'];
+};
+
+export type ChapterOrder = {
+  id: Scalars['String'];
+  order: Scalars['Float'];
 };
 
 export type Comic = {
@@ -109,6 +115,7 @@ export type Mutation = {
   createTag: Tag;
   createUser: User;
   updateAuthor: Author;
+  updateChaptersOrder: Array<Chapter>;
   updateComic: Comic;
   updateTag: Tag;
   updateUser: User;
@@ -138,6 +145,11 @@ export type MutationCreateUserArgs = {
 export type MutationUpdateAuthorArgs = {
   id: Scalars['String'];
   updateAuthorInput: UpdateAuthorDto;
+};
+
+
+export type MutationUpdateChaptersOrderArgs = {
+  input: UpdateChaptersOrderInput;
 };
 
 
@@ -280,6 +292,10 @@ export type UpdateAuthorDto = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdateChaptersOrderInput = {
+  chapters: Array<ChapterOrder>;
+};
+
 export type UpdateTagDto = {
   description?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
@@ -322,6 +338,13 @@ export type UpdateComicMutationVariables = Exact<{
 
 export type UpdateComicMutation = { __typename?: 'Mutation', updateComic: { __typename?: 'Comic', name: string } };
 
+export type UpdateChaptersOrderMutationVariables = Exact<{
+  input: UpdateChaptersOrderInput;
+}>;
+
+
+export type UpdateChaptersOrderMutation = { __typename?: 'Mutation', data: Array<{ __typename?: 'Chapter', order: number }> };
+
 export type GetAllChaptersQueryVariables = Exact<{
   comicId: Scalars['String'];
 }>;
@@ -334,7 +357,7 @@ export type GetAllChaptersAdminQueryVariables = Exact<{
 }>;
 
 
-export type GetAllChaptersAdminQuery = { __typename?: 'Query', chapters: Array<{ __typename?: 'Chapter', _id: string, chapterNumber: string, createdAt: any, order: number, name?: string | null, updatedAt: any, pages: Array<{ __typename?: 'Page', order: number, url: string }> }> };
+export type GetAllChaptersAdminQuery = { __typename?: 'Query', chapters: Array<{ __typename?: 'Chapter', _id: string, chapterNumber: string, createdAt: any, order: number, name?: string | null, updatedAt: any, pageCount: number }> };
 
 export type GetChapterByIdQueryVariables = Exact<{
   chapterId: Scalars['String'];
@@ -503,6 +526,39 @@ export function useUpdateComicMutation(baseOptions?: Apollo.MutationHookOptions<
 export type UpdateComicMutationHookResult = ReturnType<typeof useUpdateComicMutation>;
 export type UpdateComicMutationResult = Apollo.MutationResult<UpdateComicMutation>;
 export type UpdateComicMutationOptions = Apollo.BaseMutationOptions<UpdateComicMutation, UpdateComicMutationVariables>;
+export const UpdateChaptersOrderDocument = gql`
+    mutation updateChaptersOrder($input: UpdateChaptersOrderInput!) {
+  data: updateChaptersOrder(input: $input) {
+    order
+  }
+}
+    `;
+export type UpdateChaptersOrderMutationFn = Apollo.MutationFunction<UpdateChaptersOrderMutation, UpdateChaptersOrderMutationVariables>;
+
+/**
+ * __useUpdateChaptersOrderMutation__
+ *
+ * To run a mutation, you first call `useUpdateChaptersOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateChaptersOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateChaptersOrderMutation, { data, loading, error }] = useUpdateChaptersOrderMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateChaptersOrderMutation(baseOptions?: Apollo.MutationHookOptions<UpdateChaptersOrderMutation, UpdateChaptersOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateChaptersOrderMutation, UpdateChaptersOrderMutationVariables>(UpdateChaptersOrderDocument, options);
+      }
+export type UpdateChaptersOrderMutationHookResult = ReturnType<typeof useUpdateChaptersOrderMutation>;
+export type UpdateChaptersOrderMutationResult = Apollo.MutationResult<UpdateChaptersOrderMutation>;
+export type UpdateChaptersOrderMutationOptions = Apollo.BaseMutationOptions<UpdateChaptersOrderMutation, UpdateChaptersOrderMutationVariables>;
 export const GetAllChaptersDocument = gql`
     query getAllChapters($comicId: String!) {
   getAllChapters(comicId: $comicId) {
@@ -551,10 +607,7 @@ export const GetAllChaptersAdminDocument = gql`
     order
     name
     updatedAt
-    pages {
-      order
-      url
-    }
+    pageCount
   }
 }
     `;

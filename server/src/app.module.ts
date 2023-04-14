@@ -24,7 +24,7 @@ import { UserModule } from './user/user.module';
     CrawlerModule,
 
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      envFilePath: '../../dev.env',
       isGlobal: true,
     }),
     UserModule,

@@ -2,10 +2,14 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
+// get project root path
+import path from 'path';
+const parentPath = path.resolve(path.resolve(), '..');
 dotenv.config({
-  path: 'E:\\personal projects\\doc-truyen\\dev.env',
+  path: `${parentPath}${path.sep}dev.env`,
   override: true,
 });
+console.log('process.env.', process.env.DATABASE_URI);
 
 import { AppModule } from './app.module';
 

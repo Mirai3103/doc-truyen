@@ -19,6 +19,7 @@ type Chapter {
   name: String
   nextChapter: Chapter
   order: Float!
+  pageCount: Int!
   pages: [Page!]!
   previousChapter: Chapter
   updatedAt: DateTime!

@@ -10,6 +10,7 @@ import { ReadingHistoryService } from '@/readingHistory/reading-history.service'
 import { Inject, UseGuards } from '@nestjs/common';
 import {
   Args,
+  Int,
   Mutation,
   Parent,
   Query,
@@ -68,5 +69,9 @@ export class ChapterResolver {
   async updateChaptersOrder(@Args('input') input: UpdateChaptersOrderInput) {
     const a = await this.chapterService.changeChaptersOrder(input.chapters);
     return a;
+  }
+  @ResolveField(() => Int)
+  pageCount(@Parent() chapter: Chapter) {
+    return chapter.pages.length;
   }
 }
