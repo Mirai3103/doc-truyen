@@ -31,8 +31,17 @@ function DragDropImage({
     const theme = useMantineTheme();
     const [isOpenedCroper, setIsOpenedCroper] = React.useState(false);
     const [rawImageUrl, setFile] = useFilePreviewUrl();
-    const [croppedImage, setCroppedImage] = React.useState<PixelCrop | null>(null);
-
+    const [croppedImage, setCroppedImage] = React.useState<PixelCrop | null>(
+        value
+            ? {
+                  x: 0,
+                  y: 0,
+                  height: 100,
+                  width: 100,
+                  unit: "px",
+              }
+            : null
+    );
     const imgRef = React.useRef<HTMLImageElement>(null);
     const onCrop = (croppedAreaPixels: PixelCrop | null) => {
         setCroppedImage(croppedAreaPixels);
@@ -55,6 +64,14 @@ function DragDropImage({
 
     React.useEffect(() => {
         if (value) {
+            setCroppedImage({
+                x: 0,
+                y: 0,
+                height: 100,
+                width: 100,
+                unit: "px",
+            });
+
             const reader = new FileReader();
             reader.readAsDataURL(value);
             reader.onloadend = () => {

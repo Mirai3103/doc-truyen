@@ -2,14 +2,40 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId, Schema } from 'mongoose';
 import { Chapter } from './schema/chapter.schema';
 import { ChapterOrder } from './dto/update-chapter-order';
+import CreateChapterDto from './dto/create-chapter';
+import { ComicService } from '@/comic/comic.service';
 
 @Injectable()
 export class ChapterService {
+  constructor(
+    @InjectModel(Chapter.name) private readonly chapterModal: Model<Chapter>,
+    private readonly comicService: ComicService,
+  ) {}
+  create(input: CreateChapterDto) {
+    const isOwner = this.comicService.isOwner(input.userId, input.comicId);
+    if (!isOwner) {
+      throw new ForbiddenException('You are not owner of this comic');
+    }
+    const order = Number(this.getLastedChapterByComicId(input.comicId)) + 1;
+    const chapter = new this.chapterModal({
+      chapterNumber: input.chapterNumber,
+      comic: {
+        _id: input.comicId,
+      },
+      createdAt: new Date(),
+      order,
+      pageCount: input.pages.length,
+      pages: input.pages,
+      name: input.name,
+      updatedAt: new Date(),
+    });
+    return chapter.save();
+  }
   countChapterByComicId(_id: Schema.Types.ObjectId) {
     return this.chapterModal.countDocuments({
       comic: {
@@ -17,9 +43,6 @@ export class ChapterService {
       },
     });
   }
-  constructor(
-    @InjectModel(Chapter.name) private readonly chapterModal: Model<Chapter>,
-  ) {}
   public async getLastedChapterByComicId(comicId: string | ObjectId) {
     const chapter = await this.chapterModal
       .findOne({

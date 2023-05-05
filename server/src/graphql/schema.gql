@@ -44,7 +44,7 @@ type Comic {
   imageCoverUrl: String!
   imageThumbUrl: String!
   name: String!
-  officeUrl: String!
+  officeUrl: String
   otherNames: [String!]!
   recentChapter: Chapter
   slug: String!
@@ -55,6 +55,13 @@ type Comic {
 input CreateAuthorDto {
   description: String!
   name: String!
+}
+
+input CreateChapterDto {
+  chapterNumber: String!
+  comicId: String!
+  name: String
+  pages: [PageInput!]!
 }
 
 input CreateComicInput {
@@ -101,6 +108,7 @@ type Mutation {
   createTag(createTagInput: CreateTagDto!): Tag!
   createUser(createUserInput: CreateUserDto!): User!
   updateAuthor(id: String!, updateAuthorInput: UpdateAuthorDto!): Author!
+  updateChapterOrder(input: CreateChapterDto!): Chapter!
   updateChaptersOrder(input: UpdateChaptersOrderInput!): [Chapter!]!
   updateComic(id: String!, input: CreateComicInput!): Comic!
   updateTag(id: String!, updateTagInput: UpdateTagDto!): Tag!
@@ -108,6 +116,11 @@ type Mutation {
 }
 
 type Page {
+  order: Float!
+  url: String!
+}
+
+input PageInput {
   order: Float!
   url: String!
 }
@@ -124,6 +137,7 @@ type Query {
   getComicBySlug(slug: String!): Comic!
   getComicsCreatedByUser(limit: Float = 10, page: Float = 1, userId: String!): [Comic!]!
   getGenres: [Tag!]!
+  getLastedChapterByComicId(comicId: String!): Chapter!
   getRecentComics(limit: Float = 10, page: Float = 1): [Comic!]!
   getTopComics(limit: Float = 10, page: Float = 1): [Comic!]!
   getTrendingComics(input: TrendingSortInput!): [Comic!]!

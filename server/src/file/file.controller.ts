@@ -18,6 +18,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileService } from './file.service';
+import { Response } from 'express';
 
 @Controller('file')
 export class FileController {
@@ -45,6 +46,7 @@ export class FileController {
     @Query('height') height?: number,
   ) {
     const image = await this.fileService.getImage(filename, width, height);
+    res.setHeader('Content-Type', 'image/jpeg'); // 'image/png
     image.pipe(res as any);
   }
 }

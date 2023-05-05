@@ -17,7 +17,14 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test": "jest --config ./jest.config.js --runInBand --detectOpenHandles --forceExit",
-    "build:minify": "yarn build --webpack && ncc build dist/main.js -o build"
+    "build:minify": "yarn build && ncc build dist/main.js -o build",
+    "pkg": "pkg dist/main.js --target node18-linux-x64 -o app"
+  },
+  "bin": "dist/main.js",
+  "pkg": {
+    "scripts": [
+      "dist/**/*.js"
+    ]
   },
   "dependencies": {
     "@apollo/server": "^4.5.0",
@@ -77,7 +84,8 @@
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "jest": "29.3.1",
+    "jest": "^29.5.0",
+    "pkg": "^5.8.1",
     "prettier": "^2.3.2",
     "source-map-support": "^0.5.20",
     "supertest": "^6.1.3",

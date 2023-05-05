@@ -62,7 +62,7 @@ export type Comic = {
   imageCoverUrl: Scalars['String'];
   imageThumbUrl: Scalars['String'];
   name: Scalars['String'];
-  officeUrl: Scalars['String'];
+  officeUrl?: Maybe<Scalars['String']>;
   otherNames: Array<Scalars['String']>;
   recentChapter?: Maybe<Chapter>;
   slug: Scalars['String'];
@@ -189,6 +189,7 @@ export type Query = {
   getComicBySlug: Comic;
   getComicsCreatedByUser: Array<Comic>;
   getGenres: Array<Tag>;
+  getLastedChapterByComicId: Chapter;
   getRecentComics: Array<Comic>;
   getTopComics: Array<Comic>;
   getTrendingComics: Array<Comic>;
@@ -234,6 +235,11 @@ export type QueryGetComicsCreatedByUserArgs = {
   limit?: InputMaybe<Scalars['Float']>;
   page?: InputMaybe<Scalars['Float']>;
   userId: Scalars['String'];
+};
+
+
+export type QueryGetLastedChapterByComicIdArgs = {
+  comicId: Scalars['String'];
 };
 
 
@@ -366,6 +372,13 @@ export type GetChapterByIdQueryVariables = Exact<{
 
 export type GetChapterByIdQuery = { __typename?: 'Query', getChapterById: { __typename?: 'Chapter', chapterNumber: string, order: number, name?: string | null, nextChapter?: { __typename?: 'Chapter', chapterNumber: string } | null, previousChapter?: { __typename?: 'Chapter', chapterNumber: string } | null, comic: { __typename?: 'Comic', name: string, slug: string, _id: string }, pages: Array<{ __typename?: 'Page', order: number, url: string }> } };
 
+export type GetLastedChapterByComicIdQueryVariables = Exact<{
+  comicId: Scalars['String'];
+}>;
+
+
+export type GetLastedChapterByComicIdQuery = { __typename?: 'Query', getLastedChapterByComicId: { __typename?: 'Chapter', _id: string, chapterNumber: string, createdAt: any, order: number, name?: string | null } };
+
 export type GetGeneralInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -383,7 +396,7 @@ export type GetComicByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetComicByIdQuery = { __typename?: 'Query', comic: { __typename?: 'Comic', _id: string, name: string, otherNames: Array<string>, createdAt: any, updatedAt: any, description: string, imageCoverUrl: string, imageThumbUrl: string, status: string, slug: string, officeUrl: string, author: { __typename?: 'Author', _id: string, name: string }, category?: { __typename?: 'Tag', _id: string, name: string } | null, artist?: { __typename?: 'Author', name: string, _id: string } | null, createdBy: { __typename?: 'User', _id: string }, genres: Array<{ __typename?: 'Tag', name: string, _id: string }> } };
+export type GetComicByIdQuery = { __typename?: 'Query', comic: { __typename?: 'Comic', _id: string, name: string, otherNames: Array<string>, createdAt: any, updatedAt: any, description: string, imageCoverUrl: string, imageThumbUrl: string, status: string, slug: string, officeUrl?: string | null, author: { __typename?: 'Author', _id: string, name: string }, category?: { __typename?: 'Tag', _id: string, name: string } | null, artist?: { __typename?: 'Author', name: string, _id: string } | null, createdBy: { __typename?: 'User', _id: string }, genres: Array<{ __typename?: 'Tag', name: string, _id: string }> } };
 
 export type GetComicsCreatedByUserQueryVariables = Exact<{
   userId: Scalars['String'];
@@ -691,6 +704,45 @@ export function useGetChapterByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetChapterByIdQueryHookResult = ReturnType<typeof useGetChapterByIdQuery>;
 export type GetChapterByIdLazyQueryHookResult = ReturnType<typeof useGetChapterByIdLazyQuery>;
 export type GetChapterByIdQueryResult = Apollo.QueryResult<GetChapterByIdQuery, GetChapterByIdQueryVariables>;
+export const GetLastedChapterByComicIdDocument = gql`
+    query getLastedChapterByComicId($comicId: String!) {
+  getLastedChapterByComicId(comicId: $comicId) {
+    _id
+    chapterNumber
+    createdAt
+    order
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetLastedChapterByComicIdQuery__
+ *
+ * To run a query within a React component, call `useGetLastedChapterByComicIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLastedChapterByComicIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLastedChapterByComicIdQuery({
+ *   variables: {
+ *      comicId: // value for 'comicId'
+ *   },
+ * });
+ */
+export function useGetLastedChapterByComicIdQuery(baseOptions: Apollo.QueryHookOptions<GetLastedChapterByComicIdQuery, GetLastedChapterByComicIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLastedChapterByComicIdQuery, GetLastedChapterByComicIdQueryVariables>(GetLastedChapterByComicIdDocument, options);
+      }
+export function useGetLastedChapterByComicIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLastedChapterByComicIdQuery, GetLastedChapterByComicIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLastedChapterByComicIdQuery, GetLastedChapterByComicIdQueryVariables>(GetLastedChapterByComicIdDocument, options);
+        }
+export type GetLastedChapterByComicIdQueryHookResult = ReturnType<typeof useGetLastedChapterByComicIdQuery>;
+export type GetLastedChapterByComicIdLazyQueryHookResult = ReturnType<typeof useGetLastedChapterByComicIdLazyQuery>;
+export type GetLastedChapterByComicIdQueryResult = Apollo.QueryResult<GetLastedChapterByComicIdQuery, GetLastedChapterByComicIdQueryVariables>;
 export const GetGeneralInfoDocument = gql`
     query GetGeneralInfo {
   authors {

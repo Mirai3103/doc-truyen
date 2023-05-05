@@ -15,13 +15,9 @@ describe('reading history test', () => {
     module = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
-    //get connection string from module
-
     userModal = await module.get(getModelToken(User.name));
   }, 100000);
   it('should be not null', async () => {
-    //user id: 642fd6190978e275801c9dc1
-    // chapter id: 642a7b3667bfa5828ba6bc20
     const oldChapter = (
       await userModal
         .findOne({

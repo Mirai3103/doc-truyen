@@ -47,7 +47,6 @@ export default function EditComicPage() {
     });
     const { setFieldValue, values: formValues, onSubmit: onFormSubmit } = useCreateComicForm();
     const { data } = useGetGeneralInfoQuery();
-    console.log(isChangedAvatar, isChangedThumb);
     const onSubmit = async (values: any) => {
         let imageCoverUrl, imageThumbUrl: string | undefined;
         if (isChangedAvatar) {
@@ -121,7 +120,7 @@ export default function EditComicPage() {
         if (dataComic?.comic) {
             setFieldValue("name", dataComic.comic.name);
             setFieldValue("otherNames", dataComic.comic.otherNames);
-            setFieldValue("officeUrl", dataComic.comic.officeUrl);
+            setFieldValue("officeUrl", dataComic.comic.officeUrl || "");
             setFieldValue("categoryId", dataComic.comic.category!._id);
             setFieldValue(
                 "genreIds",
@@ -138,7 +137,7 @@ export default function EditComicPage() {
                 setFieldValue("thumbBlob", blob);
             });
         }
-    }, [dataComic]);
+    }, [dataComic, dataComic?.comic, setFieldValue]);
     React.useEffect(() => {
         if (dataComic && userProfile) {
             if (dataComic?.comic.createdBy._id !== userProfile?._id) {

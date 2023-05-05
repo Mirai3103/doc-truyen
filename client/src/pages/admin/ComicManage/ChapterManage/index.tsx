@@ -130,7 +130,9 @@ export default function ChapterManage() {
     return (
         <Stack p={"lg"}>
             <Flex justify={"space-between"}>
-                <Title order={2}>{data?.comic?.name}</Title>
+                <Link to={`/admin/comic-manage/edit/${comicId}`}>
+                    <Title order={2}>{data?.comic?.name}</Title>
+                </Link>
                 <Link to={`/admin/chapter-manage/create/${comicId}`} className="ml-auto">
                     <Button size="md">Tạo chương mới</Button>
                 </Link>

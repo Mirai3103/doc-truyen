@@ -37,8 +37,7 @@ export class Comic extends BaseSchema {
   @Prop()
   @Field()
   imageThumbUrl: string;
-  @Prop()
-  @Field()
+  @Field({ nullable: true })
   officeUrl?: string;
   @Prop({ default: Status.NonPublished })
   @Field()

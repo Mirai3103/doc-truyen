@@ -20,9 +20,14 @@ export const uploadImage = async (blob: Blob) => {
     });
     return response.data.url;
 };
+
 export const getBlob = async (url: string) => {
+    //image/jpeg
     const response = await axios.get(url, {
-        responseType: "blob",
+        responseType: "arraybuffer",
     });
-    return response.data;
+    const blob = new Blob([response.data], {
+        type: response.headers["content-type"] || "image/jpeg",
+    });
+    return blob;
 };

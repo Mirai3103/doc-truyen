@@ -40,3 +40,12 @@ query getChapterById($chapterId: String!) {
         name
     }
 }
+query getLastedChapterByComicId($comicId: String!) {
+    getLastedChapterByComicId(comicId: $comicId) {
+        _id
+        chapterNumber
+        createdAt
+        order
+        name
+    }
+}

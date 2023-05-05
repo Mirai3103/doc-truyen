@@ -9,16 +9,18 @@ dotenv.config({
   path: `${parentPath}${path.sep}dev.env`,
   override: true,
 });
-console.log('process.env.', process.env.DATABASE_URI);
 
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  console.log('create app');
   const app = await NestFactory.create(AppModule);
+  console.log('app created');
   app.use(morgan(process.env.MORGAN_LOG_FORMAT || 'dev'));
   app.enableCors({
     origin: '*',
   });
+
   app.useGlobalPipes(new ValidationPipe());
 
   //logger console

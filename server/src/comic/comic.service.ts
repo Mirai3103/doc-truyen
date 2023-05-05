@@ -26,6 +26,16 @@ export class ComicService {
   public async getById(id: string | ObjectId) {
     return await this.comicModal.findById(id);
   }
+  public async isOwner(userId: string, comicId: string) {
+    const comic = await this.comicModal.findOne({
+      _id: comicId,
+      createdBy: {
+        _id: userId,
+      },
+    });
+    return !!comic;
+  }
+
   public async getRecentComics(limit = 10, page = 1) {
     const skip = (page - 1) * limit;
     // order by updateAt
@@ -81,7 +91,7 @@ export class ComicService {
   private getPublishComicQuery() {
     return this.comicModal.find({
       status: {
-        $ne: Status.NonPublished,
+        $in: [Status.Completed, Status.Ongoing, Status.Drop, Status.Paused],
       },
     });
   }
@@ -139,12 +149,13 @@ export class ComicService {
           _id: id,
         };
       }),
+
       imageCoverUrl: input.imageCoverUrl,
       imageThumbUrl: input.imageThumbUrl,
       otherNames: input.otherNames,
       recentChapter: null,
       slug: slugfy(input.name),
-      status: input.status,
+      status: input.status || Status.NonPublished,
       officeUrl: input.officeUrl || null,
       artist: input.artistId
         ? {

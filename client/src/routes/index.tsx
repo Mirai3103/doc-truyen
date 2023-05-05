@@ -17,6 +17,7 @@ import { NavigationType, Outlet, createBrowserRouter, useLocation, useNavigation
 import MainLayout from "../components/layouts/MainLayout";
 import ErrorPage from "../pages/error";
 import NotFoundPage from "../pages/error/404";
+import CreateChapter from "@/pages/admin/ComicManage/ChapterManage/Create";
 const CreateComicPage = React.lazy(() => import("@/pages/admin/ComicManage/CreateComic"));
 const ScrollToTopWrapper = ({ children }: { children: JSX.Element }) => {
     const location = useLocation();
@@ -90,7 +91,9 @@ const routes = createBrowserRouter(
             path: "/admin",
             element: (
                 <ScrollToTopWrapper>
-                    <AdminLayout />
+                    <Suspense fallback={<FallBackLoader />}>
+                        <AdminLayout />
+                    </Suspense>
                 </ScrollToTopWrapper>
             ),
             children: [
@@ -100,11 +103,7 @@ const routes = createBrowserRouter(
                     children: [
                         {
                             path: "create",
-                            element: (
-                                <Suspense fallback={<FallBackLoader />}>
-                                    <CreateComicPage />
-                                </Suspense>
-                            ),
+                            element: <CreateComicPage />,
                         },
                         {
                             path: "",
@@ -125,6 +124,16 @@ const routes = createBrowserRouter(
                                     <ChapterManage />
                                 </Suspense>
                             ),
+                        },
+                    ],
+                },
+                {
+                    path: "chapter-manage",
+                    element: <Outlet />,
+                    children: [
+                        {
+                            path: "create/:comicId",
+                            element: <CreateChapter />,
                         },
                     ],
                 },

@@ -22,6 +22,7 @@ import { Chapter } from './schema/chapter.schema';
 import UpdateChapterOrderInput from './dto/update-chapter-order';
 import { Role } from '@/user/schema/user.schema';
 import UpdateChaptersOrderInput from './dto/update-chapter-order';
+import CreateChapterDto from './dto/create-chapter';
 
 @Resolver(() => Chapter)
 export class ChapterResolver {
@@ -73,5 +74,19 @@ export class ChapterResolver {
   @ResolveField(() => Int)
   pageCount(@Parent() chapter: Chapter) {
     return chapter.pages.length;
+  }
+  @Query(() => Chapter)
+  async getLastedChapterByComicId(
+    @Args('comicId', {
+      type: () => String,
+    })
+    comicId: string,
+  ) {
+    return await this.chapterService.getLastedChapterByComicId(comicId);
+  }
+  @Mutation(() => Chapter)
+  @UseGuards(new WithRoleGuardGQL(Role.CREATOR))
+  async updateChapterOrder(@Args('input') input: CreateChapterDto) {
+    return await this.chapterService.create(input);
   }
 }

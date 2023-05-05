@@ -1,6 +1,6 @@
 import { BaseSchema } from '@/base/schema/base.schema';
 import { Comic } from '@/comic/schema/comic.schema';
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as MongooseSchema } from 'mongoose';
 
@@ -33,7 +33,8 @@ export class Chapter extends BaseSchema {
 }
 
 @ObjectType()
-class Page {
+@InputType('PageInput')
+export class Page {
   @Field(() => String)
   url: string;
 

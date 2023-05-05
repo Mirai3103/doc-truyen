@@ -2,15 +2,10 @@ import { useGetComicsCreatedByUserQuery } from "@/gql/generated/graphql";
 import { useAppSelector } from "@/redux/hook";
 import { selectUserProfile } from "@/redux/userSplice";
 import { getDiffStr } from "@/utils/dateUtils";
+import { getImageUrl } from "@/utils/imageUtils";
 import { Button, Flex, Image, Stack, Table, Text, TextInput, Title } from "@mantine/core";
 import { Link, useNavigate } from "react-router-dom";
-const elements = [
-    { position: 6, mass: 12.011, symbol: "C", name: "Carbon" },
-    { position: 7, mass: 14.007, symbol: "N", name: "Nitrogen" },
-    { position: 39, mass: 88.906, symbol: "Y", name: "Yttrium" },
-    { position: 56, mass: 137.33, symbol: "Ba", name: "Barium" },
-    { position: 58, mass: 140.12, symbol: "Ce", name: "Cerium" },
-];
+
 export default function ComicManage() {
     const user = useAppSelector(selectUserProfile);
     const { data, error, loading } = useGetComicsCreatedByUserQuery({
@@ -72,7 +67,7 @@ export default function ComicManage() {
                                 <td>{index + 1}</td>
                                 <td>
                                     <Flex align={"center"} gap={"md"}>
-                                        <Image width={100} src={comic.imageCoverUrl} />
+                                        <Image width={100} src={getImageUrl(comic.imageCoverUrl)} />
                                         <Text
                                             className="hover:underline"
                                             onClick={(e) => {

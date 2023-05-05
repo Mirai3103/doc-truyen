@@ -26,17 +26,6 @@ export default class CreateComicInput {
   @Field({ nullable: true })
   officeUrl?: string;
   @Field({ defaultValue: Status.NonPublished, nullable: true })
-  // @ValidateBy({
-  //   name: 'isStatus',
-  //   validator: {
-  //     validate(value: any) {
-  //       return Object.values(Status).includes(value);
-  //     },
-  //     defaultMessage() {
-  //       return 'Trạng thái truyện không hợp lệ';
-  //     },
-  //   },
-  // })
   status: Status = Status.NonPublished;
   @IsString({
     message: 'Thể loại không được để trống',
