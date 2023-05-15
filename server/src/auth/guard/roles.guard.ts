@@ -16,7 +16,6 @@ export class WithRoleGuard extends AuthGuard('jwt') {
     return true;
   }
   handleRequest(err: any, user: any, info: any) {
-    console.log('user', user);
     if (!this.role) {
       return user;
     }

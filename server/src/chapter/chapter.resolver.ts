@@ -85,7 +85,11 @@ export class ChapterResolver {
   }
   @Mutation(() => Chapter)
   @UseGuards(new WithRoleGuardGQL(Role.CREATOR))
-  async createChapter(@Args('input') input: CreateChapterDto) {
+  async createChapter(
+    @Args('input') input: CreateChapterDto,
+    @CurrentUser() user: UserPayload,
+  ) {
+    input.userId = user._id;
     return await this.chapterService.create(input);
   }
 }

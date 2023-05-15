@@ -50,7 +50,6 @@ export class WithRoleGuardGQL extends GrapqlMayBeNeedIdentityGuard {
   }
 
   handleRequest(err: any, user: any, info: any) {
-    console.log('user', user);
     if (!this.role) {
       return user;
     }

@@ -23,12 +23,15 @@ export class ChapterService {
     @Inject(forwardRef(() => ComicService))
     private readonly comicService: ComicService,
   ) {}
-  create(input: CreateChapterDto) {
+  async create(input: CreateChapterDto) {
     const isOwner = this.comicService.isOwner(input.userId, input.comicId);
     if (!isOwner) {
       throw new ForbiddenException('You are not owner of this comic');
     }
-    const order = Number(this.getLastedChapterByComicId(input.comicId)) + 1;
+    const order =
+      Number(
+        (await this.getLastedChapterByComicId(input.comicId))?.order ?? 0,
+      ) + 1;
     const chapter = new this.chapterModal({
       chapterNumber: input.chapterNumber,
       comic: {
