@@ -8,10 +8,11 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function ComicManage() {
     const user = useAppSelector(selectUserProfile);
-    const { data, error, loading } = useGetComicsCreatedByUserQuery({
+    const { data } = useGetComicsCreatedByUserQuery({
         variables: {
             userId: user?._id!,
         },
+        fetchPolicy: "no-cache",
     });
     const navigate = useNavigate();
     return (

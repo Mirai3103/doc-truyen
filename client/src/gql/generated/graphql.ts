@@ -75,6 +75,13 @@ export type CreateAuthorDto = {
   name: Scalars['String'];
 };
 
+export type CreateChapterDto = {
+  chapterNumber: Scalars['String'];
+  comicId: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  pages: Array<PageInput>;
+};
+
 export type CreateComicInput = {
   artistId?: InputMaybe<Scalars['String']>;
   authorId: Scalars['String'];
@@ -111,9 +118,11 @@ export type FindUserDto = {
 export type Mutation = {
   __typename?: 'Mutation';
   createAuthor: Author;
+  createChapter: Chapter;
   createComic: Comic;
   createTag: Tag;
   createUser: User;
+  deleteComic: Scalars['Boolean'];
   updateAuthor: Author;
   updateChaptersOrder: Array<Chapter>;
   updateComic: Comic;
@@ -124,6 +133,11 @@ export type Mutation = {
 
 export type MutationCreateAuthorArgs = {
   createAuthorInput: CreateAuthorDto;
+};
+
+
+export type MutationCreateChapterArgs = {
+  input: CreateChapterDto;
 };
 
 
@@ -139,6 +153,11 @@ export type MutationCreateTagArgs = {
 
 export type MutationCreateUserArgs = {
   createUserInput: CreateUserDto;
+};
+
+
+export type MutationDeleteComicArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -172,6 +191,11 @@ export type MutationUpdateUserArgs = {
 
 export type Page = {
   __typename?: 'Page';
+  order: Scalars['Float'];
+  url: Scalars['String'];
+};
+
+export type PageInput = {
   order: Scalars['Float'];
   url: Scalars['String'];
 };
@@ -329,6 +353,13 @@ export type User = {
   username: Scalars['String'];
 };
 
+export type CreateChapterMutationVariables = Exact<{
+  input: CreateChapterDto;
+}>;
+
+
+export type CreateChapterMutation = { __typename?: 'Mutation', createChapter: { __typename?: 'Chapter', order: number } };
+
 export type CreateComicMutationVariables = Exact<{
   input: CreateComicInput;
 }>;
@@ -350,6 +381,13 @@ export type UpdateChaptersOrderMutationVariables = Exact<{
 
 
 export type UpdateChaptersOrderMutation = { __typename?: 'Mutation', data: Array<{ __typename?: 'Chapter', order: number }> };
+
+export type DeleteComicMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteComicMutation = { __typename?: 'Mutation', deleteComic: boolean };
 
 export type GetAllChaptersQueryVariables = Exact<{
   comicId: Scalars['String'];
@@ -472,6 +510,39 @@ export type GetNewestQueryVariables = Exact<{
 export type GetNewestQuery = { __typename?: 'Query', getTrendingComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
 
 
+export const CreateChapterDocument = gql`
+    mutation createChapter($input: CreateChapterDto!) {
+  createChapter(input: $input) {
+    order
+  }
+}
+    `;
+export type CreateChapterMutationFn = Apollo.MutationFunction<CreateChapterMutation, CreateChapterMutationVariables>;
+
+/**
+ * __useCreateChapterMutation__
+ *
+ * To run a mutation, you first call `useCreateChapterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateChapterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createChapterMutation, { data, loading, error }] = useCreateChapterMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateChapterMutation(baseOptions?: Apollo.MutationHookOptions<CreateChapterMutation, CreateChapterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateChapterMutation, CreateChapterMutationVariables>(CreateChapterDocument, options);
+      }
+export type CreateChapterMutationHookResult = ReturnType<typeof useCreateChapterMutation>;
+export type CreateChapterMutationResult = Apollo.MutationResult<CreateChapterMutation>;
+export type CreateChapterMutationOptions = Apollo.BaseMutationOptions<CreateChapterMutation, CreateChapterMutationVariables>;
 export const CreateComicDocument = gql`
     mutation createComic($input: CreateComicInput!) {
   createComic(input: $input) {
@@ -572,6 +643,37 @@ export function useUpdateChaptersOrderMutation(baseOptions?: Apollo.MutationHook
 export type UpdateChaptersOrderMutationHookResult = ReturnType<typeof useUpdateChaptersOrderMutation>;
 export type UpdateChaptersOrderMutationResult = Apollo.MutationResult<UpdateChaptersOrderMutation>;
 export type UpdateChaptersOrderMutationOptions = Apollo.BaseMutationOptions<UpdateChaptersOrderMutation, UpdateChaptersOrderMutationVariables>;
+export const DeleteComicDocument = gql`
+    mutation deleteComic($id: String!) {
+  deleteComic(id: $id)
+}
+    `;
+export type DeleteComicMutationFn = Apollo.MutationFunction<DeleteComicMutation, DeleteComicMutationVariables>;
+
+/**
+ * __useDeleteComicMutation__
+ *
+ * To run a mutation, you first call `useDeleteComicMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteComicMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteComicMutation, { data, loading, error }] = useDeleteComicMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteComicMutation(baseOptions?: Apollo.MutationHookOptions<DeleteComicMutation, DeleteComicMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteComicMutation, DeleteComicMutationVariables>(DeleteComicDocument, options);
+      }
+export type DeleteComicMutationHookResult = ReturnType<typeof useDeleteComicMutation>;
+export type DeleteComicMutationResult = Apollo.MutationResult<DeleteComicMutation>;
+export type DeleteComicMutationOptions = Apollo.BaseMutationOptions<DeleteComicMutation, DeleteComicMutationVariables>;
 export const GetAllChaptersDocument = gql`
     query getAllChapters($comicId: String!) {
   getAllChapters(comicId: $comicId) {

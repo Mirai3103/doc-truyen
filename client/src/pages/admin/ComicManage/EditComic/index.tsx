@@ -2,6 +2,7 @@ import DragDropImage from "@/components/DragDropImage";
 import TextEditor from "@/components/TextEditor";
 import {
     CreateComicInput,
+    useDeleteComicMutation,
     useGetComicByIdQuery,
     useGetGeneralInfoQuery,
     useUpdateComicMutation,
@@ -10,7 +11,9 @@ import { useAppSelector } from "@/redux/hook";
 import { selectUserProfile } from "@/redux/userSplice";
 import { getBlob, getImageUrl, uploadImage } from "@/utils/imageUtils";
 import { Button, Flex, MultiSelect, Select, Stack, Text, TextInput, Title } from "@mantine/core";
+import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
+import { IconTrash } from "@tabler/icons-react";
 import React from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { useCreateComicForm } from "../CreateComic/useCreateComicForm";
@@ -36,14 +39,12 @@ export default function EditComicPage() {
     const [updateComicMutation, { data: updatedData, loading: updatedLoading, error: updatedError }] =
         useUpdateComicMutation();
     const navigate = useNavigate();
-    const {
-        data: dataComic,
-        loading,
-        error,
-    } = useGetComicByIdQuery({
+    const [deleteComicMutation] = useDeleteComicMutation();
+    const { data: dataComic } = useGetComicByIdQuery({
         variables: {
             id: comicId!,
         },
+        fetchPolicy: "no-cache",
     });
     const { setFieldValue, values: formValues, onSubmit: onFormSubmit } = useCreateComicForm();
     const { data } = useGetGeneralInfoQuery();
@@ -149,7 +150,7 @@ export default function EditComicPage() {
                 navigate("/admin/comic-manage/");
             }
         }
-    }, [dataComic, userProfile]);
+    }, [dataComic, navigate, userProfile]);
     React.useEffect(() => {
         if (updatedData) {
             notifications.show({
@@ -159,7 +160,7 @@ export default function EditComicPage() {
             });
             navigate(`/admin/comic-manage`);
         }
-    }, [updatedData]);
+    }, [navigate, updatedData]);
     if (!comicId) {
         notifications.show({
             title: "Lỗi",
@@ -168,6 +169,31 @@ export default function EditComicPage() {
         });
         return <Navigate to="/admin/comic-manage/" />;
     }
+    const onDeleteComic = async () => {
+        modals.openConfirmModal({
+            title: "Bạn có chắc muốn xóa truyện này?",
+            children: (
+                <Text size="sm">
+                    Truyện sẽ bị xóa vĩnh viễn và không thể khôi phục. Bạn có chắc chắn muốn xóa truyện này?
+                </Text>
+            ),
+            labels: { confirm: "Xóa", cancel: "Hủy" },
+            onCancel: () => console.log("Cancel"),
+            onConfirm: () => {
+                deleteComicMutation({
+                    variables: {
+                        id: comicId,
+                    },
+                });
+                navigate("/admin/comic-manage");
+                notifications.show({
+                    title: "Thành công",
+                    message: "Xóa truyện thành công",
+                    color: "green",
+                });
+            },
+        });
+    };
     return (
         <div className="p-2">
             <Flex justify={"space-between"}>
@@ -292,6 +318,11 @@ export default function EditComicPage() {
                         <Button type="submit" color="teal" variant="outline" radius="md">
                             Lưu
                         </Button>
+                        <div className="flex font-bold justify-end pt-10">
+                            <Button leftIcon={<IconTrash />} color="red" onClick={onDeleteComic}>
+                                Xóa
+                            </Button>
+                        </div>
                     </Stack>
                 </form>
             </Flex>

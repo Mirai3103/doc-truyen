@@ -14,3 +14,6 @@ mutation updateChaptersOrder($input: UpdateChaptersOrderInput!) {
         order
     }
 }
+mutation deleteComic($id: String!) {
+    deleteComic(id: $id)
+}

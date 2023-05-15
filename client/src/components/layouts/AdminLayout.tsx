@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/redux/hook";
-import { Role, isHasPermission, selectRole } from "@/redux/userSplice";
+import { Role, selectIsTriedToLogin, selectRole } from "@/redux/userSplice";
 import { Box, Flex, useMantineTheme } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { Navigate, Outlet } from "react-router-dom";
@@ -7,28 +7,20 @@ import { Footer } from "../Footer";
 import MyHeader from "../Header";
 import { SideBar } from "./SideBar";
 import { adminSection } from "./adminMenuItem";
+import FallBackLoader from "../FallbackLoader";
 
 export default function AdminLayout() {
     const { colorScheme } = useMantineTheme();
     const userRole = useAppSelector(selectRole);
-    const isCreator = isHasPermission(userRole, Role.CREATOR);
+    const isTriedToLogin = useAppSelector(selectIsTriedToLogin);
+
+    const isCreator = userRole >= Role.CREATOR;
+
+    if (!isTriedToLogin) {
+        return <FallBackLoader />;
+    }
     if (!isCreator) {
-        notifications.show({
-            title: "Không có quyền truy cập",
-            message: "Bạn không có quyền truy cập vào trang này",
-            color: "red",
-            autoClose: 6000,
-            styles: (theme) => ({
-                title: {
-                    fontSize: theme.fontSizes.xl,
-                    fontStyle: "700",
-                },
-                body: {
-                    fontSize: theme.fontSizes.lg,
-                },
-            }),
-        });
-        return <Navigate to="/" />;
+        return <Navigate to="/" replace />;
     }
     return (
         <Flex direction={"column"} w={"100vw"} h="100vh" className="overflow-hidden">

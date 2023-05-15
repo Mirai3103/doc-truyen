@@ -2,12 +2,15 @@
 https://docs.nestjs.com/providers#services
 */
 
+import { ChapterService } from '@/chapter/chapter.service';
 import { slugfy } from '@/common/utils';
 import { UserService } from '@/user/user.service';
 import {
   ForbiddenException,
+  Inject,
   Injectable,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
@@ -19,6 +22,8 @@ export class ComicService {
   constructor(
     @InjectModel(Comic.name) private readonly comicModal: Model<Comic>,
     private readonly userService: UserService,
+    @Inject(forwardRef(() => ChapterService))
+    private readonly chapterService: ChapterService,
   ) {}
   public async getAll() {
     return await this.comicModal.find();
@@ -205,5 +210,22 @@ export class ComicService {
         : null,
     });
     return comic;
+  }
+  async deleteComic(id: string | ObjectId, userId: string | ObjectId) {
+    const comic = await this.comicModal.findById(id);
+    if (!comic) {
+      throw new NotFoundException('Comic not found');
+    }
+    if (comic.createdBy._id.toString() !== userId.toString()) {
+      throw new ForbiddenException('You are not allowed to delete this comic');
+    }
+
+    await this.comicModal.remove({
+      _id: id,
+      createdBy: {
+        _id: userId,
+      },
+    });
+    await this.chapterService.deleteChapterOfComic(id);
   }
 }

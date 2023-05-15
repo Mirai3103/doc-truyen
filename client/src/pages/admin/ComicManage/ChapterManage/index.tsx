@@ -32,6 +32,7 @@ export default function ChapterManage() {
     const { data, loading, refetch } = useGetComicByIdQuery({ variables: { id: comicId! } });
     const { data: chapters, loading: chapterLoading } = useGetAllChaptersAdminQuery({
         variables: { comicId: comicId! },
+        fetchPolicy: "no-cache",
     });
     const navigate = useNavigate();
     const { classes } = useStyles();

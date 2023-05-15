@@ -141,4 +141,10 @@ export class ComicResolver {
     const result = await this.commicService.updateComic(id, input, user._id);
     return result;
   }
+  @Mutation(() => Boolean)
+  @UseGuards(new WithRoleGuardGQL(Role.CREATOR))
+  async deleteComic(@Args('id') id: string, @CurrentUser() user: UserPayload) {
+    await this.commicService.deleteComic(id, user._id);
+    return true;
+  }
 }

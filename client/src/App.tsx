@@ -1,4 +1,4 @@
-import { authLink } from "@/utils/axios";
+import { authLink, tryAuthenticate } from "@/utils/axios";
 // eslint-disable-next-line
 
 import { ApolloClient, ApolloLink, ApolloProvider, HttpLink, InMemoryCache } from "@apollo/client";
@@ -25,6 +25,7 @@ const client = new ApolloClient({
 });
 function App() {
     console.log(process.env);
+
     const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
     const toggleColorScheme = (value?: ColorScheme) =>
         setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
@@ -45,6 +46,7 @@ function App() {
                 },
             }),
         });
+        tryAuthenticate();
     }, []);
     return (
         <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>

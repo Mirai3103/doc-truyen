@@ -7,6 +7,7 @@ import { ComicService } from '@/comic/comic.service';
 import { Comic } from '@/comic/schema/comic.schema';
 import { CurrentUser } from '@/common/decorator/graphql-user.decorator';
 import { ReadingHistoryService } from '@/readingHistory/reading-history.service';
+import { Role } from '@/user/schema/user.schema';
 import { Inject, UseGuards } from '@nestjs/common';
 import {
   Args,
@@ -18,11 +19,9 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { ChapterService } from './chapter.service';
-import { Chapter } from './schema/chapter.schema';
-import UpdateChapterOrderInput from './dto/update-chapter-order';
-import { Role } from '@/user/schema/user.schema';
-import UpdateChaptersOrderInput from './dto/update-chapter-order';
 import CreateChapterDto from './dto/create-chapter';
+import UpdateChaptersOrderInput from './dto/update-chapter-order';
+import { Chapter } from './schema/chapter.schema';
 
 @Resolver(() => Chapter)
 export class ChapterResolver {
@@ -86,7 +85,7 @@ export class ChapterResolver {
   }
   @Mutation(() => Chapter)
   @UseGuards(new WithRoleGuardGQL(Role.CREATOR))
-  async updateChapterOrder(@Args('input') input: CreateChapterDto) {
+  async createChapter(@Args('input') input: CreateChapterDto) {
     return await this.chapterService.create(input);
   }
 }

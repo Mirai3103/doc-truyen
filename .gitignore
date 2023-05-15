@@ -16,6 +16,7 @@ server/uploads
 # OS
 .DS_Store
 dev.env
+.env
 # Tests
 coverage
 .nyc_output

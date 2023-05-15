@@ -35,15 +35,16 @@ export class FileService {
       });
     });
   }
-  public async saveFiles(
-    files: Array<Express.Multer.File>,
-  ): Promise<FilesUploadMapResult> {
-    const result: FilesUploadMapResult = {};
+  public async saveFiles(files: Array<Express.Multer.File>): Promise<string[]> {
+    const newFiles: string[] = [];
     files.forEach((file) => {
-      const { filename } = file;
-      result[file.fieldname] = filename;
+      const { mimetype } = file;
+      const ext = mimetype.split('/')[1];
+      const newFilename = `${randomUUID()}.${ext}`;
+      this.saveFileToDisk(file, newFilename);
+      newFiles.push(newFilename);
     });
-    return result;
+    return newFiles;
   }
   public async getImage(filename: string, width?: number, height?: number) {
     const dir = process.env.UPLOAD_PATH || 'uploads';

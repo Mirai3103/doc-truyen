@@ -18,6 +18,7 @@ import MainLayout from "../components/layouts/MainLayout";
 import ErrorPage from "../pages/error";
 import NotFoundPage from "../pages/error/404";
 import CreateChapter from "@/pages/admin/ComicManage/ChapterManage/Create";
+
 const CreateComicPage = React.lazy(() => import("@/pages/admin/ComicManage/CreateComic"));
 const ScrollToTopWrapper = ({ children }: { children: JSX.Element }) => {
     const location = useLocation();
@@ -31,6 +32,7 @@ const ScrollToTopWrapper = ({ children }: { children: JSX.Element }) => {
     }, [location, navigationType]);
     return children;
 };
+
 const routes = createBrowserRouter(
     [
         {
@@ -90,11 +92,9 @@ const routes = createBrowserRouter(
         {
             path: "/admin",
             element: (
-                <ScrollToTopWrapper>
-                    <Suspense fallback={<FallBackLoader />}>
-                        <AdminLayout />
-                    </Suspense>
-                </ScrollToTopWrapper>
+                <Suspense fallback={<FallBackLoader />}>
+                    <AdminLayout />
+                </Suspense>
             ),
             children: [
                 {

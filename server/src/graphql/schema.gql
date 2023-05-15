@@ -104,11 +104,12 @@ input FindUserDto {
 
 type Mutation {
   createAuthor(createAuthorInput: CreateAuthorDto!): Author!
+  createChapter(input: CreateChapterDto!): Chapter!
   createComic(input: CreateComicInput!): Comic!
   createTag(createTagInput: CreateTagDto!): Tag!
   createUser(createUserInput: CreateUserDto!): User!
+  deleteComic(id: String!): Boolean!
   updateAuthor(id: String!, updateAuthorInput: UpdateAuthorDto!): Author!
-  updateChapterOrder(input: CreateChapterDto!): Chapter!
   updateChaptersOrder(input: UpdateChaptersOrderInput!): [Chapter!]!
   updateComic(id: String!, input: CreateComicInput!): Comic!
   updateTag(id: String!, updateTagInput: UpdateTagDto!): Tag!

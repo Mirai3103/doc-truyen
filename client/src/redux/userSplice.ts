@@ -19,6 +19,7 @@ interface UserState {
     isAuthenticated: boolean;
     accessToken: string;
     refreshToken: string;
+    isTriedToLogin: boolean;
 }
 
 const initialState: UserState = {
@@ -26,6 +27,7 @@ const initialState: UserState = {
     isAuthenticated: false,
     accessToken: "",
     refreshToken: localStorage.getItem("refreshToken") || "",
+    isTriedToLogin: false,
 };
 
 export const userSlice = createSlice({
@@ -37,7 +39,9 @@ export const userSlice = createSlice({
             state.refreshToken = action.payload.refreshToken;
             state.isAuthenticated = false;
             localStorage.setItem("refreshToken", action.payload.refreshToken);
+               state.isTriedToLogin = true;
             if (state.accessToken === "") return;
+            
             const userProfile = jwtDecode(action.payload.accessToken) as JwtPayload;
             state.userProfile = {
                 _id: userProfile.sub,
@@ -48,6 +52,7 @@ export const userSlice = createSlice({
                 role: userProfile.role,
             };
             state.isAuthenticated = true;
+             state.isTriedToLogin = true;
         },
         setAccessToken: (state, action: PayloadAction<string>) => {
             state.accessToken = action.payload;
@@ -64,6 +69,9 @@ export const userSlice = createSlice({
             };
             state.isAuthenticated = true;
         },
+        setIsTriedToLogin: (state, action: PayloadAction<boolean>) => {
+            state.isTriedToLogin = action.payload;
+        }
     },
 });
 
@@ -72,9 +80,9 @@ export const selectRole = (state: RootState) => state.user.userProfile?.role || 
 export const selectUser = (state: RootState) => state.user;
 export const selectUserProfile = (state: RootState) => state.user.userProfile;
 export const selectIsAuthenticated = (state: RootState) => state.user.isAuthenticated;
-export const isHasPermission = (userRole: Role, requiredRole: Role) => userRole >= requiredRole;
 export const selectRefreshToken = (state: RootState) => state.user.refreshToken;
 export const selectAccessToken = (state: RootState) => state.user.accessToken;
+export const selectIsTriedToLogin = (state: RootState) => state.user.isTriedToLogin;
 interface JwtPayload {
     username: string;
     sub: string;

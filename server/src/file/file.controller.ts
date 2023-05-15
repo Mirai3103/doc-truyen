@@ -6,7 +6,6 @@ import { WithRoleGuard } from '@/auth/guard/roles.guard';
 import { Role } from '@/user/schema/user.schema';
 import {
   Controller,
-  Get,
   Param,
   Post,
   Query,
@@ -16,29 +15,37 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { FileService } from './file.service';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
+import { CloudinaryService } from './cloudinary/cloudinary.service';
+import { FileService } from './file.service';
 
 @Controller('file')
 export class FileController {
-  constructor(private readonly fileService: FileService) {}
+  constructor(
+    private readonly fileService: FileService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   @UseGuards(new WithRoleGuard(Role.CREATOR))
   public async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    const result = await this.fileService.saveFile(file);
+    const result = await this.cloudinaryService.uploadFile(file);
     return {
-      url: result,
+      url: result.secure_url,
     };
   }
   @Post('uploads')
+  @UseInterceptors(FilesInterceptor('files'))
   // @UseGuards(new WithRoleGuard(Role.CREATOR))
   public async uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
-    const result = await this.fileService.saveFiles(files);
-    return result;
+    // const result = await this.fileService.saveFiles(files);
+    const result = await this.cloudinaryService.uploadFiles(files);
+
+    return result.map((item) => ({
+      url: item.secure_url,
+    }));
   }
-  @Get('image/:filename')
   public async getFile(
     @Param('filename') filename: string,
     @Res() res: Response,

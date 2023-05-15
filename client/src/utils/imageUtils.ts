@@ -31,3 +31,16 @@ export const getBlob = async (url: string) => {
     });
     return blob;
 };
+
+export const uploadImages = async (files: File[]) => {
+    const formData = new FormData();
+    files.forEach((file) => {
+        formData.append("files", file);
+    });
+    const response = await api.post(`${SERVER_URL}/file/uploads`, formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+    return response.data as string[];
+};

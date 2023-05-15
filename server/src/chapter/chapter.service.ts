@@ -2,18 +2,25 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { ForbiddenException, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId, Schema } from 'mongoose';
-import { Chapter } from './schema/chapter.schema';
-import { ChapterOrder } from './dto/update-chapter-order';
-import CreateChapterDto from './dto/create-chapter';
 import { ComicService } from '@/comic/comic.service';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+
+import { Model, ObjectId, Schema } from 'mongoose';
+import CreateChapterDto from './dto/create-chapter';
+import { ChapterOrder } from './dto/update-chapter-order';
+import { Chapter } from './schema/chapter.schema';
 
 @Injectable()
 export class ChapterService {
   constructor(
     @InjectModel(Chapter.name) private readonly chapterModal: Model<Chapter>,
+    @Inject(forwardRef(() => ComicService))
     private readonly comicService: ComicService,
   ) {}
   create(input: CreateChapterDto) {
@@ -107,5 +114,12 @@ export class ChapterService {
       this.updateChapterOrder(chapterOrderInput.id, chapterOrderInput.order),
     );
     return await Promise.all(promises);
+  }
+  public async deleteChapterOfComic(comicId: string | ObjectId) {
+    return await this.chapterModal.deleteMany({
+      comic: {
+        _id: comicId,
+      },
+    });
   }
 }

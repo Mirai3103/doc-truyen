@@ -21,12 +21,13 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
+    
     (response) => {
         return response;
     },
     async (error) => {
         const originalRequest = error.config;
-        if (error.response.status === 401 && !store.getState().user.isAuthenticated) {
+        if (error.response.status === 401 && !store.getState().user.isAuthenticated && store.getState().user.isTriedToLogin) {
             return Promise.reject(error);
         }
         if (error.response.status === 401 && !originalRequest._retry) {
@@ -35,7 +36,7 @@ api.interceptors.response.use(
                 accessTokenPromise = reNewAccessToken();
             }
             const accessToken = await accessTokenPromise;
-            store.dispatch(setAccessToken(accessToken));
+            store.dispatch(setToken({ accessToken, refreshToken:store.getState().user.refreshToken }));
             accessTokenPromise = null;
             return api(originalRequest);
         }
@@ -45,6 +46,7 @@ api.interceptors.response.use(
 
 const reNewAccessToken = async () => {
     const refreshToken = store.getState().user.refreshToken;
+ 
     try {
         const response = await axios.post(
             `${process.env.VITE_SERVER_URL || "http://localhost:3000"}/auth/getNewAccessToken`,
@@ -57,8 +59,6 @@ const reNewAccessToken = async () => {
         console.log(e);
         if (e.response.status === 401) {
             localStorage.removeItem("refreshToken");
-
-            window.location.reload();
             store.dispatch(
                 setToken({
                     accessToken: "",
@@ -82,18 +82,18 @@ const authLink = setContext(async (_, { headers }) => {
             },
         };
     }
-    let isVaild = false;
+    let isValid = false;
     try {
         const { exp } = jwtDecode(token) as any;
         if (Date.now() >= exp * 1000) {
-            isVaild = false;
+            isValid = false;
         } else {
-            isVaild = true;
+            isValid = true;
         }
     } catch {
-        isVaild = false;
+        isValid = false;
     }
-    if (isVaild) {
+    if (isValid) {
         return {
             headers: {
                 ...headers,
@@ -115,5 +115,9 @@ const authLink = setContext(async (_, { headers }) => {
         };
     }
 });
+const tryAuthenticate = async () => {
+    const res =await api.get("/auth/profile");
+    console.log(res);
+};
+export { authLink, api, tryAuthenticate };
 
-export { authLink, api };
