@@ -29,6 +29,9 @@ export class AuthorService {
   async findAll(): Promise<AuthorDocument[]> {
     return this.authorModel.find().exec();
   }
+  async delete(id: string) {
+    this.authorModel.deleteOne({ _id: id }).exec();
+  }
   async findOne(id: string): Promise<AuthorDocument | null> {
     return this.authorModel
       .findOne({

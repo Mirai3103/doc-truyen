@@ -29,8 +29,12 @@ export class ReadingHistoryService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
+    if (!user.readingHistories) {
+      user.readingHistories = [];
+    }
+
     const existed = user.readingHistories.find(
-      (history) => history.chapter._id === chapter._id,
+      (history) => history.chapter?._id || null === chapter?._id || null,
     );
     if (existed) {
       existed.createdAt = new Date();
@@ -61,7 +65,7 @@ export class ReadingHistoryService {
 
     user.readingHistories.push({
       createdAt: new Date(),
-      chapter,
+      chapter: chapter,
     });
     if (user.readingHistories.length > 200) {
       user.readingHistories.shift();

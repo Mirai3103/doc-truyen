@@ -53,6 +53,7 @@ function DragDropImage({
         setIsOpenedCroper(false);
         setFile(null);
         setCroppedImage(null);
+        onChange && onChange(null);
     };
     React.useEffect(() => {
         if (croppedImage && rawImageUrl !== "") {

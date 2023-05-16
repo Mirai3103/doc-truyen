@@ -55,4 +55,9 @@ export class AuthorResolver {
     );
     return result;
   }
+  @Mutation(() => Boolean)
+  async deleteAuthor(@Args('id') id: string) {
+    await this.authorService.delete(id);
+    return true;
+  }
 }

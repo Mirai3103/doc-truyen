@@ -1,38 +1,43 @@
-import { useCreateAuthorMutation } from "@/gql/generated/graphql";
+import { useUpdateAuthorMutation } from "@/gql/generated/graphql";
 import { Button, Group, Modal, TextInput, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { useCallback } from "react";
+import React, { useCallback } from "react";
 
 interface Props {
     opened: boolean;
     close: () => void;
+    onSaved: () => void;
+    author?: ({ _id: string } & IAuthorCreateDTO) | null;
 }
 
-export default function CreateAuthorModal({ opened, close }: Props) {
+export default function UpdateAuthorModal({ opened, close, onSaved, author }: Props) {
     const { values, setFieldValue, onSubmit } = useForm<IAuthorCreateDTO>({
-        initialValues: {
+        initialValues: author || {
             name: "",
             description: "",
         },
     });
-    const [createAuthor, { loading, data, error }] = useCreateAuthorMutation();
+    const [updateAuthor, { loading, data, error }] = useUpdateAuthorMutation();
     const onSubmitHandler = useCallback(
         async (formValue: IAuthorCreateDTO) => {
             try {
-                await createAuthor({
+                await updateAuthor({
                     variables: {
-                        createAuthorInput: {
+                        UpdateAuthorInput: {
                             name: formValue.name,
                             description: formValue.description,
                         },
+                        id: author?._id || "",
                     },
                 });
+                console.log(data);
                 notifications.show({
-                    message: "Tạo tác giả thành công",
+                    message: "Cập tác giả thành công",
                     title: "Thành công",
                     color: "teal",
                 });
+                onSaved();
                 close();
             } catch (e) {
                 notifications.show({
@@ -42,11 +47,14 @@ export default function CreateAuthorModal({ opened, close }: Props) {
                 });
             }
         },
-        [close, createAuthor]
+        [author?._id, close, onSaved, updateAuthor]
     );
-
+    React.useEffect(() => {
+        setFieldValue("name", author?.name || "");
+        setFieldValue("description", author?.description || "");
+    }, [author?.description, author?.name, setFieldValue]);
     return (
-        <Modal opened={opened} onClose={close} title="Tạo tác giả mới" centered>
+        <Modal opened={opened} onClose={close} title="Cập nhật tác giả " centered>
             <form className="flex gap-3 flex-col" onSubmit={onSubmit(onSubmitHandler)}>
                 <TextInput
                     label="Tên tác giả"
@@ -65,7 +73,7 @@ export default function CreateAuthorModal({ opened, close }: Props) {
                         Hủy
                     </Button>
                     <Button color="blue" type="submit" loading={loading}>
-                        Tạo
+                        Cập nhật
                     </Button>
                 </Group>
             </form>

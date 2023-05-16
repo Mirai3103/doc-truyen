@@ -108,6 +108,7 @@ type Mutation {
   createComic(input: CreateComicInput!): Comic!
   createTag(createTagInput: CreateTagDto!): Tag!
   createUser(createUserInput: CreateUserDto!): User!
+  deleteAuthor(id: String!): Boolean!
   deleteComic(id: String!): Boolean!
   updateAuthor(id: String!, updateAuthorInput: UpdateAuthorDto!): Author!
   updateChaptersOrder(input: UpdateChaptersOrderInput!): [Chapter!]!
@@ -154,7 +155,7 @@ type QueryAuthorsDTO {
 }
 
 type ReadingHistory {
-  chapter: Chapter!
+  chapter: Chapter
   comic: Comic!
   createdAt: DateTime!
 }
@@ -162,7 +163,7 @@ type ReadingHistory {
 type Tag {
   _id: String!
   createdAt: DateTime!
-  description: String!
+  description: String
   name: String!
   slug: String!
   type: String!

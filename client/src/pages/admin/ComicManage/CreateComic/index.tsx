@@ -184,7 +184,14 @@ export default function CreateComicPage() {
                             <Text size={"sm"}>Mô tả: </Text>
                             <TextEditor value={formValues.description} onChange={onDescriptionChange}></TextEditor>
                         </Stack>
-                        <Button type="submit" color="teal" variant="outline" radius="md">
+                        <Button
+                            type="submit"
+                            color="teal"
+                            variant="outline"
+                            radius="md"
+                            disabled={createLoading}
+                            loading={createLoading}
+                        >
                             Đăng truyện
                         </Button>
                     </Stack>

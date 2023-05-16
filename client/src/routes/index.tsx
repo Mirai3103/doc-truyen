@@ -8,6 +8,7 @@ import ComicManage from "@/pages/admin/ComicManage";
 import ChapterManage from "@/pages/admin/ComicManage/ChapterManage";
 import CreateChapter from "@/pages/admin/ComicManage/ChapterManage/Create";
 import EditComicPage from "@/pages/admin/ComicManage/EditComic";
+import TagManagePage from "@/pages/admin/TagManage";
 import LoginPage from "@/pages/auth";
 import Callback from "@/pages/auth/callback";
 import ChapterPage from "@/pages/chapter";
@@ -141,6 +142,10 @@ const routes = createBrowserRouter(
                 {
                     path: "author-manage",
                     element: <AuthorManagePage />,
+                },
+                {
+                    path: "tag-management",
+                    element: <TagManagePage />,
                 },
             ],
         },

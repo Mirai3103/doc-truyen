@@ -9,7 +9,7 @@ export class ReadingHistory {
   @Field(() => Date)
   @Prop()
   createdAt: Date = new Date();
-  @Field(() => Chapter)
+  @Field(() => Chapter, { nullable: true })
   @Prop({
     type: mongoose.Types.ObjectId,
     ref: 'Chapter',

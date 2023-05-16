@@ -1,89 +1,66 @@
-import { useSearchAuthorQuery } from "@/gql/generated/graphql";
+import { useFindAllTagQuery } from "@/gql/generated/graphql";
 import { useAppSelector } from "@/redux/hook";
 import { selectRole } from "@/redux/userSplice";
-import { Button, Flex, Loader, Menu, Pagination, Stack, Table, TextInput, Title, Tooltip } from "@mantine/core";
-import { useDebouncedState, useDisclosure, usePagination } from "@mantine/hooks";
+import { Button, Flex, Loader, Menu, Stack, Table, TextInput, Title, Tooltip } from "@mantine/core";
+import { useDebouncedState, useDisclosure } from "@mantine/hooks";
 import { IconDots, IconEdit, IconTrash } from "@tabler/icons-react";
 import React, { useCallback } from "react";
-import CreateAuthorModal from "./CreateAuthorModal";
-import UpdateAuthorModal from "./UpdateAuthorModal";
+import CreateTagModal from "./CreateTagModal";
+import UpdateTagModal from "./UpdateTagModal";
 
-export default function AuthorManagePage() {
-    const { active, setPage } = usePagination({ total: 100, initialPage: 1 });
+export default function TagManagePage() {
     const [search, setSearch] = useDebouncedState("", 1000);
     const [opened, { open, close }] = useDisclosure(false);
     const [openedUpdateModal, { open: openUpdateModal, close: closeUpdateModal }] = useDisclosure(false);
-    const [selectedAuthor, setSelectedAuthor] = React.useState<{
+
+    const [selectedTag, setSelectedTag] = React.useState<{
         _id: string;
         name: string;
         description: string;
     } | null>(null);
-    const { data, loading, error, refetch } = useSearchAuthorQuery({
-        variables: {
-            page: active,
-            limit: 20,
-            keyword: search,
-        },
-    });
+    const { data, loading, error, refetch } = useFindAllTagQuery({});
     const userRole = useAppSelector(selectRole);
-    const totalPage = Math.ceil((data?.searchAuthor?.count || 20) / 20);
-    const handleSearch = useCallback(
-        (e: React.ChangeEvent<HTMLInputElement>) => {
-            setSearch(e.currentTarget.value);
-        },
-        [setSearch]
-    );
-    React.useEffect(() => {
-        refetch({
-            keyword: search,
-            page: active,
-            limit: 20,
-        });
-    }, [active, data, refetch, search]);
+    const filterData = React.useMemo(() => {
+        if (!data) return [];
+        return data.tags.filter((tag) => tag.name.toLowerCase().includes(search.toLowerCase()));
+    }, [data, search]);
+
     const onSaved = useCallback(() => {
-        refetch({
-            keyword: search,
-            page: active,
-            limit: 20,
-        });
-    }, [active, refetch, search]);
+        refetch();
+    }, [refetch]);
     return (
         <Stack className="p-2">
             <Flex>
-                <Title order={2}>Quản lý tác giả</Title>
+                <Title order={2}>Quản lý tag</Title>
                 <div className="ml-auto">
                     <Button size="md" color="teal" onClick={open}>
-                        Tạo tác giả mới
+                        Tạo tag mới
                     </Button>
-                    <CreateAuthorModal opened={opened} close={close} />
+                    <CreateTagModal opened={opened} close={close} />
                 </div>
             </Flex>
-            <UpdateAuthorModal
-                onSaved={onSaved}
-                author={selectedAuthor}
-                opened={openedUpdateModal}
-                close={closeUpdateModal}
-            />
+            <UpdateTagModal onSaved={onSaved} tag={selectedTag} opened={openedUpdateModal} close={closeUpdateModal} />
 
             <Stack spacing={"lg"}>
                 <Flex justify={"center"}>
                     <TextInput
-                        onChange={handleSearch}
+                        onChange={(e) => setSearch(e.currentTarget.value)}
                         defaultValue={search}
                         className="grow shrink"
                         maw={500}
-                        label="Tìm kiếm tác giả"
+                        label="Tìm kiếm tag"
                         placeholder="Theo tên"
                     />
                 </Flex>
                 <Title order={4} ml={"sm"}>
-                    Danh sách tác giả
+                    Danh sách tag
                 </Title>
 
                 <Table fontSize={"md"} striped highlightOnHover withBorder withColumnBorders>
                     <thead>
                         <tr>
                             <th>Tên</th>
+                            <td>Loại</td>
                             <th>Slug</th>
                             <th>Giới thiệu</th>
                             <th></th>
@@ -97,24 +74,25 @@ export default function AuthorManagePage() {
                                 </td>
                             </tr>
                         ) : (
-                            data?.searchAuthor?.authors?.map((author) => (
+                            filterData.map((tag) => (
                                 <tr
-                                    key={author._id}
+                                    key={tag._id}
                                     onClick={() =>
-                                        setSelectedAuthor({
-                                            ...author,
-                                            description: author.description || "",
+                                        setSelectedTag({
+                                            ...tag,
+                                            description: tag.description || "",
                                         })
                                     }
                                 >
-                                    <td>{author.name}</td>
-                                    <td>{author.slug}</td>
+                                    <td>{tag.name}</td>
+                                    <td>{tag.type}</td>
+                                    <td>{tag.slug}</td>
                                     <td>
-                                        <Tooltip label={author.description || ""} position="bottom">
+                                        <Tooltip label={tag.description || ""} position="bottom">
                                             <span>
-                                                {author.description?.length || 0 > 40
-                                                    ? author.description?.slice(0, 40) + "..."
-                                                    : author.description}
+                                                {tag.description?.length || 0 > 40
+                                                    ? tag.description?.slice(0, 40) + "..."
+                                                    : tag.description}
                                             </span>
                                         </Tooltip>
                                     </td>
@@ -143,9 +121,6 @@ export default function AuthorManagePage() {
                         )}
                     </tbody>
                 </Table>
-                <Flex justify={"center"}>
-                    <Pagination total={totalPage} value={active} onChange={setPage} />
-                </Flex>
             </Stack>
         </Stack>
     );

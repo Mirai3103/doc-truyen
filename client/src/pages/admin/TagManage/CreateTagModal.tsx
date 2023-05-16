@@ -1,4 +1,4 @@
-import { useCreateAuthorMutation } from "@/gql/generated/graphql";
+import { useCreateTagMutation } from "@/gql/generated/graphql";
 import { Button, Group, Modal, TextInput, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
@@ -9,20 +9,20 @@ interface Props {
     close: () => void;
 }
 
-export default function CreateAuthorModal({ opened, close }: Props) {
-    const { values, setFieldValue, onSubmit } = useForm<IAuthorCreateDTO>({
+export default function CreateTagModal({ opened, close }: Props) {
+    const { values, setFieldValue, onSubmit } = useForm<ITagCreateDTO>({
         initialValues: {
             name: "",
             description: "",
         },
     });
-    const [createAuthor, { loading, data, error }] = useCreateAuthorMutation();
+    const [createTag, { loading, data, error }] = useCreateTagMutation();
     const onSubmitHandler = useCallback(
-        async (formValue: IAuthorCreateDTO) => {
+        async (formValue: ITagCreateDTO) => {
             try {
-                await createAuthor({
+                await createTag({
                     variables: {
-                        createAuthorInput: {
+                        createTagInput: {
                             name: formValue.name,
                             description: formValue.description,
                         },
@@ -42,7 +42,7 @@ export default function CreateAuthorModal({ opened, close }: Props) {
                 });
             }
         },
-        [close, createAuthor]
+        [close, createTag]
     );
 
     return (
@@ -72,7 +72,7 @@ export default function CreateAuthorModal({ opened, close }: Props) {
         </Modal>
     );
 }
-interface IAuthorCreateDTO {
+interface ITagCreateDTO {
     name: string;
     description: string;
 }

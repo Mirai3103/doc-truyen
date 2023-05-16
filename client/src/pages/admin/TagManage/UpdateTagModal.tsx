@@ -1,55 +1,63 @@
-import { useCreateAuthorMutation } from "@/gql/generated/graphql";
+import { useUpdateTagMutation } from "@/gql/generated/graphql";
 import { Button, Group, Modal, TextInput, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { useCallback } from "react";
+import React, { useCallback } from "react";
 
 interface Props {
     opened: boolean;
     close: () => void;
+    onSaved: () => void;
+    tag?: ({ _id: string } & ITagCreateDTO) | null;
 }
 
-export default function CreateAuthorModal({ opened, close }: Props) {
-    const { values, setFieldValue, onSubmit } = useForm<IAuthorCreateDTO>({
-        initialValues: {
+export default function UpdateTagModal({ opened, close, onSaved, tag }: Props) {
+    const { values, setFieldValue, onSubmit } = useForm<ITagCreateDTO>({
+        initialValues: tag || {
             name: "",
             description: "",
         },
     });
-    const [createAuthor, { loading, data, error }] = useCreateAuthorMutation();
+    const [updateTag, { loading, data, error }] = useUpdateTagMutation();
     const onSubmitHandler = useCallback(
-        async (formValue: IAuthorCreateDTO) => {
+        async (formValue: ITagCreateDTO) => {
             try {
-                await createAuthor({
+                await updateTag({
                     variables: {
-                        createAuthorInput: {
+                        UpdateTagInput: {
                             name: formValue.name,
                             description: formValue.description,
                         },
+                        id: tag?._id || "",
                     },
                 });
+                console.log(data);
                 notifications.show({
-                    message: "Tạo tác giả thành công",
+                    message: "Cập tag thành công",
                     title: "Thành công",
                     color: "teal",
                 });
+                onSaved();
                 close();
             } catch (e) {
                 notifications.show({
-                    message: "Tạo tác giả thất bại",
+                    message: "Tạo tag thất bại",
                     title: "Lỗi",
                     color: "red",
                 });
             }
         },
-        [close, createAuthor]
+        [updateTag, tag?._id, data, onSaved, close]
     );
-
+    React.useEffect(() => {
+        setFieldValue("name", tag?.name || "");
+        setFieldValue("description", tag?.description || "");
+    }, [tag?.description, tag?.name, setFieldValue]);
     return (
-        <Modal opened={opened} onClose={close} title="Tạo tác giả mới" centered>
+        <Modal opened={opened} onClose={close} title="Cập nhật tag " centered>
             <form className="flex gap-3 flex-col" onSubmit={onSubmit(onSubmitHandler)}>
                 <TextInput
-                    label="Tên tác giả"
+                    label="Tên tag"
                     value={values.name}
                     onChange={(e) => setFieldValue("name", e.currentTarget.value)}
                 />
@@ -65,14 +73,14 @@ export default function CreateAuthorModal({ opened, close }: Props) {
                         Hủy
                     </Button>
                     <Button color="blue" type="submit" loading={loading}>
-                        Tạo
+                        Cập nhật
                     </Button>
                 </Group>
             </form>
         </Modal>
     );
 }
-interface IAuthorCreateDTO {
+interface ITagCreateDTO {
     name: string;
     description: string;
 }

@@ -122,6 +122,7 @@ export type Mutation = {
   createComic: Comic;
   createTag: Tag;
   createUser: User;
+  deleteAuthor: Scalars['Boolean'];
   deleteComic: Scalars['Boolean'];
   updateAuthor: Author;
   updateChaptersOrder: Array<Chapter>;
@@ -153,6 +154,11 @@ export type MutationCreateTagArgs = {
 
 export type MutationCreateUserArgs = {
   createUserInput: CreateUserDto;
+};
+
+
+export type MutationDeleteAuthorArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -309,7 +315,7 @@ export type QueryAuthorsDto = {
 
 export type ReadingHistory = {
   __typename?: 'ReadingHistory';
-  chapter: Chapter;
+  chapter?: Maybe<Chapter>;
   comic: Comic;
   createdAt: Scalars['DateTime'];
 };
@@ -367,6 +373,28 @@ export type User = {
   username: Scalars['String'];
 };
 
+export type CreateAuthorMutationVariables = Exact<{
+  createAuthorInput: CreateAuthorDto;
+}>;
+
+
+export type CreateAuthorMutation = { __typename?: 'Mutation', createAuthor: { __typename?: 'Author', slug: string } };
+
+export type UpdateAuthorMutationVariables = Exact<{
+  UpdateAuthorInput: UpdateAuthorDto;
+  id: Scalars['String'];
+}>;
+
+
+export type UpdateAuthorMutation = { __typename?: 'Mutation', updateAuthor: { __typename?: 'Author', slug: string, _id: string, name: string, description?: string | null } };
+
+export type DeleteAuthorMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteAuthorMutation = { __typename?: 'Mutation', deleteAuthor: boolean };
+
 export type CreateChapterMutationVariables = Exact<{
   input: CreateChapterDto;
 }>;
@@ -402,6 +430,21 @@ export type DeleteComicMutationVariables = Exact<{
 
 
 export type DeleteComicMutation = { __typename?: 'Mutation', deleteComic: boolean };
+
+export type CreateTagMutationVariables = Exact<{
+  createTagInput: CreateTagDto;
+}>;
+
+
+export type CreateTagMutation = { __typename?: 'Mutation', createTag: { __typename?: 'Tag', slug: string } };
+
+export type UpdateTagMutationVariables = Exact<{
+  UpdateTagInput: UpdateTagDto;
+  id: Scalars['String'];
+}>;
+
+
+export type UpdateTagMutation = { __typename?: 'Mutation', updateTag: { __typename?: 'Tag', slug: string, _id: string, name: string, description: string } };
 
 export type SearchAuthorQueryVariables = Exact<{
   keyword?: InputMaybe<Scalars['String']>;
@@ -489,6 +532,11 @@ export type GetTopComicsQueryVariables = Exact<{
 
 export type GetTopComicsQuery = { __typename?: 'Query', getTopComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string } }> };
 
+export type FindAllTagQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FindAllTagQuery = { __typename?: 'Query', tags: Array<{ __typename?: 'Tag', _id: string, name: string, slug: string, type: string, description: string }> };
+
 export type GetTrendingComicsQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Float']>;
   limit?: InputMaybe<Scalars['Float']>;
@@ -538,6 +586,107 @@ export type GetNewestQueryVariables = Exact<{
 export type GetNewestQuery = { __typename?: 'Query', getTrendingComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
 
 
+export const CreateAuthorDocument = gql`
+    mutation createAuthor($createAuthorInput: CreateAuthorDto!) {
+  createAuthor(createAuthorInput: $createAuthorInput) {
+    slug
+  }
+}
+    `;
+export type CreateAuthorMutationFn = Apollo.MutationFunction<CreateAuthorMutation, CreateAuthorMutationVariables>;
+
+/**
+ * __useCreateAuthorMutation__
+ *
+ * To run a mutation, you first call `useCreateAuthorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAuthorMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAuthorMutation, { data, loading, error }] = useCreateAuthorMutation({
+ *   variables: {
+ *      createAuthorInput: // value for 'createAuthorInput'
+ *   },
+ * });
+ */
+export function useCreateAuthorMutation(baseOptions?: Apollo.MutationHookOptions<CreateAuthorMutation, CreateAuthorMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateAuthorMutation, CreateAuthorMutationVariables>(CreateAuthorDocument, options);
+      }
+export type CreateAuthorMutationHookResult = ReturnType<typeof useCreateAuthorMutation>;
+export type CreateAuthorMutationResult = Apollo.MutationResult<CreateAuthorMutation>;
+export type CreateAuthorMutationOptions = Apollo.BaseMutationOptions<CreateAuthorMutation, CreateAuthorMutationVariables>;
+export const UpdateAuthorDocument = gql`
+    mutation UpdateAuthor($UpdateAuthorInput: UpdateAuthorDto!, $id: String!) {
+  updateAuthor(updateAuthorInput: $UpdateAuthorInput, id: $id) {
+    slug
+    _id
+    name
+    description
+  }
+}
+    `;
+export type UpdateAuthorMutationFn = Apollo.MutationFunction<UpdateAuthorMutation, UpdateAuthorMutationVariables>;
+
+/**
+ * __useUpdateAuthorMutation__
+ *
+ * To run a mutation, you first call `useUpdateAuthorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAuthorMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAuthorMutation, { data, loading, error }] = useUpdateAuthorMutation({
+ *   variables: {
+ *      UpdateAuthorInput: // value for 'UpdateAuthorInput'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUpdateAuthorMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAuthorMutation, UpdateAuthorMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateAuthorMutation, UpdateAuthorMutationVariables>(UpdateAuthorDocument, options);
+      }
+export type UpdateAuthorMutationHookResult = ReturnType<typeof useUpdateAuthorMutation>;
+export type UpdateAuthorMutationResult = Apollo.MutationResult<UpdateAuthorMutation>;
+export type UpdateAuthorMutationOptions = Apollo.BaseMutationOptions<UpdateAuthorMutation, UpdateAuthorMutationVariables>;
+export const DeleteAuthorDocument = gql`
+    mutation deleteAuthor($id: String!) {
+  deleteAuthor(id: $id)
+}
+    `;
+export type DeleteAuthorMutationFn = Apollo.MutationFunction<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
+
+/**
+ * __useDeleteAuthorMutation__
+ *
+ * To run a mutation, you first call `useDeleteAuthorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAuthorMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAuthorMutation, { data, loading, error }] = useDeleteAuthorMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteAuthorMutation(baseOptions?: Apollo.MutationHookOptions<DeleteAuthorMutation, DeleteAuthorMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteAuthorMutation, DeleteAuthorMutationVariables>(DeleteAuthorDocument, options);
+      }
+export type DeleteAuthorMutationHookResult = ReturnType<typeof useDeleteAuthorMutation>;
+export type DeleteAuthorMutationResult = Apollo.MutationResult<DeleteAuthorMutation>;
+export type DeleteAuthorMutationOptions = Apollo.BaseMutationOptions<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
 export const CreateChapterDocument = gql`
     mutation createChapter($input: CreateChapterDto!) {
   createChapter(input: $input) {
@@ -702,6 +851,76 @@ export function useDeleteComicMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteComicMutationHookResult = ReturnType<typeof useDeleteComicMutation>;
 export type DeleteComicMutationResult = Apollo.MutationResult<DeleteComicMutation>;
 export type DeleteComicMutationOptions = Apollo.BaseMutationOptions<DeleteComicMutation, DeleteComicMutationVariables>;
+export const CreateTagDocument = gql`
+    mutation createTag($createTagInput: CreateTagDto!) {
+  createTag(createTagInput: $createTagInput) {
+    slug
+  }
+}
+    `;
+export type CreateTagMutationFn = Apollo.MutationFunction<CreateTagMutation, CreateTagMutationVariables>;
+
+/**
+ * __useCreateTagMutation__
+ *
+ * To run a mutation, you first call `useCreateTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTagMutation, { data, loading, error }] = useCreateTagMutation({
+ *   variables: {
+ *      createTagInput: // value for 'createTagInput'
+ *   },
+ * });
+ */
+export function useCreateTagMutation(baseOptions?: Apollo.MutationHookOptions<CreateTagMutation, CreateTagMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTagMutation, CreateTagMutationVariables>(CreateTagDocument, options);
+      }
+export type CreateTagMutationHookResult = ReturnType<typeof useCreateTagMutation>;
+export type CreateTagMutationResult = Apollo.MutationResult<CreateTagMutation>;
+export type CreateTagMutationOptions = Apollo.BaseMutationOptions<CreateTagMutation, CreateTagMutationVariables>;
+export const UpdateTagDocument = gql`
+    mutation UpdateTag($UpdateTagInput: UpdateTagDto!, $id: String!) {
+  updateTag(updateTagInput: $UpdateTagInput, id: $id) {
+    slug
+    _id
+    name
+    description
+  }
+}
+    `;
+export type UpdateTagMutationFn = Apollo.MutationFunction<UpdateTagMutation, UpdateTagMutationVariables>;
+
+/**
+ * __useUpdateTagMutation__
+ *
+ * To run a mutation, you first call `useUpdateTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTagMutation, { data, loading, error }] = useUpdateTagMutation({
+ *   variables: {
+ *      UpdateTagInput: // value for 'UpdateTagInput'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUpdateTagMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTagMutation, UpdateTagMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTagMutation, UpdateTagMutationVariables>(UpdateTagDocument, options);
+      }
+export type UpdateTagMutationHookResult = ReturnType<typeof useUpdateTagMutation>;
+export type UpdateTagMutationResult = Apollo.MutationResult<UpdateTagMutation>;
+export type UpdateTagMutationOptions = Apollo.BaseMutationOptions<UpdateTagMutation, UpdateTagMutationVariables>;
 export const SearchAuthorDocument = gql`
     query searchAuthor($keyword: String, $limit: Float, $page: Float) {
   searchAuthor(keyword: $keyword, limit: $limit, page: $page) {
@@ -1300,6 +1519,44 @@ export function useGetTopComicsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type GetTopComicsQueryHookResult = ReturnType<typeof useGetTopComicsQuery>;
 export type GetTopComicsLazyQueryHookResult = ReturnType<typeof useGetTopComicsLazyQuery>;
 export type GetTopComicsQueryResult = Apollo.QueryResult<GetTopComicsQuery, GetTopComicsQueryVariables>;
+export const FindAllTagDocument = gql`
+    query findAllTag {
+  tags {
+    _id
+    name
+    slug
+    type
+    description
+  }
+}
+    `;
+
+/**
+ * __useFindAllTagQuery__
+ *
+ * To run a query within a React component, call `useFindAllTagQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindAllTagQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindAllTagQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFindAllTagQuery(baseOptions?: Apollo.QueryHookOptions<FindAllTagQuery, FindAllTagQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindAllTagQuery, FindAllTagQueryVariables>(FindAllTagDocument, options);
+      }
+export function useFindAllTagLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindAllTagQuery, FindAllTagQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindAllTagQuery, FindAllTagQueryVariables>(FindAllTagDocument, options);
+        }
+export type FindAllTagQueryHookResult = ReturnType<typeof useFindAllTagQuery>;
+export type FindAllTagLazyQueryHookResult = ReturnType<typeof useFindAllTagLazyQuery>;
+export type FindAllTagQueryResult = Apollo.QueryResult<FindAllTagQuery, FindAllTagQueryVariables>;
 export const GetTrendingComicsDocument = gql`
     query getTrendingComics($page: Float, $limit: Float) {
   TopFollow: getTrendingComics(

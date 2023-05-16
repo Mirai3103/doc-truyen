@@ -20,7 +20,7 @@ export class Tag extends BaseSchema {
   slug: string;
 
   @Prop()
-  @Field()
+  @Field(() => String, { nullable: true })
   description: string;
   @Prop({ default: TagType.Genre })
   @Field()
