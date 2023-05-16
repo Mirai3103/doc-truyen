@@ -1,0 +1,5 @@
+mutation createAuthor($createAuthorInput: CreateAuthorInput!) {
+    createAuthor(createAuthorInput: $createAuthorInput) {
+        slug
+    }
+}

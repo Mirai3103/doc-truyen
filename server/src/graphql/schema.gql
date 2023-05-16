@@ -5,7 +5,7 @@
 type Author {
   _id: String!
   createdAt: DateTime!
-  description: String!
+  description: String
   name: String!
   slug: String!
   updatedAt: DateTime!
@@ -142,9 +142,15 @@ type Query {
   getRecentComics(limit: Float = 10, page: Float = 1): [Comic!]!
   getTopComics(limit: Float = 10, page: Float = 1): [Comic!]!
   getTrendingComics(input: TrendingSortInput!): [Comic!]!
+  searchAuthor(keyword: String = "", limit: Float = 25, page: Float = 1): QueryAuthorsDTO!
   tag(id: String!): Tag!
   tags: [Tag!]!
   user(findUserInput: FindUserDto!): User!
+}
+
+type QueryAuthorsDTO {
+  authors: [Author!]!
+  count: Float!
 }
 
 type ReadingHistory {

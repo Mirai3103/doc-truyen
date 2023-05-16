@@ -1,9 +1,12 @@
-import { NotFoundException } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
+import { WithRoleGuard } from '@/auth/guard/roles.guard';
+import { Role } from '@/user/schema/user.schema';
+import { NotFoundException, UseGuards } from '@nestjs/common';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthorService } from './author.service';
-import { Author } from './schema/author.schema';
 import { CreateAuthorDto } from './dto/createAuthor.dto';
+import { QueryAuthorsDTO } from './dto/queryAuthor.dto';
 import { UpdateAuthorDto } from './dto/updateAuthor.dto';
+import { Author } from './schema/author.schema';
 
 @Resolver(() => Author)
 export class AuthorResolver {
@@ -22,6 +25,7 @@ export class AuthorResolver {
     return await this.authorService.findAll();
   }
   @Mutation(() => Author)
+  @UseGuards(new WithRoleGuard(Role.CREATOR))
   async createAuthor(
     @Args('createAuthorInput') createAuthorDto: CreateAuthorDto,
   ) {
@@ -37,5 +41,18 @@ export class AuthorResolver {
       throw new NotFoundException(id);
     }
     return author;
+  }
+  @Query(() => QueryAuthorsDTO)
+  async searchAuthor(
+    @Args('keyword', { defaultValue: '', nullable: true }) keyword: string,
+    @Args('page', { defaultValue: 1, nullable: true }) page: number,
+    @Args('limit', { defaultValue: 25, nullable: true }) limit: number,
+  ) {
+    const result = await this.authorService.findAllPaginated(
+      page,
+      limit,
+      keyword,
+    );
+    return result;
   }
 }

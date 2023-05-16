@@ -1,5 +1,13 @@
 import { appNavigate } from "@/routes";
-import { IconBookUpload, IconChartAreaFilled, IconHome, IconTag, IconUserEdit } from "@tabler/icons-react";
+import {
+    IconBookUpload,
+    IconChartAreaFilled,
+    IconHome,
+    IconTag,
+    IconUser,
+    IconUserEdit,
+    IconVocabulary,
+} from "@tabler/icons-react";
 import { MenuItemProps } from "./appMenuItems";
 export const menuData: MenuItemProps[] = [
     {
@@ -27,6 +35,14 @@ export const menuData: MenuItemProps[] = [
         },
     },
     {
+        link: "/admin/author-manage",
+        label: "Tác giả",
+        icon: IconUser,
+        action: () => {
+            appNavigate("/admin/author-manage");
+        },
+    },
+    {
         link: "/admin/user-management",
         label: "Quản lý người dùng",
         icon: IconUserEdit,
@@ -45,7 +61,7 @@ export const menuData: MenuItemProps[] = [
     {
         link: "/admin/chapter-management",
         label: "Quản lý chương truyện",
-        icon: IconTag,
+        icon: IconVocabulary,
         action: () => {
             appNavigate("/admin/chapter-management");
         },

@@ -3,13 +3,13 @@ https://docs.nestjs.com/providers#services
 */
 
 import { Inject, Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
-import { AuthorDocument } from './schema/author.schema';
-import { CreateAuthorDto } from './dto/createAuthor.dto';
-import { UtilService } from '../common/util.service';
 import { InjectModel } from '@nestjs/mongoose';
-import { Author } from './schema/author.schema';
+import { Model } from 'mongoose';
+import { UtilService } from '../common/util.service';
+import { CreateAuthorDto } from './dto/createAuthor.dto';
+import { QueryAuthorsDTO } from './dto/queryAuthor.dto';
 import { UpdateAuthorDto } from './dto/updateAuthor.dto';
+import { Author, AuthorDocument } from './schema/author.schema';
 @Injectable()
 export class AuthorService {
   constructor(
@@ -56,5 +56,44 @@ export class AuthorService {
       description: null,
     });
     return await createdAuthor.save();
+  }
+  public async findAllPaginated(
+    page = 1,
+    limit = 25,
+    keyword = '',
+  ): Promise<QueryAuthorsDTO> {
+    if (!keyword) {
+      const count = await this.authorModel.countDocuments();
+      const authors = await this.authorModel
+        .find()
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .exec();
+      return {
+        authors,
+        count,
+      };
+    }
+
+    const count = await this.authorModel.countDocuments({
+      name: {
+        $regex: keyword,
+        $options: 'i',
+      },
+    });
+    const authors = await this.authorModel
+      .find({
+        name: {
+          $regex: keyword,
+          $options: 'i',
+        },
+      })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+    return {
+      authors,
+      count,
+    };
   }
 }

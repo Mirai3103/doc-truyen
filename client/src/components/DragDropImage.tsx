@@ -17,7 +17,7 @@ interface DragDropFileProps {
     onChange?: (blob: Blob | null) => void;
     value: Blob | null;
 }
-
+let count = 0;
 function DragDropImage({
     title,
     description,
@@ -64,14 +64,6 @@ function DragDropImage({
 
     React.useEffect(() => {
         if (value) {
-            setCroppedImage({
-                x: 0,
-                y: 0,
-                height: 100,
-                width: 100,
-                unit: "px",
-            });
-
             const reader = new FileReader();
             reader.readAsDataURL(value);
             reader.onloadend = () => {
@@ -95,7 +87,7 @@ function DragDropImage({
                     onCrop={onCrop}
                 />
             )}
-            {!croppedImage ? (
+            {!value ? (
                 <Dropzone
                     onDrop={(files) => {
                         setFile(files[0]);

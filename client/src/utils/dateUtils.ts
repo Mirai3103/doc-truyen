@@ -33,5 +33,5 @@ export const toDateTimeFormat = (date: Date | string) => {
         date = new Date(date);
     }
     // dd/mm/yyyy - hh:mm
-    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} - ${date.getHours()}:${date.getMinutes()}`;
+    return date.toLocaleDateString("vi-VN") + " - " + date.toLocaleTimeString("vi-VN");
 };

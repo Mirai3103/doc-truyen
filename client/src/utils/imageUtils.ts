@@ -42,5 +42,7 @@ export const uploadImages = async (files: File[]) => {
             "Content-Type": "multipart/form-data",
         },
     });
-    return response.data as string[];
+    return response.data as {
+        url: string;
+    }[];
 };

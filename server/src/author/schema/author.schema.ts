@@ -1,7 +1,6 @@
-import { ObjectType, Field } from '@nestjs/graphql';
-import { Schema as MongooseSchema } from 'mongoose';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BaseSchema } from '@/base/schema/base.schema';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({
   timestamps: true,
@@ -17,8 +16,8 @@ export class Author extends BaseSchema {
   slug: string;
 
   @Prop()
-  @Field()
-  description: string;
+  @Field({ nullable: true })
+  description?: string;
 }
 
 export type AuthorDocument = Author & Document;

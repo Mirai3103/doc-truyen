@@ -21,7 +21,7 @@ export type Author = {
   __typename?: 'Author';
   _id: Scalars['String'];
   createdAt: Scalars['DateTime'];
-  description: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   slug: Scalars['String'];
   updatedAt: Scalars['DateTime'];
@@ -217,6 +217,7 @@ export type Query = {
   getRecentComics: Array<Comic>;
   getTopComics: Array<Comic>;
   getTrendingComics: Array<Comic>;
+  searchAuthor: QueryAuthorsDto;
   tag: Tag;
   tags: Array<Tag>;
   user: User;
@@ -284,6 +285,13 @@ export type QueryGetTrendingComicsArgs = {
 };
 
 
+export type QuerySearchAuthorArgs = {
+  keyword?: InputMaybe<Scalars['String']>;
+  limit?: InputMaybe<Scalars['Float']>;
+  page?: InputMaybe<Scalars['Float']>;
+};
+
+
 export type QueryTagArgs = {
   id: Scalars['String'];
 };
@@ -291,6 +299,12 @@ export type QueryTagArgs = {
 
 export type QueryUserArgs = {
   findUserInput: FindUserDto;
+};
+
+export type QueryAuthorsDto = {
+  __typename?: 'QueryAuthorsDTO';
+  authors: Array<Author>;
+  count: Scalars['Float'];
 };
 
 export type ReadingHistory = {
@@ -388,6 +402,20 @@ export type DeleteComicMutationVariables = Exact<{
 
 
 export type DeleteComicMutation = { __typename?: 'Mutation', deleteComic: boolean };
+
+export type SearchAuthorQueryVariables = Exact<{
+  keyword?: InputMaybe<Scalars['String']>;
+  limit?: InputMaybe<Scalars['Float']>;
+  page?: InputMaybe<Scalars['Float']>;
+}>;
+
+
+export type SearchAuthorQuery = { __typename?: 'Query', searchAuthor: { __typename?: 'QueryAuthorsDTO', count: number, authors: Array<{ __typename?: 'Author', _id: string, name: string, description?: string | null, slug: string, createdAt: any }> } };
+
+export type FindAllAuthorsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FindAllAuthorsQuery = { __typename?: 'Query', authors: Array<{ __typename?: 'Author', _id: string, name: string, slug: string }> };
 
 export type GetAllChaptersQueryVariables = Exact<{
   comicId: Scalars['String'];
@@ -674,6 +702,86 @@ export function useDeleteComicMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteComicMutationHookResult = ReturnType<typeof useDeleteComicMutation>;
 export type DeleteComicMutationResult = Apollo.MutationResult<DeleteComicMutation>;
 export type DeleteComicMutationOptions = Apollo.BaseMutationOptions<DeleteComicMutation, DeleteComicMutationVariables>;
+export const SearchAuthorDocument = gql`
+    query searchAuthor($keyword: String, $limit: Float, $page: Float) {
+  searchAuthor(keyword: $keyword, limit: $limit, page: $page) {
+    authors {
+      _id
+      name
+      description
+      slug
+      createdAt
+    }
+    count
+  }
+}
+    `;
+
+/**
+ * __useSearchAuthorQuery__
+ *
+ * To run a query within a React component, call `useSearchAuthorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchAuthorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchAuthorQuery({
+ *   variables: {
+ *      keyword: // value for 'keyword'
+ *      limit: // value for 'limit'
+ *      page: // value for 'page'
+ *   },
+ * });
+ */
+export function useSearchAuthorQuery(baseOptions?: Apollo.QueryHookOptions<SearchAuthorQuery, SearchAuthorQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchAuthorQuery, SearchAuthorQueryVariables>(SearchAuthorDocument, options);
+      }
+export function useSearchAuthorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchAuthorQuery, SearchAuthorQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchAuthorQuery, SearchAuthorQueryVariables>(SearchAuthorDocument, options);
+        }
+export type SearchAuthorQueryHookResult = ReturnType<typeof useSearchAuthorQuery>;
+export type SearchAuthorLazyQueryHookResult = ReturnType<typeof useSearchAuthorLazyQuery>;
+export type SearchAuthorQueryResult = Apollo.QueryResult<SearchAuthorQuery, SearchAuthorQueryVariables>;
+export const FindAllAuthorsDocument = gql`
+    query FindAllAuthors {
+  authors {
+    _id
+    name
+    slug
+  }
+}
+    `;
+
+/**
+ * __useFindAllAuthorsQuery__
+ *
+ * To run a query within a React component, call `useFindAllAuthorsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindAllAuthorsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindAllAuthorsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFindAllAuthorsQuery(baseOptions?: Apollo.QueryHookOptions<FindAllAuthorsQuery, FindAllAuthorsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindAllAuthorsQuery, FindAllAuthorsQueryVariables>(FindAllAuthorsDocument, options);
+      }
+export function useFindAllAuthorsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindAllAuthorsQuery, FindAllAuthorsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindAllAuthorsQuery, FindAllAuthorsQueryVariables>(FindAllAuthorsDocument, options);
+        }
+export type FindAllAuthorsQueryHookResult = ReturnType<typeof useFindAllAuthorsQuery>;
+export type FindAllAuthorsLazyQueryHookResult = ReturnType<typeof useFindAllAuthorsLazyQuery>;
+export type FindAllAuthorsQueryResult = Apollo.QueryResult<FindAllAuthorsQuery, FindAllAuthorsQueryVariables>;
 export const GetAllChaptersDocument = gql`
     query getAllChapters($comicId: String!) {
   getAllChapters(comicId: $comicId) {

@@ -37,7 +37,7 @@ export class FileController {
   }
   @Post('uploads')
   @UseInterceptors(FilesInterceptor('files'))
-  // @UseGuards(new WithRoleGuard(Role.CREATOR))
+  @UseGuards(new WithRoleGuard(Role.CREATOR))
   public async uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
     // const result = await this.fileService.saveFiles(files);
     const result = await this.cloudinaryService.uploadFiles(files);

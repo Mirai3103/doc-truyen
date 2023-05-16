@@ -1,6 +1,4 @@
 import { useCreateChapterMutation, useGetComicByIdQuery } from "@/gql/generated/graphql";
-import { useAppSelector } from "@/redux/hook";
-import { selectUserProfile } from "@/redux/userSplice";
 import { getImageUrl, uploadImages } from "@/utils/imageUtils";
 import {
     Box,
@@ -31,8 +29,8 @@ export default function CreateChapter() {
             id: comicId || "a",
         },
     });
-    const user = useAppSelector(selectUserProfile);
     const { errors, onSubmit: onFormSubmit, values, setFieldValue } = useCreateChapterForm();
+
     const [files, setFiles] = React.useState<FileWithPath[]>([]);
     const theme = useMantineTheme();
     const navigate = useNavigate();
@@ -57,9 +55,15 @@ export default function CreateChapter() {
         const newFileName = await uploadImages(files);
         const pages = newFileName.map((item, index) => {
             return {
-                url: item,
-                order: index,
+                url: item.url,
+                order: index + 1,
             };
+        });
+        console.log({
+            chapterNumber: value.chapterNumber + "",
+            comicId: comicId,
+            pages: pages,
+            name: value.name,
         });
         const res = await createChapterMutation({
             variables: {
@@ -72,7 +76,6 @@ export default function CreateChapter() {
             },
         });
         setLoading(false);
-        navigate(`/admin/comic-manage/edit/chapters/${comicId}`);
 
         // todo: create chapter
         notifications.show({

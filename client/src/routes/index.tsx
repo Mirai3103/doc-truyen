@@ -3,8 +3,10 @@ import AdminLayout from "@/components/layouts/AdminLayout";
 import ReadingLayout from "@/components/layouts/ReadingLayout";
 import Logout from "@/pages/Logout";
 import Test from "@/pages/Test";
+import AuthorManagePage from "@/pages/admin/AuthorManage";
 import ComicManage from "@/pages/admin/ComicManage";
 import ChapterManage from "@/pages/admin/ComicManage/ChapterManage";
+import CreateChapter from "@/pages/admin/ComicManage/ChapterManage/Create";
 import EditComicPage from "@/pages/admin/ComicManage/EditComic";
 import LoginPage from "@/pages/auth";
 import Callback from "@/pages/auth/callback";
@@ -17,7 +19,6 @@ import { NavigationType, Outlet, createBrowserRouter, useLocation, useNavigation
 import MainLayout from "../components/layouts/MainLayout";
 import ErrorPage from "../pages/error";
 import NotFoundPage from "../pages/error/404";
-import CreateChapter from "@/pages/admin/ComicManage/ChapterManage/Create";
 
 const CreateComicPage = React.lazy(() => import("@/pages/admin/ComicManage/CreateComic"));
 const ScrollToTopWrapper = ({ children }: { children: JSX.Element }) => {
@@ -136,6 +137,10 @@ const routes = createBrowserRouter(
                             element: <CreateChapter />,
                         },
                     ],
+                },
+                {
+                    path: "author-manage",
+                    element: <AuthorManagePage />,
                 },
             ],
         },

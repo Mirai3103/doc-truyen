@@ -63,7 +63,7 @@ export default function ChapterManage() {
         if (chapters?.chapters) {
             handlers.setState(chapters.chapters as any);
         }
-    }, [chapters]);
+    }, [chapters, handlers]);
     if (chapterLoading) {
         return <FallBackLoader />;
     }
