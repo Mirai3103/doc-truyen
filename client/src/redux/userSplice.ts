@@ -2,11 +2,27 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import jwtDecode from "jwt-decode";
 import { RootState } from "./store";
 
-export enum Role {
+enum UserRole {
     ADMIN = 10,
     CREATOR = 5,
     USER = 1,
 }
+namespace UserRole {
+    export function toString(role: UserRole) {
+        switch (role) {
+            case UserRole.ADMIN:
+                return "Quản trị viên";
+            case UserRole.CREATOR:
+                return "Người đóng góp";
+            case UserRole.USER:
+                return "Độc giả";
+            default:
+                return "Unknown";
+        }
+    }
+}
+export const Role = UserRole;
+
 interface UserState {
     userProfile: {
         _id: string;
@@ -14,7 +30,7 @@ interface UserState {
         avatarUrl: string;
         email: string;
         displayName: string;
-        role: Role;
+        role: UserRole;
     } | null;
     isAuthenticated: boolean;
     accessToken: string;
@@ -39,9 +55,9 @@ export const userSlice = createSlice({
             state.refreshToken = action.payload.refreshToken;
             state.isAuthenticated = false;
             localStorage.setItem("refreshToken", action.payload.refreshToken);
-               state.isTriedToLogin = true;
+            state.isTriedToLogin = true;
             if (state.accessToken === "") return;
-            
+
             const userProfile = jwtDecode(action.payload.accessToken) as JwtPayload;
             state.userProfile = {
                 _id: userProfile.sub,
@@ -52,7 +68,7 @@ export const userSlice = createSlice({
                 role: userProfile.role,
             };
             state.isAuthenticated = true;
-             state.isTriedToLogin = true;
+            state.isTriedToLogin = true;
         },
         setAccessToken: (state, action: PayloadAction<string>) => {
             state.accessToken = action.payload;
@@ -71,7 +87,7 @@ export const userSlice = createSlice({
         },
         setIsTriedToLogin: (state, action: PayloadAction<boolean>) => {
             state.isTriedToLogin = action.payload;
-        }
+        },
     },
 });
 
@@ -86,7 +102,7 @@ export const selectIsTriedToLogin = (state: RootState) => state.user.isTriedToLo
 interface JwtPayload {
     username: string;
     sub: string;
-    role: Role;
+    role: UserRole;
     email: string;
     displayName: string;
     avatarUrl: string;

@@ -1,4 +1,6 @@
-import { NotFoundException } from '@nestjs/common';
+import { WithRoleGuardGQL } from '@/auth/guard/grapql-jwt.auth.guard';
+import { Role } from '@/user/schema/user.schema';
+import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateTagDto } from './dto/createTag.dto';
 import { UpdateTagDto } from './dto/updateTag.dto';
@@ -21,10 +23,12 @@ export class TagResolver {
     return await this.tagService.findAll();
   }
   @Mutation(() => Tag)
+  @UseGuards(new WithRoleGuardGQL(Role.CREATOR))
   async createTag(@Args('createTagInput') createTagDto: CreateTagDto) {
     return await this.tagService.create(createTagDto);
   }
   @Mutation(() => Tag)
+  @UseGuards(new WithRoleGuardGQL(Role.CREATOR))
   async updateTag(
     @Args('id') id: string,
     @Args('updateTagInput') updateTagDto: UpdateTagDto,

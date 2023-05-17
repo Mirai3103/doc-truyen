@@ -147,6 +147,7 @@ type Query {
   tag(id: String!): Tag!
   tags: [Tag!]!
   user(findUserInput: FindUserDto!): User!
+  users(keywords: String, limit: Float = 25, page: Float = 1): UserQueryDto!
 }
 
 type QueryAuthorsDTO {
@@ -195,6 +196,8 @@ input UpdateUserDto {
   description: String
   displayName: String
   email: String
+  role: Int
+  username: String
 }
 
 type User {
@@ -206,7 +209,12 @@ type User {
   email: String!
   followedComics: [Comic!]!
   readingHistories: [ReadingHistory!]!
-  role: Float!
+  role: Int!
   updatedAt: DateTime!
   username: String!
+}
+
+type UserQueryDto {
+  count: Int!
+  users: [User!]!
 }

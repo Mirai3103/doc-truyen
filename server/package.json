@@ -17,7 +17,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test": "jest --config ./jest.config.js --runInBand --detectOpenHandles --forceExit",
-    "build:minify": "yarn build && ncc build dist/main.js -o build",
+    "build:minify": "webpack",
     "pkg": "pkg dist/main.js --target node18-linux-x64 -o app"
   },
   "bin": "dist/main.js",
@@ -65,7 +65,10 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "sharp": "^0.32.0",
-    "streamifier": "^0.1.1"
+    "streamifier": "^0.1.1",
+    "tsconfig-paths-webpack-plugin": "^4.0.1",
+    "webpack": "^5.82.1",
+    "webpack-cli": "^5.1.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
@@ -94,26 +97,10 @@
     "source-map-support": "^0.5.20",
     "supertest": "^6.1.3",
     "ts-jest": "29.0.3",
-    "ts-loader": "^9.2.3",
+    "ts-loader": "^9.4.2",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "4.1.1",
     "typescript": "^4.7.4"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
   }
+ 
 }

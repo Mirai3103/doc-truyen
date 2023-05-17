@@ -227,6 +227,7 @@ export type Query = {
   tag: Tag;
   tags: Array<Tag>;
   user: User;
+  users: UserQueryDto;
 };
 
 
@@ -307,6 +308,13 @@ export type QueryUserArgs = {
   findUserInput: FindUserDto;
 };
 
+
+export type QueryUsersArgs = {
+  keywords?: InputMaybe<Scalars['String']>;
+  limit?: InputMaybe<Scalars['Float']>;
+  page?: InputMaybe<Scalars['Float']>;
+};
+
 export type QueryAuthorsDto = {
   __typename?: 'QueryAuthorsDTO';
   authors: Array<Author>;
@@ -324,7 +332,7 @@ export type Tag = {
   __typename?: 'Tag';
   _id: Scalars['String'];
   createdAt: Scalars['DateTime'];
-  description: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   slug: Scalars['String'];
   type: Scalars['String'];
@@ -356,6 +364,8 @@ export type UpdateUserDto = {
   description?: InputMaybe<Scalars['String']>;
   displayName?: InputMaybe<Scalars['String']>;
   email?: InputMaybe<Scalars['String']>;
+  role?: InputMaybe<Scalars['Int']>;
+  username?: InputMaybe<Scalars['String']>;
 };
 
 export type User = {
@@ -368,9 +378,15 @@ export type User = {
   email: Scalars['String'];
   followedComics: Array<Comic>;
   readingHistories: Array<ReadingHistory>;
-  role: Scalars['Float'];
+  role: Scalars['Int'];
   updatedAt: Scalars['DateTime'];
   username: Scalars['String'];
+};
+
+export type UserQueryDto = {
+  __typename?: 'UserQueryDto';
+  count: Scalars['Int'];
+  users: Array<User>;
 };
 
 export type CreateAuthorMutationVariables = Exact<{
@@ -444,7 +460,15 @@ export type UpdateTagMutationVariables = Exact<{
 }>;
 
 
-export type UpdateTagMutation = { __typename?: 'Mutation', updateTag: { __typename?: 'Tag', slug: string, _id: string, name: string, description: string } };
+export type UpdateTagMutation = { __typename?: 'Mutation', updateTag: { __typename?: 'Tag', slug: string, _id: string, name: string, description?: string | null } };
+
+export type UpdateUserMutationVariables = Exact<{
+  id: Scalars['String'];
+  updateUserInput: UpdateUserDto;
+}>;
+
+
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', _id: string } };
 
 export type SearchAuthorQueryVariables = Exact<{
   keyword?: InputMaybe<Scalars['String']>;
@@ -535,7 +559,7 @@ export type GetTopComicsQuery = { __typename?: 'Query', getTopComics: Array<{ __
 export type FindAllTagQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FindAllTagQuery = { __typename?: 'Query', tags: Array<{ __typename?: 'Tag', _id: string, name: string, slug: string, type: string, description: string }> };
+export type FindAllTagQuery = { __typename?: 'Query', tags: Array<{ __typename?: 'Tag', _id: string, name: string, slug: string, type: string, description?: string | null }> };
 
 export type GetTrendingComicsQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Float']>;
@@ -584,6 +608,15 @@ export type GetNewestQueryVariables = Exact<{
 
 
 export type GetNewestQuery = { __typename?: 'Query', getTrendingComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string, slug: string } }> };
+
+export type FindAllUsersQueryVariables = Exact<{
+  keywords: Scalars['String'];
+  limit?: InputMaybe<Scalars['Float']>;
+  page?: InputMaybe<Scalars['Float']>;
+}>;
+
+
+export type FindAllUsersQuery = { __typename?: 'Query', users: { __typename?: 'UserQueryDto', count: number, users: Array<{ __typename?: 'User', _id: string, avatarUrl?: string | null, email: string, displayName: string, role: number, username: string, createdAt: any, description?: string | null }> } };
 
 
 export const CreateAuthorDocument = gql`
@@ -921,6 +954,40 @@ export function useUpdateTagMutation(baseOptions?: Apollo.MutationHookOptions<Up
 export type UpdateTagMutationHookResult = ReturnType<typeof useUpdateTagMutation>;
 export type UpdateTagMutationResult = Apollo.MutationResult<UpdateTagMutation>;
 export type UpdateTagMutationOptions = Apollo.BaseMutationOptions<UpdateTagMutation, UpdateTagMutationVariables>;
+export const UpdateUserDocument = gql`
+    mutation updateUser($id: String!, $updateUserInput: UpdateUserDto!) {
+  updateUser(id: $id, updateUserInput: $updateUserInput) {
+    _id
+  }
+}
+    `;
+export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      updateUserInput: // value for 'updateUserInput'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+      }
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
 export const SearchAuthorDocument = gql`
     query searchAuthor($keyword: String, $limit: Float, $page: Float) {
   searchAuthor(keyword: $keyword, limit: $limit, page: $page) {
@@ -1999,3 +2066,50 @@ export function useGetNewestLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type GetNewestQueryHookResult = ReturnType<typeof useGetNewestQuery>;
 export type GetNewestLazyQueryHookResult = ReturnType<typeof useGetNewestLazyQuery>;
 export type GetNewestQueryResult = Apollo.QueryResult<GetNewestQuery, GetNewestQueryVariables>;
+export const FindAllUsersDocument = gql`
+    query findAllUsers($keywords: String!, $limit: Float, $page: Float) {
+  users(keywords: $keywords, limit: $limit, page: $page) {
+    count
+    users {
+      _id
+      avatarUrl
+      email
+      displayName
+      role
+      username
+      createdAt
+      description
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindAllUsersQuery__
+ *
+ * To run a query within a React component, call `useFindAllUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindAllUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindAllUsersQuery({
+ *   variables: {
+ *      keywords: // value for 'keywords'
+ *      limit: // value for 'limit'
+ *      page: // value for 'page'
+ *   },
+ * });
+ */
+export function useFindAllUsersQuery(baseOptions: Apollo.QueryHookOptions<FindAllUsersQuery, FindAllUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindAllUsersQuery, FindAllUsersQueryVariables>(FindAllUsersDocument, options);
+      }
+export function useFindAllUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindAllUsersQuery, FindAllUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindAllUsersQuery, FindAllUsersQueryVariables>(FindAllUsersDocument, options);
+        }
+export type FindAllUsersQueryHookResult = ReturnType<typeof useFindAllUsersQuery>;
+export type FindAllUsersLazyQueryHookResult = ReturnType<typeof useFindAllUsersLazyQuery>;
+export type FindAllUsersQueryResult = Apollo.QueryResult<FindAllUsersQuery, FindAllUsersQueryVariables>;

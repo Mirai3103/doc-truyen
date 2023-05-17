@@ -4,9 +4,10 @@ import {
   ReadingHistory,
   ReadingHistorySchema,
 } from '@/readingHistory/schema/reading-history.schema';
-import { Field, HideField, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, Int, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
+
 export enum Role {
   ADMIN = 10,
   CREATOR = 5,
@@ -43,7 +44,7 @@ export class User extends BaseSchema {
     default: Role.USER,
     type: Number,
   })
-  @Field()
+  @Field(() => Int)
   role: Role;
   @HideField()
   @Prop({

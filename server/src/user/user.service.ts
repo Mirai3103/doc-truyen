@@ -1,16 +1,19 @@
 import { UtilService } from '@/common/util.service';
+import { CloudinaryService } from '@/file/cloudinary/cloudinary.service';
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { CreateUserDto } from './dto/createUser.dto';
 import { FindUserDto } from './dto/findUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { UserQueryDto } from './dto/userQuery.dto';
 import { User, UserDocument } from './schema/user.schema';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @Inject(CloudinaryService) private cloudinaryService: CloudinaryService,
     @Inject(UtilService) private utilService: UtilService,
   ) {}
 
@@ -41,7 +44,9 @@ export class UserService {
   ): Promise<User | null> {
     let avatarUrl: string | undefined;
     if (updateUserDto.base64Avatar) {
-      avatarUrl = await this.utilService.saveFile(updateUserDto.base64Avatar);
+      avatarUrl = await this.cloudinaryService.uploadFromBase64(
+        updateUserDto.base64Avatar,
+      );
     }
 
     return this.userModel.findByIdAndUpdate(id, {
@@ -72,5 +77,30 @@ export class UserService {
         $in: ids,
       },
     });
+  }
+  public async findAll(
+    keywords: string,
+    page: number,
+    limit: number,
+  ): Promise<UserQueryDto> {
+    const skip = (page - 1) * limit;
+
+    const query = {
+      $or: [
+        { username: { $regex: keywords || '', $options: 'i' } },
+        { email: { $regex: keywords || '', $options: 'i' } },
+        { displayName: { $regex: keywords || '', $options: 'i' } },
+      ],
+    };
+
+    const [users, count] = await Promise.all([
+      this.userModel.find(query).skip(skip).limit(limit),
+      this.userModel.countDocuments(query),
+    ]);
+
+    return {
+      users,
+      count,
+    };
   }
 }

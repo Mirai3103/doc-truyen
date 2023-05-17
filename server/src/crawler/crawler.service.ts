@@ -111,7 +111,7 @@ export class CrawlerService {
       updatedAt: new Date(iteam.updated_at),
       description:
         iteam.description + iteam.facebook_address
-          ? `<br/> <a href="${iteam.facebook_address}" target="_blank">Facebook</a>`
+          ? `<br/> <a href="https://facebook.com/${iteam.facebook_address}" target="_blank">Facebook</a>`
           : '',
       email: slug + '@gmail.com',
       hashPassword: await this.utilsService.hash('123456'),

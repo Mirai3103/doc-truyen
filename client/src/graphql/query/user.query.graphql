@@ -1,0 +1,15 @@
+query findAllUsers($keywords: String!, $limit: Float, $page: Float) {
+    users(keywords: $keywords, limit: $limit, page: $page) {
+        count
+        users {
+            _id
+            avatarUrl
+            email
+            displayName
+            role
+            username
+            createdAt
+            description
+        }
+    }
+}

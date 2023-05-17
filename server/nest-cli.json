@@ -4,5 +4,7 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "deleteOutDir": true
-  }
+  },
+  "language": "ts"
+
 }
