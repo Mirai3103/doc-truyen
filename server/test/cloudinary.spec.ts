@@ -25,11 +25,22 @@ describe('upload file test', () => {
       const filename = await cloudinaryService.uploadFromBase64(base64);
       console.log(filename);
     }
-    assert.doesNotThrow(() => {
+    assert.doesNotThrow(async () => {
       const file = readFileSync('/home/laffy/Pictures/Screenshots/a.png', {
         encoding: 'base64',
       });
-      uploadFromBase64(file);
+      await uploadFromBase64(file);
+    });
+  });
+  it('should be not throw errors', async () => {
+    async function uploadFromUrl(url: string) {
+      const filename = await cloudinaryService.uploadFromUrl(url);
+      console.log(filename);
+    }
+    assert.doesNotThrow(async () => {
+      await uploadFromUrl(
+        'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
+      );
     });
   });
 });

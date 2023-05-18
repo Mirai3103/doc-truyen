@@ -7,7 +7,7 @@ services:
     volumes:
       - ./server:/usr/src/app/server
     env_file:
-      - .env
+      - dev.env
   client:
     build: ./client
     ports:
@@ -15,6 +15,6 @@ services:
     volumes:
       - ./client:/usr/src/app/client
     env_file:
-      - .env
+      - dev.env
     depends_on:
       - server
