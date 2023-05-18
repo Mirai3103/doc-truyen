@@ -4,7 +4,7 @@ import { setContext } from "@apollo/client/link/context";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 const api = axios.create({
-    baseURL: process.env.VITE_SERVER_URL || "http://localhost:3000",
+    baseURL: process.env.VITE_SERVER_URL || "/api",
 });
 let accessTokenPromise: Promise<string> | null = null;
 api.interceptors.request.use(

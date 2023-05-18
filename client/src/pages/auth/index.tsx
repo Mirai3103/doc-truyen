@@ -76,7 +76,8 @@ export default function LoginPage({ authType = "đăng nhập", ...props }: Prop
         return <Navigate to="/" />;
     }
     const onGoogleLogin = async (e: any) => {
-        window.open(`${process.env.SERVER_URL || "http://localhost:3000"}/auth/google`, "_self");
+        const url = process.env.VITE_SERVER_URL ? process.env.VITE_SERVER_URL + "auth/google" : "/api/auth/google";
+        window.open(url, "_self");
     };
     const onFacebookLogin = async (e: any) => {
         notifications.show({
