@@ -1,0 +1,16 @@
+query getAllHistories($userId: String!) {
+    histories: getAllHistories(userId: $userId) {
+        chapter {
+            chapterNumber
+            name
+            _id
+            comic {
+                name
+                slug
+
+                imageCoverUrl
+            }
+        }
+        createdAt
+    }
+}

@@ -2,27 +2,23 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import jwtDecode from "jwt-decode";
 import { RootState } from "./store";
 
-enum UserRole {
+export enum Role {
     ADMIN = 10,
     CREATOR = 5,
     USER = 1,
 }
-namespace UserRole {
-    export function toString(role: UserRole) {
-        switch (role) {
-            case UserRole.ADMIN:
-                return "Quản trị viên";
-            case UserRole.CREATOR:
-                return "Người đóng góp";
-            case UserRole.USER:
-                return "Độc giả";
-            default:
-                return "Unknown";
-        }
+export const roleToString = (role: Role) => {
+    switch (role) {
+        case Role.ADMIN:
+            return "Quản trị viên";
+        case Role.CREATOR:
+            return "Người đóng góp";
+        case Role.USER:
+            return "Người dùng";
+        default:
+            return "Không xác định";
     }
-}
-export const Role = UserRole;
-
+};
 interface UserState {
     userProfile: {
         _id: string;
@@ -30,7 +26,7 @@ interface UserState {
         avatarUrl: string;
         email: string;
         displayName: string;
-        role: UserRole;
+        role: Role;
     } | null;
     isAuthenticated: boolean;
     accessToken: string;
@@ -92,7 +88,7 @@ export const userSlice = createSlice({
 });
 
 export const { setToken, setAccessToken } = userSlice.actions;
-export const selectRole = (state: RootState) => state.user.userProfile?.role || 1;
+export const selectRole = (state: RootState) => state.user.userProfile?.role || 0;
 export const selectUser = (state: RootState) => state.user;
 export const selectUserProfile = (state: RootState) => state.user.userProfile;
 export const selectIsAuthenticated = (state: RootState) => state.user.isAuthenticated;
@@ -102,7 +98,7 @@ export const selectIsTriedToLogin = (state: RootState) => state.user.isTriedToLo
 interface JwtPayload {
     username: string;
     sub: string;
-    role: UserRole;
+    role: Role;
     email: string;
     displayName: string;
     avatarUrl: string;

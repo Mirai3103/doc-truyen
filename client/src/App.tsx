@@ -24,8 +24,6 @@ const client = new ApolloClient({
     ]),
 });
 function App() {
-    console.log(process.env);
-
     const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
     const toggleColorScheme = (value?: ColorScheme) =>
         setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));

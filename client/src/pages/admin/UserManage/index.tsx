@@ -1,6 +1,6 @@
 import { useFindAllUsersQuery } from "@/gql/generated/graphql";
 import { useAppSelector } from "@/redux/hook";
-import { Role, selectRole } from "@/redux/userSplice";
+import { Role, roleToString, selectRole } from "@/redux/userSplice";
 import { toDateTimeFormat } from "@/utils/dateUtils";
 import { Flex, Loader, Menu, Pagination, Stack, Table, TextInput, Title } from "@mantine/core";
 import { useDebouncedState, useDisclosure, usePagination } from "@mantine/hooks";
@@ -115,7 +115,7 @@ export default function UserManagePage() {
                                             }}
                                         ></p>
                                     </td>
-                                    <td>{Role.toString(user.role)}</td>
+                                    <td>{roleToString(user.role)}</td>
                                     <td>{toDateTimeFormat(user.createdAt)}</td>
 
                                     <td>

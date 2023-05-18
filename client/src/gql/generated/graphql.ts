@@ -127,6 +127,7 @@ export type Mutation = {
   updateAuthor: Author;
   updateChaptersOrder: Array<Chapter>;
   updateComic: Comic;
+  updateImportantInfo: User;
   updateTag: Tag;
   updateUser: User;
 };
@@ -181,6 +182,11 @@ export type MutationUpdateChaptersOrderArgs = {
 export type MutationUpdateComicArgs = {
   id: Scalars['String'];
   input: CreateComicInput;
+};
+
+
+export type MutationUpdateImportantInfoArgs = {
+  input: UpdateImportantInfoDto;
 };
 
 
@@ -324,7 +330,6 @@ export type QueryAuthorsDto = {
 export type ReadingHistory = {
   __typename?: 'ReadingHistory';
   chapter?: Maybe<Chapter>;
-  comic: Comic;
   createdAt: Scalars['DateTime'];
 };
 
@@ -352,6 +357,12 @@ export type UpdateAuthorDto = {
 
 export type UpdateChaptersOrderInput = {
   chapters: Array<ChapterOrder>;
+};
+
+export type UpdateImportantInfoDto = {
+  email?: InputMaybe<Scalars['String']>;
+  newPassword?: InputMaybe<Scalars['String']>;
+  password: Scalars['String'];
 };
 
 export type UpdateTagDto = {
@@ -470,6 +481,13 @@ export type UpdateUserMutationVariables = Exact<{
 
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', _id: string } };
 
+export type UpdateImportantUserInfoMutationVariables = Exact<{
+  updateUserInput: UpdateImportantInfoDto;
+}>;
+
+
+export type UpdateImportantUserInfoMutation = { __typename?: 'Mutation', updateImportantInfo: { __typename?: 'User', _id: string } };
+
 export type SearchAuthorQueryVariables = Exact<{
   keyword?: InputMaybe<Scalars['String']>;
   limit?: InputMaybe<Scalars['Float']>;
@@ -556,6 +574,13 @@ export type GetTopComicsQueryVariables = Exact<{
 
 export type GetTopComicsQuery = { __typename?: 'Query', getTopComics: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', slug: string, name: string } | null, author: { __typename?: 'Author', name: string } }> };
 
+export type GetAllHistoriesQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type GetAllHistoriesQuery = { __typename?: 'Query', histories: Array<{ __typename?: 'ReadingHistory', createdAt: any, chapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, _id: string, comic: { __typename?: 'Comic', name: string, slug: string, imageCoverUrl: string } } | null }> };
+
 export type FindAllTagQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -617,6 +642,13 @@ export type FindAllUsersQueryVariables = Exact<{
 
 
 export type FindAllUsersQuery = { __typename?: 'Query', users: { __typename?: 'UserQueryDto', count: number, users: Array<{ __typename?: 'User', _id: string, avatarUrl?: string | null, email: string, displayName: string, role: number, username: string, createdAt: any, description?: string | null }> } };
+
+export type GetUserByIdQueryVariables = Exact<{
+  input: FindUserDto;
+}>;
+
+
+export type GetUserByIdQuery = { __typename?: 'Query', user: { __typename?: 'User', _id: string, avatarUrl?: string | null, createdAt: any, description?: string | null, displayName: string, email: string, role: number, username: string } };
 
 
 export const CreateAuthorDocument = gql`
@@ -988,6 +1020,39 @@ export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
 export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
 export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const UpdateImportantUserInfoDocument = gql`
+    mutation updateImportantUserInfo($updateUserInput: UpdateImportantInfoDTO!) {
+  updateImportantInfo(input: $updateUserInput) {
+    _id
+  }
+}
+    `;
+export type UpdateImportantUserInfoMutationFn = Apollo.MutationFunction<UpdateImportantUserInfoMutation, UpdateImportantUserInfoMutationVariables>;
+
+/**
+ * __useUpdateImportantUserInfoMutation__
+ *
+ * To run a mutation, you first call `useUpdateImportantUserInfoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateImportantUserInfoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateImportantUserInfoMutation, { data, loading, error }] = useUpdateImportantUserInfoMutation({
+ *   variables: {
+ *      updateUserInput: // value for 'updateUserInput'
+ *   },
+ * });
+ */
+export function useUpdateImportantUserInfoMutation(baseOptions?: Apollo.MutationHookOptions<UpdateImportantUserInfoMutation, UpdateImportantUserInfoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateImportantUserInfoMutation, UpdateImportantUserInfoMutationVariables>(UpdateImportantUserInfoDocument, options);
+      }
+export type UpdateImportantUserInfoMutationHookResult = ReturnType<typeof useUpdateImportantUserInfoMutation>;
+export type UpdateImportantUserInfoMutationResult = Apollo.MutationResult<UpdateImportantUserInfoMutation>;
+export type UpdateImportantUserInfoMutationOptions = Apollo.BaseMutationOptions<UpdateImportantUserInfoMutation, UpdateImportantUserInfoMutationVariables>;
 export const SearchAuthorDocument = gql`
     query searchAuthor($keyword: String, $limit: Float, $page: Float) {
   searchAuthor(keyword: $keyword, limit: $limit, page: $page) {
@@ -1586,6 +1651,51 @@ export function useGetTopComicsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type GetTopComicsQueryHookResult = ReturnType<typeof useGetTopComicsQuery>;
 export type GetTopComicsLazyQueryHookResult = ReturnType<typeof useGetTopComicsLazyQuery>;
 export type GetTopComicsQueryResult = Apollo.QueryResult<GetTopComicsQuery, GetTopComicsQueryVariables>;
+export const GetAllHistoriesDocument = gql`
+    query getAllHistories($userId: String!) {
+  histories: getAllHistories(userId: $userId) {
+    chapter {
+      chapterNumber
+      name
+      _id
+      comic {
+        name
+        slug
+        imageCoverUrl
+      }
+    }
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetAllHistoriesQuery__
+ *
+ * To run a query within a React component, call `useGetAllHistoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllHistoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllHistoriesQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetAllHistoriesQuery(baseOptions: Apollo.QueryHookOptions<GetAllHistoriesQuery, GetAllHistoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllHistoriesQuery, GetAllHistoriesQueryVariables>(GetAllHistoriesDocument, options);
+      }
+export function useGetAllHistoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllHistoriesQuery, GetAllHistoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllHistoriesQuery, GetAllHistoriesQueryVariables>(GetAllHistoriesDocument, options);
+        }
+export type GetAllHistoriesQueryHookResult = ReturnType<typeof useGetAllHistoriesQuery>;
+export type GetAllHistoriesLazyQueryHookResult = ReturnType<typeof useGetAllHistoriesLazyQuery>;
+export type GetAllHistoriesQueryResult = Apollo.QueryResult<GetAllHistoriesQuery, GetAllHistoriesQueryVariables>;
 export const FindAllTagDocument = gql`
     query findAllTag {
   tags {
@@ -2113,3 +2223,45 @@ export function useFindAllUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type FindAllUsersQueryHookResult = ReturnType<typeof useFindAllUsersQuery>;
 export type FindAllUsersLazyQueryHookResult = ReturnType<typeof useFindAllUsersLazyQuery>;
 export type FindAllUsersQueryResult = Apollo.QueryResult<FindAllUsersQuery, FindAllUsersQueryVariables>;
+export const GetUserByIdDocument = gql`
+    query getUserById($input: FindUserDto!) {
+  user(findUserInput: $input) {
+    _id
+    avatarUrl
+    createdAt
+    description
+    displayName
+    email
+    role
+    username
+  }
+}
+    `;
+
+/**
+ * __useGetUserByIdQuery__
+ *
+ * To run a query within a React component, call `useGetUserByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserByIdQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetUserByIdQuery(baseOptions: Apollo.QueryHookOptions<GetUserByIdQuery, GetUserByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(GetUserByIdDocument, options);
+      }
+export function useGetUserByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserByIdQuery, GetUserByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(GetUserByIdDocument, options);
+        }
+export type GetUserByIdQueryHookResult = ReturnType<typeof useGetUserByIdQuery>;
+export type GetUserByIdLazyQueryHookResult = ReturnType<typeof useGetUserByIdLazyQuery>;
+export type GetUserByIdQueryResult = Apollo.QueryResult<GetUserByIdQuery, GetUserByIdQueryVariables>;

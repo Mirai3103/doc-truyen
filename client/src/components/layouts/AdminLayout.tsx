@@ -1,27 +1,17 @@
-import { useAppSelector } from "@/redux/hook";
-import { Role, selectIsTriedToLogin, selectRole } from "@/redux/userSplice";
+import { withAuth } from "@/HOC/authGuard";
+import { Role } from "@/redux/userSplice";
 import { Box, Flex, useMantineTheme } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Footer } from "../Footer";
 import MyHeader from "../Header";
 import { SideBar } from "./SideBar";
 import { adminSection } from "./adminMenuItem";
-import FallBackLoader from "../FallbackLoader";
 
-export default function AdminLayout() {
+const AdminLayoutWithAuth = withAuth(AdminLayout, Role.CREATOR);
+export default AdminLayoutWithAuth;
+function AdminLayout() {
     const { colorScheme } = useMantineTheme();
-    const userRole = useAppSelector(selectRole);
-    const isTriedToLogin = useAppSelector(selectIsTriedToLogin);
 
-    const isCreator = userRole >= Role.CREATOR;
-
-    if (!isTriedToLogin) {
-        return <FallBackLoader />;
-    }
-    if (!isCreator) {
-        return <Navigate to="/" replace />;
-    }
     return (
         <Flex direction={"column"} w={"100vw"} h="100vh" className="overflow-hidden">
             <MyHeader burgerMenuItems={adminSection} />

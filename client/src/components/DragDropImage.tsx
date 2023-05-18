@@ -1,5 +1,5 @@
 import { useFilePreviewUrl } from "@/hook/useFilePreviewUrl";
-import { Flex, Group, Text, UnstyledButton, rem, useMantineTheme } from "@mantine/core";
+import { Flex, Group, Text, UnstyledButton, useMantineTheme } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { notifications } from "@mantine/notifications";
 import { IconPhoto, IconSquareX, IconUpload, IconX } from "@tabler/icons-react";
@@ -105,7 +105,7 @@ function DragDropImage({
                     h={h}
                     accept={IMAGE_MIME_TYPE}
                 >
-                    <Group position="center" spacing="xl" style={{ minHeight: rem(220), pointerEvents: "none" }}>
+                    <Group position="center" style={{ pointerEvents: "none" }}>
                         <Dropzone.Accept>
                             <IconUpload
                                 size="3.2rem"
@@ -128,7 +128,7 @@ function DragDropImage({
                             <Text align="center" size="xl" inline>
                                 {title}
                             </Text>
-                            <Text align="center" size="sm" color="dimmed" inline mt={7}>
+                            <Text align="center" size="sm" color="dimmed" mt={"md"} inline>
                                 {description}
                             </Text>
                         </div>

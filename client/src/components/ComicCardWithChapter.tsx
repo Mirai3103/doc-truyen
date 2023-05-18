@@ -53,7 +53,7 @@ function ComicCardWithChapter({ comic, w = 200, ...props }: ComicCardProps) {
             w={w}
             direction="column"
             className={classes.card}
-            onClick={() => navigate(`/chapter/${comic.recentChapter._id}`)}
+            onClick={() => navigate(`/chapter/${comic.recentChapter!._id}`)}
             {...props}
         >
             <AspectRatio ratio={2 / 3} maw={w} w={w}>
@@ -71,8 +71,8 @@ function ComicCardWithChapter({ comic, w = 200, ...props }: ComicCardProps) {
                 </BackgroundImage>
             </AspectRatio>
             <Box w={"100%"} p={"xs"} className={classes.description}>
-                <div className="text-sm font-extralight mb-1">{`Chương ` + comic.recentChapter.chapterNumber}</div>
-                <div className="text-sm font-extralight mb-1">{getDiffStr(comic.recentChapter.updatedAt)}</div>
+                <div className="text-sm font-extralight mb-1">{`Chương ` + comic.recentChapter!.chapterNumber}</div>
+                <div className="text-sm font-extralight mb-1">{getDiffStr(comic.recentChapter!.updatedAt)}</div>
 
                 <Tooltip label={comic.name} withArrow>
                     <Title

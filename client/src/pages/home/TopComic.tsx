@@ -38,9 +38,9 @@ function Item({ comic, ...props }: ItemProps) {
                 pos={"absolute"}
                 px="lg"
                 className="left-3 md:left-10 bottom-6 md:bottom-5"
-                onClick={() => navigate(`/chapter/${comic.recentChapter._id}`)}
+                onClick={() => navigate(`/chapter/${comic.recentChapter!._id}`)}
             >
-                {`Chương ` + comic.recentChapter.chapterNumber}
+                {`Chương ` + comic.recentChapter!.chapterNumber}
             </Button>
             <Badge className="z-10" variant="filled" size="lg" radius="sm" pos={"absolute"} top="10px" right={10}>
                 {comic.category?.name || "Manga"}
@@ -70,7 +70,7 @@ function Item({ comic, ...props }: ItemProps) {
                     mt={"md"}
                     size={"md"}
                     color={"blue.9"}
-                    onClick={() => navigate(`/chapter/${comic.recentChapter._id}`)}
+                    onClick={() => navigate(`/chapter/${comic.recentChapter!._id}`)}
                     uppercase
                     className="font-bold w-36 md:w-52 ml-6 md:ml-0"
                 >

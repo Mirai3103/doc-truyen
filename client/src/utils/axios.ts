@@ -21,13 +21,16 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
-    
     (response) => {
         return response;
     },
     async (error) => {
         const originalRequest = error.config;
-        if (error.response.status === 401 && !store.getState().user.isAuthenticated && store.getState().user.isTriedToLogin) {
+        if (
+            error.response.status === 401 &&
+            !store.getState().user.isAuthenticated &&
+            store.getState().user.isTriedToLogin
+        ) {
             return Promise.reject(error);
         }
         if (error.response.status === 401 && !originalRequest._retry) {
@@ -36,7 +39,7 @@ api.interceptors.response.use(
                 accessTokenPromise = reNewAccessToken();
             }
             const accessToken = await accessTokenPromise;
-            store.dispatch(setToken({ accessToken, refreshToken:store.getState().user.refreshToken }));
+            store.dispatch(setToken({ accessToken, refreshToken: store.getState().user.refreshToken }));
             accessTokenPromise = null;
             return api(originalRequest);
         }
@@ -46,7 +49,7 @@ api.interceptors.response.use(
 
 const reNewAccessToken = async () => {
     const refreshToken = store.getState().user.refreshToken;
- 
+
     try {
         const response = await axios.post(
             `${process.env.VITE_SERVER_URL || "http://localhost:3000"}/auth/getNewAccessToken`,
@@ -116,8 +119,6 @@ const authLink = setContext(async (_, { headers }) => {
     }
 });
 const tryAuthenticate = async () => {
-    const res =await api.get("/auth/profile");
-    console.log(res);
+    const res = await api.get("/auth/profile");
 };
-export { authLink, api, tryAuthenticate };
-
+export { api, authLink, tryAuthenticate };

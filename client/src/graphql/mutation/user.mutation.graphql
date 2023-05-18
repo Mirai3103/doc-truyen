@@ -3,3 +3,9 @@ mutation updateUser($id: String!, $updateUserInput: UpdateUserDto!) {
         _id
     }
 }
+
+mutation updateImportantUserInfo($updateUserInput: UpdateImportantInfoDTO!) {
+    updateImportantInfo(input: $updateUserInput) {
+        _id
+    }
+}

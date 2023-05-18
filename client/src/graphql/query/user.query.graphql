@@ -13,3 +13,16 @@ query findAllUsers($keywords: String!, $limit: Float, $page: Float) {
         }
     }
 }
+
+query getUserById($input: FindUserDto!) {
+    user(findUserInput: $input) {
+        _id
+        avatarUrl
+        createdAt
+        description
+        displayName
+        email
+        role
+        username
+    }
+}
