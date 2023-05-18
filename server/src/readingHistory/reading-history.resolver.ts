@@ -1,7 +1,9 @@
+import { GrapqlJwtAuthGuard } from '@/auth/guard/grapql-jwt.auth.guard';
+import { UserPayload } from '@/auth/interface/user-payload.jwt';
 import { Chapter } from '@/chapter/schema/chapter.schema';
 import { ComicService } from '@/comic/comic.service';
-import { Comic } from '@/comic/schema/comic.schema';
-import { Inject } from '@nestjs/common';
+import { CurrentUser } from '@/common/decorator/graphql-user.decorator';
+import { Inject, UseGuards } from '@nestjs/common';
 import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { ReadingHistoryService } from './reading-history.service';
 import { ReadingHistory } from './schema/reading-history.schema';
@@ -27,7 +29,7 @@ export class ReadingHistoryResolver {
     page: number,
     @Args('limit', {
       type: () => Number,
-      defaultValue: 30,
+      defaultValue: 200,
       nullable: true,
     })
     limit: number,
@@ -39,11 +41,17 @@ export class ReadingHistoryResolver {
     );
   }
   @ResolveField(() => Chapter)
-  async chapter(@Parent() history: ReadingHistory) {
+  @UseGuards(GrapqlJwtAuthGuard)
+  async chapter(
+    @Parent() history: ReadingHistory,
+    @CurrentUser() user: UserPayload,
+  ) {
     return history.chapter;
   }
-  @ResolveField(() => Comic)
-  async comic(@Parent() history: ReadingHistory) {
-    return this.comicService.getById(history.chapter.comic._id);
-  }
+  // @ResolveField(() => Comic)
+  // async comic(@Parent() history: ReadingHistory) {
+  //   return history.chapter
+  //     ? this.comicService.getById(history.chapter.comic._id)
+  //     : null;
+  // }
 }

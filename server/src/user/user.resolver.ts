@@ -10,7 +10,7 @@ import {
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateUserDto } from './dto/createUser.dto';
 import { FindUserDto } from './dto/findUser.dto';
-import { UpdateUserDto } from './dto/updateUser.dto';
+import { UpdateImportantInfoDTO, UpdateUserDto } from './dto/updateUser.dto';
 import { UserQueryDto } from './dto/userQuery.dto';
 import { Role, User } from './schema/user.schema';
 import { UserService } from './user.service';
@@ -65,5 +65,21 @@ export class UserResolver {
     @Args('limit', { nullable: true, defaultValue: 25 }) limit: number,
   ) {
     return await this.userService.findAll(keywords, page, limit);
+  }
+  @Mutation(() => User)
+  @UseGuards(GrapqlJwtAuthGuard)
+  async updateImportantInfo(
+    @Args('input') updateImportantInfoDTO: UpdateImportantInfoDTO,
+    @CurrentUser() currentUser: UserPayload,
+  ) {
+    updateImportantInfoDTO.id = currentUser._id;
+    const user = await this.userService.updateImportantFields(
+      updateImportantInfoDTO,
+    );
+
+    if (!user) {
+      throw new NotFoundException(currentUser._id);
+    }
+    return user;
   }
 }

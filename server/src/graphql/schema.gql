@@ -113,6 +113,7 @@ type Mutation {
   updateAuthor(id: String!, updateAuthorInput: UpdateAuthorDto!): Author!
   updateChaptersOrder(input: UpdateChaptersOrderInput!): [Chapter!]!
   updateComic(id: String!, input: CreateComicInput!): Comic!
+  updateImportantInfo(input: UpdateImportantInfoDTO!): User!
   updateTag(id: String!, updateTagInput: UpdateTagDto!): Tag!
   updateUser(id: String!, updateUserInput: UpdateUserDto!): User!
 }
@@ -132,7 +133,7 @@ type Query {
   authors: [Author!]!
   getAllChapters(comicId: String!): [Chapter!]!
   getAllComics: [Comic!]!
-  getAllHistories(limit: Float = 30, page: Float = 1, userId: String!): [ReadingHistory!]!
+  getAllHistories(limit: Float = 200, page: Float = 1, userId: String!): [ReadingHistory!]!
   getCategories: [Tag!]!
   getChapterById(chapterId: String!): Chapter!
   getComicById(id: String!): Comic!
@@ -157,7 +158,6 @@ type QueryAuthorsDTO {
 
 type ReadingHistory {
   chapter: Chapter
-  comic: Comic!
   createdAt: DateTime!
 }
 
@@ -184,6 +184,12 @@ input UpdateAuthorDto {
 
 input UpdateChaptersOrderInput {
   chapters: [ChapterOrder!]!
+}
+
+input UpdateImportantInfoDTO {
+  email: String
+  newPassword: String
+  password: String!
 }
 
 input UpdateTagDto {

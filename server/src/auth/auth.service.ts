@@ -3,6 +3,7 @@ https://docs.nestjs.com/providers#services
 */
 
 import { UtilService } from '@/common/util.service';
+import { CloudinaryService } from '@/file/cloudinary/cloudinary.service';
 import { CreateUserDto } from '@/user/dto/createUser.dto';
 import { User } from '@/user/schema/user.schema';
 import { UserService } from '@/user/user.service';
@@ -16,6 +17,8 @@ export class AuthService {
     @Inject(UserService) private readonly userService: UserService,
     @Inject(UtilService) private readonly utilService: UtilService,
     @Inject(JwtService) private readonly jwtService: JwtService,
+    @Inject(CloudinaryService)
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
   async validateUser(loginDto: LoginDto): Promise<User | null> {
     const user = await this.userService.findByUniqueField(loginDto.username);
@@ -104,15 +107,13 @@ export class AuthService {
       req.user.email,
     );
     if (existingUser) {
-      existingUser.avatarUrl = req.user.picture;
-      await existingUser.save();
       return this.login(existingUser);
     }
     const newUser = await this.userService.create({
       email: req.user.email,
       username: req.user.username,
       rawPassword: crypto.randomBytes(8).toString('hex'),
-      avatarUrl: req.user.picture,
+      avatarUrl: await this.cloudinaryService.uploadFromUrl(req.user.picture),
       displayName: req.user.displayName,
     });
     return this.login(newUser);

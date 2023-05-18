@@ -1,4 +1,5 @@
 import { CommonModule } from '@/common/common.module';
+import { CloudinaryModule } from '@/file/cloudinary/cloudinary.module';
 import { UserModule } from '@/user/user.module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt/dist';
@@ -22,6 +23,7 @@ import { LocalStrategy } from './strategy/local.strategy';
       secret: process.env.JWT_SECRET_KEY || 'secret',
       signOptions: { expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES || '30s' },
     }),
+    CloudinaryModule,
   ],
   providers: [
     AuthService,

@@ -1,11 +1,16 @@
 import { UtilService } from '@/common/util.service';
 import { CloudinaryService } from '@/file/cloudinary/cloudinary.service';
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { CreateUserDto } from './dto/createUser.dto';
 import { FindUserDto } from './dto/findUser.dto';
-import { UpdateUserDto } from './dto/updateUser.dto';
+import { UpdateImportantInfoDTO, UpdateUserDto } from './dto/updateUser.dto';
 import { UserQueryDto } from './dto/userQuery.dto';
 import { User, UserDocument } from './schema/user.schema';
 
@@ -102,5 +107,22 @@ export class UserService {
       users,
       count,
     };
+  }
+  public async updateImportantFields(
+    input: UpdateImportantInfoDTO,
+  ): Promise<User | null> {
+    const user = await this.userModel.findById(input.id);
+    if (!user) {
+      throw new NotFoundException('Không tìm thấy người dùng');
+    }
+    if (await this.utilService.compare(input.password, user.hashPassword)) {
+      throw new ConflictException('Mật khẩu không đúng');
+    }
+    return this.userModel.findByIdAndUpdate(input.id, {
+      email: input.email,
+      password: input.newPassword
+        ? await this.utilService.hash(input.newPassword)
+        : undefined,
+    });
   }
 }

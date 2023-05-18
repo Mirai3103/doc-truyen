@@ -34,3 +34,23 @@ export class UpdateUserDto {
   @ValidateIf((o) => o.username !== undefined)
   username?: string;
 }
+
+@InputType()
+export class UpdateImportantInfoDTO {
+  @HideField()
+  id: string;
+  @IsString()
+  @Field(() => String, { nullable: true })
+  @IsEmail()
+  @ValidateIf((o) => o.email !== undefined)
+  email?: string;
+  @Field(() => String)
+  @IsString()
+  @MinLength(3)
+  password: string;
+  @Field(() => String, { nullable: true })
+  @IsString()
+  @MinLength(3)
+  @ValidateIf((o) => o.newPassword !== undefined)
+  newPassword?: string;
+}

@@ -119,7 +119,7 @@ export class ChapterService {
     return await Promise.all(promises);
   }
   public async deleteChapterOfComic(comicId: string | ObjectId) {
-    return await this.chapterModal.deleteMany({
+    await this.chapterModal.deleteMany({
       comic: {
         _id: comicId,
       },

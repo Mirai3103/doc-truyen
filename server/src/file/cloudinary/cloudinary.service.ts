@@ -30,6 +30,7 @@ export class CloudinaryService {
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir);
     }
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const base64Data = base64.split(';base64,').pop()!;
     const tempFilename = `${uploadDir}/${randomUUID()}.jpg`;
     writeFileSync(tempFilename, base64Data, {
@@ -46,6 +47,16 @@ export class CloudinaryService {
       if (err) console.log('error deleting file');
     });
     console.log(newFileName);
+    return newFileName;
+  }
+  async uploadFromUrl(url: string): Promise<string> {
+    const promise = new Promise<CloudinaryResponse>((resolve, reject) => {
+      const res = cloudinary.uploader.upload(url, (error, result) => {
+        if (error) return reject(error);
+        resolve(result as any);
+      });
+    });
+    const newFileName = (await promise).secure_url;
     return newFileName;
   }
 }

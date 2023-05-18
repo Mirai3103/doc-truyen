@@ -15,7 +15,6 @@ export class ReadingHistoryService {
     private readonly userModel: Model<User>,
     private readonly chapterService: ChapterService,
   ) {}
-  // only save 200 lastest chapters
   public async markAsRead(userId: string, chapterId: string | ObjectId) {
     const user = await this.userModel
       .findOne({
@@ -32,13 +31,15 @@ export class ReadingHistoryService {
     if (!user.readingHistories) {
       user.readingHistories = [];
     }
-
+    user.readingHistories = user.readingHistories.filter(
+      (history) => history.chapter !== null,
+    );
     const existed = user.readingHistories.find(
       (history) => history.chapter?._id || null === chapter?._id || null,
     );
     if (existed) {
       existed.createdAt = new Date();
-      await user.save();
+      user.save();
       return;
     }
 
@@ -91,5 +92,22 @@ export class ReadingHistoryService {
       throw new NotFoundException('User not found');
     }
     return user.readingHistories;
+  }
+  public async removeHistory(userId: string, chapterId: string | ObjectId) {
+    const user = await this.userModel
+      .findOne({
+        _id: userId,
+      })
+      .populate('readingHistories.chapter');
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    if (!user.readingHistories) {
+      user.readingHistories = [];
+    }
+    user.readingHistories = user.readingHistories.filter(
+      (history) => history.chapter._id.toString() !== chapterId.toString(),
+    );
+    await user.save();
   }
 }
