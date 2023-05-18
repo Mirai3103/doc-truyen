@@ -8,6 +8,7 @@ COPY . /app
 RUN apk add --no-cache make gcc g++ python3
 RUN npm install -g npm@9.6.7
 RUN npm i 
+RUN npm i --dev
 RUN npm rebuild bcrypt --build-from-source
 RUN npm i -g @nestjs/cli
 RUN npm run build

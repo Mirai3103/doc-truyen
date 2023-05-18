@@ -3,6 +3,7 @@ https://docs.nestjs.com/controllers#controllers
 */
 
 import { CreateUserDto } from '@/user/dto/createUser.dto';
+import { User } from '@/user/schema/user.schema';
 import {
   Body,
   Controller,
@@ -23,8 +24,8 @@ export class AuthController {
   constructor(@Inject(AuthService) private authService: AuthService) {}
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req: Express.Request) {
-    return this.authService.login(req.user as any);
+  async login(@Request() req: Express.Request & { user: User }) {
+    return this.authService.login(req.user);
   }
   @UseGuards(JwtAuthGuard)
   @Get('profile')
