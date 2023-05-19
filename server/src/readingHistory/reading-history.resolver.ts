@@ -4,7 +4,14 @@ import { Chapter } from '@/chapter/schema/chapter.schema';
 import { ComicService } from '@/comic/comic.service';
 import { CurrentUser } from '@/common/decorator/graphql-user.decorator';
 import { Inject, UseGuards } from '@nestjs/common';
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { ReadingHistoryService } from './reading-history.service';
 import { ReadingHistory } from './schema/reading-history.schema';
 
@@ -54,4 +61,20 @@ export class ReadingHistoryResolver {
   //     ? this.comicService.getById(history.chapter.comic._id)
   //     : null;
   // }
+  @Mutation(() => Boolean)
+  @UseGuards(GrapqlJwtAuthGuard)
+  async removeHistory(
+    @Args('chapterId', {
+      type: () => String,
+    })
+    chapterId: string,
+    @CurrentUser() user: UserPayload,
+  ) {
+    return await this.readingHistoryService.removeHistory(user._id, chapterId);
+  }
+  @Mutation(() => Boolean)
+  @UseGuards(GrapqlJwtAuthGuard)
+  async removeAllHistories(@CurrentUser() user: UserPayload) {
+    return await this.readingHistoryService.removeAllHistory(user._id);
+  }
 }

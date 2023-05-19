@@ -110,6 +110,8 @@ type Mutation {
   createUser(createUserInput: CreateUserDto!): User!
   deleteAuthor(id: String!): Boolean!
   deleteComic(id: String!): Boolean!
+  removeAllHistories: Boolean!
+  removeHistory(chapterId: String!): Boolean!
   updateAuthor(id: String!, updateAuthorInput: UpdateAuthorDto!): Author!
   updateChaptersOrder(input: UpdateChaptersOrderInput!): [Chapter!]!
   updateComic(id: String!, input: CreateComicInput!): Comic!

@@ -7,7 +7,6 @@ query getAllHistories($userId: String!) {
             comic {
                 name
                 slug
-
                 imageCoverUrl
             }
         }

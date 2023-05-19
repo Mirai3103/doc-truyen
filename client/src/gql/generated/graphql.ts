@@ -13,7 +13,6 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: any;
 };
 
@@ -124,6 +123,8 @@ export type Mutation = {
   createUser: User;
   deleteAuthor: Scalars['Boolean'];
   deleteComic: Scalars['Boolean'];
+  removeAllHistories: Scalars['Boolean'];
+  removeHistory: Scalars['Boolean'];
   updateAuthor: Author;
   updateChaptersOrder: Array<Chapter>;
   updateComic: Comic;
@@ -165,6 +166,11 @@ export type MutationDeleteAuthorArgs = {
 
 export type MutationDeleteComicArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationRemoveHistoryArgs = {
+  chapterId: Scalars['String'];
 };
 
 
@@ -457,6 +463,18 @@ export type DeleteComicMutationVariables = Exact<{
 
 
 export type DeleteComicMutation = { __typename?: 'Mutation', deleteComic: boolean };
+
+export type RemoveHistoryMutationVariables = Exact<{
+  chapterId: Scalars['String'];
+}>;
+
+
+export type RemoveHistoryMutation = { __typename?: 'Mutation', removeHistory: boolean };
+
+export type RemoveAllHistoryMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RemoveAllHistoryMutation = { __typename?: 'Mutation', removeAllHistories: boolean };
 
 export type CreateTagMutationVariables = Exact<{
   createTagInput: CreateTagDto;
@@ -916,6 +934,67 @@ export function useDeleteComicMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteComicMutationHookResult = ReturnType<typeof useDeleteComicMutation>;
 export type DeleteComicMutationResult = Apollo.MutationResult<DeleteComicMutation>;
 export type DeleteComicMutationOptions = Apollo.BaseMutationOptions<DeleteComicMutation, DeleteComicMutationVariables>;
+export const RemoveHistoryDocument = gql`
+    mutation removeHistory($chapterId: String!) {
+  removeHistory(chapterId: $chapterId)
+}
+    `;
+export type RemoveHistoryMutationFn = Apollo.MutationFunction<RemoveHistoryMutation, RemoveHistoryMutationVariables>;
+
+/**
+ * __useRemoveHistoryMutation__
+ *
+ * To run a mutation, you first call `useRemoveHistoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveHistoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeHistoryMutation, { data, loading, error }] = useRemoveHistoryMutation({
+ *   variables: {
+ *      chapterId: // value for 'chapterId'
+ *   },
+ * });
+ */
+export function useRemoveHistoryMutation(baseOptions?: Apollo.MutationHookOptions<RemoveHistoryMutation, RemoveHistoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveHistoryMutation, RemoveHistoryMutationVariables>(RemoveHistoryDocument, options);
+      }
+export type RemoveHistoryMutationHookResult = ReturnType<typeof useRemoveHistoryMutation>;
+export type RemoveHistoryMutationResult = Apollo.MutationResult<RemoveHistoryMutation>;
+export type RemoveHistoryMutationOptions = Apollo.BaseMutationOptions<RemoveHistoryMutation, RemoveHistoryMutationVariables>;
+export const RemoveAllHistoryDocument = gql`
+    mutation removeAllHistory {
+  removeAllHistories
+}
+    `;
+export type RemoveAllHistoryMutationFn = Apollo.MutationFunction<RemoveAllHistoryMutation, RemoveAllHistoryMutationVariables>;
+
+/**
+ * __useRemoveAllHistoryMutation__
+ *
+ * To run a mutation, you first call `useRemoveAllHistoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveAllHistoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeAllHistoryMutation, { data, loading, error }] = useRemoveAllHistoryMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRemoveAllHistoryMutation(baseOptions?: Apollo.MutationHookOptions<RemoveAllHistoryMutation, RemoveAllHistoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveAllHistoryMutation, RemoveAllHistoryMutationVariables>(RemoveAllHistoryDocument, options);
+      }
+export type RemoveAllHistoryMutationHookResult = ReturnType<typeof useRemoveAllHistoryMutation>;
+export type RemoveAllHistoryMutationResult = Apollo.MutationResult<RemoveAllHistoryMutation>;
+export type RemoveAllHistoryMutationOptions = Apollo.BaseMutationOptions<RemoveAllHistoryMutation, RemoveAllHistoryMutationVariables>;
 export const CreateTagDocument = gql`
     mutation createTag($createTagInput: CreateTagDto!) {
   createTag(createTagInput: $createTagInput) {

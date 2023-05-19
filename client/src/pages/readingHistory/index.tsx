@@ -1,26 +1,49 @@
 import { withAuth } from "@/HOC/authGuard";
-import { useGetAllHistoriesQuery } from "@/gql/generated/graphql";
+import {
+    useGetAllHistoriesQuery,
+    useRemoveAllHistoryMutation,
+    useRemoveHistoryMutation,
+} from "@/gql/generated/graphql";
 import { useAppSelector } from "@/redux/hook";
 import { selectUserProfile } from "@/redux/userSplice";
 import { toDateTimeFormat } from "@/utils/dateUtils";
 import { getImageUrl } from "@/utils/imageUtils";
 import { Button, Flex, Group, Image, Stack, Table, Text, Title, Tooltip } from "@mantine/core";
 import { IconTrash, IconX } from "@tabler/icons-react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 function ReadingHistory() {
     const userProfile = useAppSelector(selectUserProfile);
-    const { data } = useGetAllHistoriesQuery({
+    const { data, refetch } = useGetAllHistoriesQuery({
         variables: {
             userId: userProfile?._id || "",
         },
     });
+    const [removeHistory, { data: removeData }] = useRemoveHistoryMutation();
+    const [removeAllHistory, { data: removeAllData }] = useRemoveAllHistoryMutation();
+    React.useEffect(() => {
+        refetch();
+    }, [refetch, removeData, removeAllData]);
+    const sortedData = React.useMemo(() => {
+        if (!data?.histories) return [];
+        return [...data.histories].sort((a, b) => {
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        });
+    }, [data?.histories]);
     const navigate = useNavigate();
     return (
         <Stack m={"lg"}>
             <Title>Lịch sử đọc</Title>
             <Group position={"left"}>
-                <Button className="px-10" size="md" leftIcon={<IconX />}>
+                <Button
+                    className="px-10"
+                    size="md"
+                    leftIcon={<IconX />}
+                    onClick={() => {
+                        removeAllHistory();
+                    }}
+                >
                     Xóa tất cả
                 </Button>
             </Group>
@@ -42,7 +65,7 @@ function ReadingHistory() {
                             </td>
                         </tr>
                     )}
-                    {data?.histories?.map((history, index) => (
+                    {sortedData.map((history, index) => (
                         <tr key={index}>
                             <td>{index + 1}</td>
                             <td>
@@ -80,7 +103,18 @@ function ReadingHistory() {
                             </td>
                             <td>{toDateTimeFormat(history.createdAt)}</td>
                             <td>
-                                <Button color="red" variant="outline" leftIcon={<IconTrash />}>
+                                <Button
+                                    color="red"
+                                    variant="outline"
+                                    leftIcon={<IconTrash />}
+                                    onClick={() => {
+                                        removeHistory({
+                                            variables: {
+                                                chapterId: history.chapter?._id || "",
+                                            },
+                                        });
+                                    }}
+                                >
                                     Xóa
                                 </Button>
                             </td>

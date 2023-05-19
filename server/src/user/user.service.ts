@@ -1,5 +1,4 @@
 import { UtilService } from '@/common/util.service';
-import { CloudinaryService } from '@/file/cloudinary/cloudinary.service';
 import {
   ConflictException,
   Inject,
@@ -18,7 +17,6 @@ import { User, UserDocument } from './schema/user.schema';
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
-    @Inject(CloudinaryService) private cloudinaryService: CloudinaryService,
     @Inject(UtilService) private utilService: UtilService,
   ) {}
 
@@ -47,12 +45,7 @@ export class UserService {
     id: string | mongoose.Types.ObjectId,
     updateUserDto: UpdateUserDto,
   ): Promise<User | null> {
-    let avatarUrl: string | undefined;
-    if (updateUserDto.base64Avatar) {
-      avatarUrl = await this.cloudinaryService.uploadFromBase64(
-        updateUserDto.base64Avatar,
-      );
-    }
+    const avatarUrl: string | undefined = updateUserDto.base64Avatar;
 
     return this.userModel.findByIdAndUpdate(id, {
       ...updateUserDto,

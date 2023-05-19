@@ -4,7 +4,7 @@ import { setContext } from "@apollo/client/link/context";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 const api = axios.create({
-    baseURL: process.env.VITE_SERVER_URL || "/api",
+    baseURL: "/api",
 });
 let accessTokenPromise: Promise<string> | null = null;
 api.interceptors.request.use(
@@ -51,12 +51,9 @@ const reNewAccessToken = async () => {
     const refreshToken = store.getState().user.refreshToken;
 
     try {
-        const response = await axios.post(
-            `${process.env.VITE_SERVER_URL || "http://localhost:3000"}/auth/getNewAccessToken`,
-            {
-                refreshToken,
-            }
-        );
+        const response = await axios.post(`/api/auth/getNewAccessToken`, {
+            refreshToken,
+        });
         return response.data.accessToken;
     } catch (e: any) {
         console.log(e);

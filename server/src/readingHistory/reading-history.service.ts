@@ -23,10 +23,10 @@ export class ReadingHistoryService {
       .populate('readingHistories.chapter');
     const chapter = await this.chapterService.getChapterById(chapterId);
     if (!chapter) {
-      throw new NotFoundException('Chapter not found');
+      return;
     }
     if (!user) {
-      throw new NotFoundException('User not found');
+      return;
     }
     if (!user.readingHistories) {
       user.readingHistories = [];
@@ -35,11 +35,13 @@ export class ReadingHistoryService {
       (history) => history.chapter !== null,
     );
     const existed = user.readingHistories.find(
-      (history) => history.chapter?._id || null === chapter?._id || null,
+      (history) => history.chapter._id === chapter._id,
     );
+
     if (existed) {
       existed.createdAt = new Date();
-      user.save();
+      await user.save();
+      console.log('update existed', user.readingHistories);
       return;
     }
 
@@ -60,7 +62,9 @@ export class ReadingHistoryService {
       if (user.readingHistories.length > 200) {
         user.readingHistories.shift();
       }
-      user.save();
+      await user.save();
+      console.log('update existed comic', user.readingHistories);
+
       return;
     }
 
@@ -71,7 +75,8 @@ export class ReadingHistoryService {
     if (user.readingHistories.length > 200) {
       user.readingHistories.shift();
     }
-    user.save();
+    console.log('create new', user.readingHistories);
+    await user.save();
   }
   public async getReadingHistories(
     userId: string,
@@ -83,14 +88,12 @@ export class ReadingHistoryService {
         _id: userId,
       })
       .populate('readingHistories.chapter')
-      .sort({
-        'readingHistories.createdAt': -1,
-      })
       .skip((page - 1) * limit)
       .limit(limit);
     if (!user) {
       throw new NotFoundException('User not found');
     }
+
     return user.readingHistories;
   }
   public async removeHistory(userId: string, chapterId: string | ObjectId) {
@@ -100,7 +103,7 @@ export class ReadingHistoryService {
       })
       .populate('readingHistories.chapter');
     if (!user) {
-      throw new NotFoundException('User not found');
+      return false;
     }
     if (!user.readingHistories) {
       user.readingHistories = [];
@@ -109,5 +112,19 @@ export class ReadingHistoryService {
       (history) => history.chapter._id.toString() !== chapterId.toString(),
     );
     await user.save();
+    return true;
+  }
+  public async removeAllHistory(userId: string) {
+    const user = await this.userModel
+      .findOne({
+        _id: userId,
+      })
+      .populate('readingHistories.chapter');
+    if (!user) {
+      return false;
+    }
+    user.readingHistories = [];
+    await user.save();
+    return true;
   }
 }

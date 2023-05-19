@@ -49,6 +49,7 @@ export class ChapterResolver {
   ) {
     if (user) {
       this.readingHistoryService.markAsRead(user._id, chapterId);
+      console.log('mark as read', user._id, chapterId);
     }
     return await this.chapterService.getChapterById(chapterId);
   }

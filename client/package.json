@@ -9,7 +9,7 @@
         "preview": "vite preview",
         "generate": "graphql-codegen --config codegen.yml",
         "predev": "npm run generate",
-                "preview:build": "serve dist --listen 8080"
+        "preview:build": "serve dist --listen 8080"
     },
     "dependencies": {
         "@apollo/client": "^3.7.11",

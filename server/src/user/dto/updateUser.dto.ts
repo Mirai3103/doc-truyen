@@ -16,8 +16,6 @@ export class UpdateUserDto {
   displayName?: string;
   @Field(() => String, { nullable: true })
   @IsString()
-  @MinLength(3)
-  @ValidateIf((o) => o.base64Avatar !== undefined)
   base64Avatar?: string;
   @Field(() => String, { nullable: true })
   @IsString()

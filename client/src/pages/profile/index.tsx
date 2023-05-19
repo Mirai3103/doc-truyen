@@ -4,8 +4,8 @@ import TextEditor from "@/components/TextEditor";
 import { useGetUserByIdQuery, useUpdateUserMutation } from "@/gql/generated/graphql";
 import { useAppSelector } from "@/redux/hook";
 import { Role, roleToString, selectUserProfile } from "@/redux/userSplice";
-import { blobToBase64, getBlob } from "@/utils/imageUtils";
-import { Button, Container, Flex, Group, Stack, TextInput, Title } from "@mantine/core";
+import { getBlob, uploadImage } from "@/utils/imageUtils";
+import { Button, Container, Flex, Group, Loader, Stack, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
@@ -17,14 +17,16 @@ function ProfilePage() {
     const [opened, { close, open }] = useDisclosure();
     const [avatar, setAvatar] = useState<Blob | null>(null);
     const [type, setType] = useState<"email" | "password">("email");
-    const { data, loading, error } = useGetUserByIdQuery({
+    const [isAvatarChanged, setIsAvatarChanged] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const { data } = useGetUserByIdQuery({
         variables: {
             input: {
                 _id: userProfile?._id,
             },
         },
     });
-    const [updateUserMutatiom, { loading: updateLoading }] = useUpdateUserMutation();
+    const [updateUserMutation] = useUpdateUserMutation();
     const { values, setFieldValue, onSubmit } = useForm<IProfileUpdateDTO>({
         initialValues: {
             username: userProfile?.username || "",
@@ -33,38 +35,45 @@ function ProfilePage() {
         },
     });
 
-    const onAvatarChange = React.useCallback(
-        async (blob: Blob | null) => {
-            setAvatar(blob);
-            if (blob) {
-                setFieldValue("base64Avatar", await blobToBase64(blob));
-            } else setFieldValue("base64Avatar", "");
-        },
-        [setFieldValue]
-    );
+    const onAvatarChange = React.useCallback(async (blob: Blob | null) => {
+        setAvatar(blob);
+        setIsAvatarChanged(true);
+    }, []);
     const onSubmitForm = async (values: IProfileUpdateDTO) => {
-        await updateUserMutatiom({
-            variables: {
-                id: userProfile?._id || "",
-                updateUserInput: {
-                    displayName: values.displayName,
-                    description: values.description,
-                    username: values.username,
-                    base64Avatar: values.base64Avatar,
+        try {
+            let avatarUrl: string | undefined = undefined;
+            setLoading(true);
+            if (isAvatarChanged && avatar) {
+                avatarUrl = await uploadImage(avatar);
+            }
+            await updateUserMutation({
+                variables: {
+                    id: userProfile?._id || "",
+                    updateUserInput: {
+                        displayName: values.displayName,
+                        description: values.description,
+                        username: values.username,
+                        base64Avatar: avatarUrl,
+                    },
                 },
-            },
-        });
-        notifications.show({
-            message: "Cập nhật thành công",
-            color: "green",
-            title: "Thành công",
-        });
+            });
+            notifications.show({
+                message: "Cập nhật thành công",
+                color: "green",
+                title: "Thành công",
+            });
+        } catch (e) {
+            console.error(e);
+        }
+        setLoading(false);
     };
     React.useEffect(() => {
         if (userProfile?.avatarUrl) {
             getBlob(userProfile.avatarUrl).then((blob) => {
                 setAvatar(blob);
             });
+        } else {
+            setAvatar(null);
         }
     }, [userProfile]);
     React.useEffect(() => {
@@ -115,14 +124,8 @@ function ProfilePage() {
                             </Stack>
                         </Stack>
                         <Stack w={"100%"}>
-                            <Button
-                                mt={"lg"}
-                                mx={"auto"}
-                                w={"80%"}
-                                type="submit"
-                                variant="filled"
-                                disabled={updateLoading}
-                            >
+                            <Button mt={"lg"} mx={"auto"} w={"80%"} type="submit" variant="filled" disabled={loading}>
+                                {loading && <Loader />}
                                 Cập nhật
                             </Button>
                             <Group position="right">

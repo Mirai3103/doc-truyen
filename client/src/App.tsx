@@ -12,15 +12,14 @@ import { RouterProvider } from "react-router-dom";
 import "./index.css";
 import { themeOverride } from "./mantine.config";
 import routes from "./routes";
-console.log(process.env);
 const client = new ApolloClient({
-    uri: process.env.VITE_GRAPHQL_URL || "/graphql",
+    uri: "/graphql",
     cache: new InMemoryCache(),
     connectToDevTools: true,
     link: ApolloLink.from([
         authLink,
         new HttpLink({
-            uri: process.env.VITE_GRAPHQL_URL || "/graphql",
+            uri: "/graphql",
         }),
     ]),
 });

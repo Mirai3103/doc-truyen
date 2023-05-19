@@ -126,7 +126,11 @@ export default function MyHeader({ withBurgerMenu = false, burgerMenuItems = def
                             {isAuthenticated && (
                                 <Menu.Item>
                                     <Group spacing="sm" className="cursor-pointer">
-                                        <Avatar size={40} src={userProfile?.avatarUrl} radius={30} />
+                                        <Avatar
+                                            size={40}
+                                            radius={30}
+                                            placeholder={userProfile?.displayName.split(" ").pop()?.charAt(0)}
+                                        />
                                         <Text fz="md" fw={700}>
                                             {userProfile?.displayName}
                                         </Text>

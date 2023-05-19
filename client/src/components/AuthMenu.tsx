@@ -13,7 +13,12 @@ export default function AuthMenu() {
             <Menu shadow="md" width={300} withArrow>
                 <Menu.Target>
                     <Group spacing="sm" className="cursor-pointer">
-                        <Avatar size={40} src={userProfile?.avatarUrl} radius={30} />
+                        <Avatar
+                            size={40}
+                            placeholder={userProfile?.displayName.split(" ").pop()?.charAt(0)}
+                            src={userProfile?.avatarUrl}
+                            radius={30}
+                        />
                         <Text fz="md" fw={700}>
                             {userProfile?.displayName}
                         </Text>

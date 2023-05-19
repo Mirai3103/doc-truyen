@@ -8,12 +8,6 @@ export default ({ mode }) => {
     config();
     return defineConfig({
         plugins: [react(), tsconfigPaths()],
-        define: {
-            "process.env": {
-                // VITE_SERVER_URL: process.env.SERVER_URL,
-                // VITE_GRAPHQL_URL: process.env.GRAPHQL_URL,
-            },
-        },
         server: {
             proxy: {
                 "/graphql": {

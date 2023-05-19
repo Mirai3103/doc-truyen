@@ -1,4 +1,5 @@
 import { Button, Group, Modal, Stack } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import React, { useState } from "react";
 import ReactCrop, { PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
@@ -15,6 +16,14 @@ export default function CropImageModal({ src, aspect, onClose, onCrop, onCancel,
     const [croppedArea, setCroppedArea] = useState<PixelCrop>();
 
     const onCropClick = () => {
+        if (croppedArea === undefined) {
+            notifications.show({
+                title: "Lỗi",
+                message: "Vui chọn vùng cần cắt",
+                color: "red",
+            });
+            return;
+        }
         const scaleX = imgRef.current!.naturalWidth / imgRef.current!.width || 1;
         const scaleY = imgRef.current!.naturalHeight / imgRef.current!.height || 1;
         onCrop(

@@ -28,7 +28,7 @@ export class FileController {
   ) {}
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
-  @UseGuards(new WithRoleGuard(Role.CREATOR))
+  @UseGuards(new WithRoleGuard(Role.USER))
   public async uploadFile(@UploadedFile() file: Express.Multer.File) {
     const result = await this.cloudinaryService.uploadFile(file);
     return {

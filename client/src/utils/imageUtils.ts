@@ -1,7 +1,7 @@
 import axios from "axios";
 import api from "./axios";
 
-const SERVER_URL = process.env.VITE_SERVER_URL || "http://localhost:3000";
+const SERVER_URL = "/api";
 export const getImageUrl = (name: string) => {
     //check if name is a url
     if (name.startsWith("http")) {
@@ -11,9 +11,12 @@ export const getImageUrl = (name: string) => {
 };
 
 export const uploadImage = async (blob: Blob) => {
+    if (!blob) {
+        return "";
+    }
     const formData = new FormData();
     formData.append("file", blob);
-    const response = await api.post(`${SERVER_URL}/file/upload`, formData, {
+    const response = await api.post(`/file/upload`, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         },
@@ -37,7 +40,7 @@ export const uploadImages = async (files: File[]) => {
     files.forEach((file) => {
         formData.append("files", file);
     });
-    const response = await api.post(`${SERVER_URL}/file/uploads`, formData, {
+    const response = await api.post(`/file/uploads`, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         },

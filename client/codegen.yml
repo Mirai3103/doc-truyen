@@ -1,5 +1,5 @@
 overwrite: true
-schema: "../server/src/graphql/schema.gql"
+schema: "http://[::1]:3000/graphql"
 documents:
     - "./src/graphql/**/*.graphql"
     - "./src/**/*.tsx"
