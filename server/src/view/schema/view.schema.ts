@@ -16,4 +16,3 @@ export class View {
 }
 export type ViewDocument = View & Document;
 export const ViewSchema = SchemaFactory.createForClass(View);
-ViewSchema.index({ chapter: 1, date: 1 }, { unique: true });
