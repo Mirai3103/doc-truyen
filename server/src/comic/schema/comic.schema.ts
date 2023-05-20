@@ -63,7 +63,23 @@ export class Comic extends BaseSchema {
   @Field(() => Chapter, { nullable: true })
   recentChapter: Chapter;
   @Field(() => Int)
-  chapterCount: number;
+  chapterCount = 0;
+  // analytics
+  @Prop({ default: 0 })
+  @Field(() => Int)
+  weekViewCount: number;
+  @Prop({ default: 0 })
+  @Field(() => Int)
+  monthViewCount: number;
+  @Prop({ default: 0 })
+  @Field(() => Int)
+  yearViewCount: number;
+  @Prop({ default: 0 })
+  @Field(() => Int)
+  totalViewCount: number;
+  @Prop({ default: 0 })
+  @Field(() => Int)
+  todayViewCount: number;
 }
 
 export type ComicDocument = Comic & Document;

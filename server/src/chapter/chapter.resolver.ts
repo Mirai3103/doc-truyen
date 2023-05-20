@@ -8,6 +8,7 @@ import { Comic } from '@/comic/schema/comic.schema';
 import { CurrentUser } from '@/common/decorator/graphql-user.decorator';
 import { ReadingHistoryService } from '@/readingHistory/reading-history.service';
 import { Role } from '@/user/schema/user.schema';
+import { ViewService } from '@/view/view.service';
 import { Inject, UseGuards } from '@nestjs/common';
 import {
   Args,
@@ -30,6 +31,8 @@ export class ChapterResolver {
     @Inject(ComicService) private readonly comicService: ComicService,
     @Inject(ReadingHistoryService)
     private readonly readingHistoryService: ReadingHistoryService,
+    @Inject(ViewService)
+    private readonly viewService: ViewService,
   ) {}
   @Query(() => [Chapter])
   async getAllChapters(
@@ -49,8 +52,8 @@ export class ChapterResolver {
   ) {
     if (user) {
       this.readingHistoryService.markAsRead(user._id, chapterId);
-      console.log('mark as read', user._id, chapterId);
     }
+    this.viewService.increaseView(chapterId);
     return await this.chapterService.getChapterById(chapterId);
   }
   @ResolveField(() => Comic)

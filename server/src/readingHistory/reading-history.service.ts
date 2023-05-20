@@ -41,7 +41,6 @@ export class ReadingHistoryService {
     if (existed) {
       existed.createdAt = new Date();
       await user.save();
-      console.log('update existed', user.readingHistories);
       return;
     }
 
@@ -63,7 +62,6 @@ export class ReadingHistoryService {
         user.readingHistories.shift();
       }
       await user.save();
-      console.log('update existed comic', user.readingHistories);
 
       return;
     }
@@ -75,7 +73,6 @@ export class ReadingHistoryService {
     if (user.readingHistories.length > 200) {
       user.readingHistories.shift();
     }
-    console.log('create new', user.readingHistories);
     await user.save();
   }
   public async getReadingHistories(

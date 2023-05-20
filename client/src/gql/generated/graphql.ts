@@ -32,13 +32,18 @@ export type Chapter = {
   chapterNumber: Scalars['String'];
   comic: Comic;
   createdAt: Scalars['DateTime'];
+  monthViewCount: Scalars['Int'];
   name?: Maybe<Scalars['String']>;
   nextChapter?: Maybe<Chapter>;
   order: Scalars['Float'];
   pageCount: Scalars['Int'];
   pages: Array<Page>;
   previousChapter?: Maybe<Chapter>;
+  todayViewCount: Scalars['Int'];
+  totalViewCount: Scalars['Int'];
   updatedAt: Scalars['DateTime'];
+  weekViewCount: Scalars['Int'];
+  yearViewCount: Scalars['Int'];
 };
 
 export type ChapterOrder = {
@@ -60,13 +65,18 @@ export type Comic = {
   genres: Array<Tag>;
   imageCoverUrl: Scalars['String'];
   imageThumbUrl: Scalars['String'];
+  monthViewCount: Scalars['Int'];
   name: Scalars['String'];
   officeUrl?: Maybe<Scalars['String']>;
   otherNames: Array<Scalars['String']>;
   recentChapter?: Maybe<Chapter>;
   slug: Scalars['String'];
   status: Scalars['String'];
+  todayViewCount: Scalars['Int'];
+  totalViewCount: Scalars['Int'];
   updatedAt: Scalars['DateTime'];
+  weekViewCount: Scalars['Int'];
+  yearViewCount: Scalars['Int'];
 };
 
 export type CreateAuthorDto = {

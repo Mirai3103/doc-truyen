@@ -30,6 +30,22 @@ export class Chapter extends BaseSchema {
   previousChapter?: Chapter;
   @Field(() => Int)
   pageCount: number;
+  // analytics
+  @Prop({ default: 0 })
+  @Field(() => Int)
+  weekViewCount: number;
+  @Prop({ default: 0 })
+  @Field(() => Int)
+  monthViewCount: number;
+  @Prop({ default: 0 })
+  @Field(() => Int)
+  yearViewCount: number;
+  @Prop({ default: 0 })
+  @Field(() => Int)
+  totalViewCount: number;
+  @Prop({ default: 0 })
+  @Field(() => Int)
+  todayViewCount: number;
 }
 
 @ObjectType()

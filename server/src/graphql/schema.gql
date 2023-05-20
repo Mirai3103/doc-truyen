@@ -16,13 +16,18 @@ type Chapter {
   chapterNumber: String!
   comic: Comic!
   createdAt: DateTime!
+  monthViewCount: Int!
   name: String
   nextChapter: Chapter
   order: Float!
   pageCount: Int!
   pages: [Page!]!
   previousChapter: Chapter
+  todayViewCount: Int!
+  totalViewCount: Int!
   updatedAt: DateTime!
+  weekViewCount: Int!
+  yearViewCount: Int!
 }
 
 input ChapterOrder {
@@ -43,13 +48,18 @@ type Comic {
   genres: [Tag!]!
   imageCoverUrl: String!
   imageThumbUrl: String!
+  monthViewCount: Int!
   name: String!
   officeUrl: String
   otherNames: [String!]!
   recentChapter: Chapter
   slug: String!
   status: String!
+  todayViewCount: Int!
+  totalViewCount: Int!
   updatedAt: DateTime!
+  weekViewCount: Int!
+  yearViewCount: Int!
 }
 
 input CreateAuthorDto {
