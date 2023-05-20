@@ -8,7 +8,6 @@ export class ViewService {
   constructor(@InjectModel(View.name) private viewModel: Model<ViewDocument>) {}
   public async increaseView(chapterId: string) {
     const today = new Date();
-
     const view = await this.viewModel.findOne({
       chapter: {
         _id: chapterId,
@@ -16,13 +15,21 @@ export class ViewService {
       date: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
     });
     if (!view) {
-      await this.viewModel.create({
-        chapter: {
-          _id: chapterId,
-        },
-        count: 1,
-        date: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
-      });
+      try {
+        await this.viewModel.create({
+          chapter: {
+            _id: chapterId,
+          },
+          count: 1,
+          date: new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate(),
+          ),
+        });
+      } catch (error) {
+        console.error(chapterId, today);
+      }
     } else {
       view.count += 1;
       await view.save();
