@@ -10,6 +10,17 @@ Một trang web đọc truyện
 
 **Server:** Node, Nestjs, Graphql
 
+## Todo
+
+- Schedule task for crawler
+- Advance search
+- Bookmarks
+- Notification
+- Trending
+- Comment
+- Mobile app with react native
+
+
 
 ## Run Locally
 
