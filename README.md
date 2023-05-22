@@ -12,7 +12,7 @@ Một trang web đọc truyện
 
 ## Todo
 
-~~- Schedule task for crawler~~
+- ~~Schedule task for crawler~~
 - server query caching
 - Advance search
 - Bookmarks
