@@ -8,7 +8,7 @@ import {
     useUpdateComicMutation,
 } from "@/gql/generated/graphql";
 import { useAppSelector } from "@/redux/hook";
-import { selectUserProfile } from "@/redux/userSplice";
+import { Role, selectUserProfile } from "@/redux/userSplice";
 import { getBlob, getImageUrl, uploadImage } from "@/utils/imageUtils";
 import { Button, Flex, MultiSelect, Select, Stack, Text, TextInput, Title } from "@mantine/core";
 import { modals } from "@mantine/modals";
@@ -141,7 +141,7 @@ export default function EditComicPage() {
     }, [dataComic, dataComic?.comic, setFieldValue]);
     React.useEffect(() => {
         if (dataComic && userProfile) {
-            if (dataComic?.comic.createdBy._id !== userProfile?._id) {
+            if (dataComic?.comic.createdBy._id !== userProfile?._id && userProfile?.role !== Role.ADMIN) {
                 notifications.show({
                     title: "Lỗi",
                     message: "Bạn không có quyền chỉnh sửa truyện này",

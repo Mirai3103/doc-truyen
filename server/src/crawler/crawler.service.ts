@@ -4,6 +4,7 @@ https://docs.nestjs.com/providers#services
 
 import { AuthorService } from '@/author/author.service';
 import { Chapter, ChapterDocument } from '@/chapter/schema/chapter.schema';
+import { ComicService } from '@/comic/comic.service';
 import { Comic, ComicDocument, Status } from '@/comic/schema/comic.schema';
 import { UtilService } from '@/common/util.service';
 import { Role, User } from '@/user/schema/user.schema';
@@ -31,6 +32,7 @@ export class CrawlerService {
     private readonly authorService: AuthorService,
     @InjectModel(User.name) private readonly userModel: Model<User>,
     private readonly utilsService: UtilService,
+    private readonly comicService: ComicService,
   ) {
     this.fakePages = JSON.parse(readFileSync('fakePages.json', 'utf-8'));
   }
@@ -117,6 +119,7 @@ export class CrawlerService {
       );
 
       await Promise.all(listPromises);
+      await this.comicService.updateUpdatedAt(mangaExist._id + '');
       return;
     }
     console.log('crawling new manga: ', manga.name);

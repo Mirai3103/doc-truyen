@@ -9,6 +9,7 @@ export default function TrendingPage() {
     const { data, loading } = useGetTrendingComicsQuery({
         variables: {
             limit: 10,
+            page: 1,
         },
     });
     return (

@@ -42,21 +42,28 @@ export class ComicService {
     });
     return !!comic;
   }
-  public async updateUpdatedAt() {
-    console.log('updateUpdatedAt');
+  public async updateUpdatedAtAll() {
     const comics = await this.comicModal.find();
     comics.forEach(async (comic) => {
-      const lastChapter = await this.chapterService.getLastedChapterByComicId(
-        comic._id,
-      );
-      if (lastChapter) {
-        comic.updatedAt = lastChapter.createdAt;
-        await comic.save({
-          timestamps: false,
-        });
+      if (comic) {
+        await this.updateUpdatedAt(comic._id + '');
       }
-      console.log('done', comic.updatedAt);
     });
+  }
+  public async updateUpdatedAt(comicId: string) {
+    const comic = await this.comicModal.findById(comicId);
+    if (!comic) {
+      return;
+    }
+    const lastChapter = await this.chapterService.getLastedChapterByComicId(
+      comic._id,
+    );
+    if (lastChapter) {
+      comic.updatedAt = lastChapter.createdAt;
+      await comic.save({
+        timestamps: false,
+      });
+    }
   }
   public async getRecentComics(limit = 10, page = 1) {
     const skip = (page - 1) * limit;

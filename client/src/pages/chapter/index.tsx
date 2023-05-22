@@ -36,15 +36,22 @@ export default function ChapterPage() {
             <Flex direction={"column"} rowGap="xl">
                 {data ? <ChapterInfo chapter={data.getChapterById as any} /> : <ChapterInfo.Skeleton />}
 
-                <Flex direction={"column"} gap="xl">
-                    {sortedPages
-                        ? sortedPages.map((page: Page) => (
-                              <Image radius={"sm"} key={page.order} src={getImageUrl(page.url)} alt={page.order + ""} />
-                          ))
-                        : Array.from({ length: 10 }).map((_, index) => (
-                              <Skeleton height={500} width={"100%"} key={index} />
-                          ))}
-                </Flex>
+                <Container>
+                    <Flex direction={"column"} gap="xl">
+                        {sortedPages
+                            ? sortedPages.map((page: Page) => (
+                                  <Image
+                                      radius={"sm"}
+                                      key={page.order}
+                                      src={getImageUrl(page.url)}
+                                      alt={page.order + ""}
+                                  />
+                              ))
+                            : Array.from({ length: 10 }).map((_, index) => (
+                                  <Skeleton height={500} width={"100%"} key={index} />
+                              ))}
+                    </Flex>
+                </Container>
             </Flex>
             <Group className="flex mt-20 items-center flex-nowrap justify-center ">
                 <Button leftIcon={<IconChevronLeft />} disabled={!data?.getChapterById.previousChapter}>

@@ -1895,32 +1895,8 @@ export const GetTrendingComicsDocument = gql`
       _id
     }
   }
-  TopWeek: getTrendingComics(input: {page: $page, limit: $limit, type: "topWeek"}) {
-    _id
-    imageThumbUrl
-    imageCoverUrl
-    name
-    description
-    slug
-    recentChapter {
-      chapterNumber
-      name
-      order
-      _id
-      createdAt
-      updatedAt
-    }
-    category {
-      _id
-      name
-    }
-    author {
-      name
-      _id
-    }
-  }
-  TopMonth: getTrendingComics(
-    input: {page: $page, limit: $limit, type: "topMonth"}
+  TopWeek: getTrendingComics(
+    input: {page: $page, limit: $limit, type: "weekViewCount"}
   ) {
     _id
     imageThumbUrl
@@ -1945,7 +1921,9 @@ export const GetTrendingComicsDocument = gql`
       _id
     }
   }
-  TopYear: getTrendingComics(input: {page: $page, limit: $limit, type: "topYear"}) {
+  TopMonth: getTrendingComics(
+    input: {page: $page, limit: $limit, type: "monthViewCount"}
+  ) {
     _id
     imageThumbUrl
     imageCoverUrl
@@ -1969,7 +1947,35 @@ export const GetTrendingComicsDocument = gql`
       _id
     }
   }
-  Newest: getTrendingComics(input: {page: $page, limit: $limit, type: "newest"}) {
+  TopYear: getTrendingComics(
+    input: {page: $page, limit: $limit, type: "yearViewCount"}
+  ) {
+    _id
+    imageThumbUrl
+    imageCoverUrl
+    name
+    description
+    slug
+    recentChapter {
+      chapterNumber
+      name
+      order
+      _id
+      createdAt
+      updatedAt
+    }
+    category {
+      _id
+      name
+    }
+    author {
+      name
+      _id
+    }
+  }
+  Newest: getTrendingComics(
+    input: {page: $page, limit: $limit, type: "updatedAt"}
+  ) {
     _id
     imageThumbUrl
     imageCoverUrl
@@ -2083,7 +2089,7 @@ export type GetTopFollowLazyQueryHookResult = ReturnType<typeof useGetTopFollowL
 export type GetTopFollowQueryResult = Apollo.QueryResult<GetTopFollowQuery, GetTopFollowQueryVariables>;
 export const GetTopWeekDocument = gql`
     query getTopWeek($page: Float, $limit: Float) {
-  getTrendingComics(input: {page: $page, limit: $limit, type: "topWeek"}) {
+  getTrendingComics(input: {page: $page, limit: $limit, type: "weekViewCount"}) {
     _id
     imageThumbUrl
     imageCoverUrl
@@ -2140,7 +2146,7 @@ export type GetTopWeekLazyQueryHookResult = ReturnType<typeof useGetTopWeekLazyQ
 export type GetTopWeekQueryResult = Apollo.QueryResult<GetTopWeekQuery, GetTopWeekQueryVariables>;
 export const GetTopMonthDocument = gql`
     query getTopMonth($page: Float, $limit: Float) {
-  getTrendingComics(input: {page: $page, limit: $limit, type: "topMonth"}) {
+  getTrendingComics(input: {page: $page, limit: $limit, type: "monthViewCount"}) {
     _id
     imageThumbUrl
     imageCoverUrl
@@ -2197,7 +2203,7 @@ export type GetTopMonthLazyQueryHookResult = ReturnType<typeof useGetTopMonthLaz
 export type GetTopMonthQueryResult = Apollo.QueryResult<GetTopMonthQuery, GetTopMonthQueryVariables>;
 export const GetTopYearDocument = gql`
     query getTopYear($page: Float, $limit: Float) {
-  getTrendingComics(input: {page: $page, limit: $limit, type: "topYear"}) {
+  getTrendingComics(input: {page: $page, limit: $limit, type: "yearViewCount"}) {
     _id
     imageThumbUrl
     imageCoverUrl
@@ -2254,7 +2260,7 @@ export type GetTopYearLazyQueryHookResult = ReturnType<typeof useGetTopYearLazyQ
 export type GetTopYearQueryResult = Apollo.QueryResult<GetTopYearQuery, GetTopYearQueryVariables>;
 export const GetNewestDocument = gql`
     query getNewest($page: Float, $limit: Float) {
-  getTrendingComics(input: {page: $page, limit: $limit, type: "newest"}) {
+  getTrendingComics(input: {page: $page, limit: $limit, type: "updatedAt"}) {
     _id
     imageThumbUrl
     imageCoverUrl

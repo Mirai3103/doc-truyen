@@ -7,6 +7,7 @@ https://docs.nestjs.com/modules
 import { AuthorModule } from '@/author/author.module';
 import { Author, AuthorSchema } from '@/author/schema/author.schema';
 import { Chapter, ChapterSchema } from '@/chapter/schema/chapter.schema';
+import { ComicModule } from '@/comic/comic.module';
 import { Comic, ComicSchema } from '@/comic/schema/comic.schema';
 import { CommonModule } from '@/common/common.module';
 import { Tag, TagSchema } from '@/tag/schema/tag.schema';
@@ -42,6 +43,7 @@ import { ComikService } from './comik.service';
     ]),
     CommonModule,
     AuthorModule,
+    ComicModule,
   ],
   providers: [CrawlerService, ComikService],
   exports: [CrawlerService, ComikService],

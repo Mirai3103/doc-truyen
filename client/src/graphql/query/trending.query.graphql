@@ -23,7 +23,7 @@ query getTrendingComics($page: Float, $limit: Float) {
             _id
         }
     }
-    TopWeek: getTrendingComics(input: { page: $page, limit: $limit, type: "topWeek" }) {
+    TopWeek: getTrendingComics(input: { page: $page, limit: $limit, type: "weekViewCount" }) {
         _id
         imageThumbUrl
         imageCoverUrl
@@ -47,7 +47,7 @@ query getTrendingComics($page: Float, $limit: Float) {
             _id
         }
     }
-    TopMonth: getTrendingComics(input: { page: $page, limit: $limit, type: "topMonth" }) {
+    TopMonth: getTrendingComics(input: { page: $page, limit: $limit, type: "monthViewCount" }) {
         _id
         imageThumbUrl
         imageCoverUrl
@@ -71,7 +71,7 @@ query getTrendingComics($page: Float, $limit: Float) {
             _id
         }
     }
-    TopYear: getTrendingComics(input: { page: $page, limit: $limit, type: "topYear" }) {
+    TopYear: getTrendingComics(input: { page: $page, limit: $limit, type: "yearViewCount" }) {
         _id
         imageThumbUrl
         imageCoverUrl
@@ -95,7 +95,7 @@ query getTrendingComics($page: Float, $limit: Float) {
             _id
         }
     }
-    Newest: getTrendingComics(input: { page: $page, limit: $limit, type: "newest" }) {
+    Newest: getTrendingComics(input: { page: $page, limit: $limit, type: "updatedAt" }) {
         _id
         imageThumbUrl
         imageCoverUrl
@@ -149,7 +149,7 @@ query getTopFollow($page: Float, $limit: Float) {
 }
 
 query getTopWeek($page: Float, $limit: Float) {
-    getTrendingComics(input: { page: $page, limit: $limit, type: "topWeek" }) {
+    getTrendingComics(input: { page: $page, limit: $limit, type: "weekViewCount" }) {
         _id
         imageThumbUrl
         imageCoverUrl
@@ -176,7 +176,7 @@ query getTopWeek($page: Float, $limit: Float) {
 }
 
 query getTopMonth($page: Float, $limit: Float) {
-    getTrendingComics(input: { page: $page, limit: $limit, type: "topMonth" }) {
+    getTrendingComics(input: { page: $page, limit: $limit, type: "monthViewCount" }) {
         _id
         imageThumbUrl
         imageCoverUrl
@@ -203,7 +203,7 @@ query getTopMonth($page: Float, $limit: Float) {
 }
 
 query getTopYear($page: Float, $limit: Float) {
-    getTrendingComics(input: { page: $page, limit: $limit, type: "topYear" }) {
+    getTrendingComics(input: { page: $page, limit: $limit, type: "yearViewCount" }) {
         _id
         imageThumbUrl
         imageCoverUrl
@@ -230,7 +230,7 @@ query getTopYear($page: Float, $limit: Float) {
 }
 
 query getNewest($page: Float, $limit: Float) {
-    getTrendingComics(input: { page: $page, limit: $limit, type: "newest" }) {
+    getTrendingComics(input: { page: $page, limit: $limit, type: "updatedAt" }) {
         _id
         imageThumbUrl
         imageCoverUrl

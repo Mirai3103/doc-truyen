@@ -22,9 +22,11 @@ const useStyles = createStyles((theme) => ({
             transform: "scale(1.03)",
         },
         [`&:hover .${getStylesRef("description")}`]: {
-            backgroundColor: theme.colorScheme === "dark" ? theme.colors.gray[8] : theme.colors.gray[1],
+            backgroundColor: theme.colorScheme === "dark" ? theme.colors.gray[8] : theme.colors.gray[2],
             transform: "scale(1.03)",
         },
+        backgroundColor: theme.colorScheme === "dark" ? theme.colors.gray[9] : theme.colors.gray[0],
+        borderRadius: "5px",
     },
 
     image: {
@@ -79,6 +81,7 @@ function ComicCardWithChapter({ comic, w = 200, ...props }: ComicCardProps) {
                         mt={"xs"}
                         className="truncate-two-lines text-base cursor-pointer hover:underline"
                         weight={"800"}
+                        mih={"2.8rem"}
                         color="indigo"
                         align="center"
                         order={6}
@@ -91,9 +94,11 @@ function ComicCardWithChapter({ comic, w = 200, ...props }: ComicCardProps) {
                         {comic.name}
                     </Title>
                 </Tooltip>
-                <Title mt={"2px"} weight={"400"} align="center" size={"12px"} order={6}>
-                    {comic.author.name}
-                </Title>
+                <Tooltip label={comic.author.name} withArrow>
+                    <Title mt={"2px"} weight={"400"} align="center" size={"12px"} order={6}>
+                        {comic.author.name.length > 20 ? comic.author.name.slice(0, 20) + "..." : comic.author.name}
+                    </Title>
+                </Tooltip>
             </Box>
         </Flex>
     );
