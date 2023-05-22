@@ -3,7 +3,6 @@ import { ApolloDriver } from '@nestjs/apollo/dist/drivers';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ScheduleModule } from '@nestjs/schedule';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
@@ -16,6 +15,7 @@ import { DatabaseModule } from './database/database.module';
 import { FileModule } from './file/file.module';
 import { ReadingHistoryModule } from './readingHistory/reading-history.module';
 import { TagModule } from './tag/tag.module';
+import { AppScheduleModule } from './task/schedule.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -23,7 +23,7 @@ import { UserModule } from './user/user.module';
     FileModule,
     ReadingHistoryModule,
     CrawlerModule,
-    ScheduleModule.forRoot(),
+    AppScheduleModule,
     ConfigModule.forRoot({
       envFilePath: '../../dev.env',
       isGlobal: true,

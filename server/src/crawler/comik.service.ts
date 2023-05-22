@@ -3,50 +3,76 @@ import { UtilService } from '@/common/util.service';
 import { Tag, TagDocument, TagType } from '@/tag/schema/tag.schema';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import axios from 'axios';
 import { load } from 'cheerio';
-import { writeFileSync } from 'fs';
+import { distance } from 'fastest-levenshtein';
+import Humanoid from 'humanoid-js';
 import { Model } from 'mongoose';
 // https://api.comick.app/v1.0/search?q=blue+box&t=true
 @Injectable()
 export class ComikService {
+  private readonly humanoid: Humanoid;
   constructor(
     @InjectModel(Comic.name) private mangaModel: Model<ComicDocument>,
     private readonly utilsService: UtilService,
     @InjectModel(Tag.name) private tagModel: Model<TagDocument>,
-  ) {}
-  private async searchByName(name: string) {
-    const url = `https://api.comick.app/v1.0/search?q=${name}&t=true`;
-    const response = await axios.get(url);
-    const { title, slug, id } = response.data[0];
-    if (!title) return null;
-    const name1 = this.utilsService.slugfy(name).replace(/-/g, '');
-    const name2 = this.utilsService.slugfy(title).replace(/-/g, '');
-    if (!name1.includes(name2) && !name2.includes(name1)) return null;
-    return {
-      title,
-      slug,
-      id,
-    };
+  ) {
+    this.humanoid = new Humanoid();
   }
-  public async generateJson() {
-    const comics = await this.mangaModel.find();
+
+  public async getBestMatch(name: string[]) {
+    let list = await Promise.all(name.map((item) => this.searchByName(item)));
+    list = list.filter((item) => item !== null);
+    if (list.length === 0) {
+      console.log(name, 'not found');
+      return null;
+    }
+    const bestMatch = list.reduce((prev, curr) => {
+      return prev!.distance < curr!.distance ? prev : curr;
+    });
+    return bestMatch?.result;
+  }
+
+  private async searchByName(name: string) {
+    const url = `https://api.comick.app/v1.0/search?q=${encodeURIComponent(
+      name,
+    )}&limit=1&page=1`.replace(' ', '%20');
+
+    try {
+      const response: any = await new Promise((resolve, reject) => {
+        this.humanoid
+          .get(url)
+          .then((res) => JSON.parse(res.body))
+          .then(resolve)
+          .catch((e) => resolve([{}]));
+      });
+      const { title, slug, id } = response[0];
+
+      if (!title) return null;
+
+      return {
+        name,
+        distance: distance(name.toLowerCase(), title.toLowerCase()),
+        result: {
+          title,
+          slug,
+          id,
+        },
+      };
+    } catch (e) {
+      return null;
+    }
+  }
+  public async crawlNewManga() {
+    const newComics = this.mangaModel.find({
+      $or: [{ genres: { $size: 0 } }, { genres: { $exists: false } }],
+    });
     const listCrawled = [];
-    const notFound = [];
     let i = 0;
-    for await (const comic of comics) {
+    for await (const comic of newComics) {
       if (comic.genres.length > 0) continue;
-      const asciiName = comic.otherNames.find((name) => !this.hasUnicode(name));
-      if (!asciiName) {
-        notFound.push(comic.otherNames);
-        continue;
-      }
-      const rs = await this.searchByName(asciiName);
+
+      const rs = await this.getBestMatch([...comic.otherNames, comic.title]);
       if (!rs) {
-        notFound.push({
-          asciiName,
-          others: comic.otherNames,
-        });
         continue;
       }
       const { title, slug, id } = rs;
@@ -54,35 +80,87 @@ export class ComikService {
         comikId: id,
         slug,
         comikTitle: title,
-        name: asciiName,
         comic: comic,
       });
       console.log(++i + ' doned');
     }
     i = 0;
     for await (const item of listCrawled) {
-      console.log('start crawl', ++i);
-      const obj = await this.getData(item.slug);
+      try {
+        console.log('start crawl', ++i);
+        const obj = await this.getData(item.slug);
 
-      let category = await this.createIfTagNotFound(obj.origination);
-      if (!category) {
-        category = await this.createIfTagNotFound('manga');
+        let category = await this.createIfTagNotFound(obj.origination);
+        if (!category) {
+          category = await this.createIfTagNotFound('manga');
+        }
+        category!.type = TagType.Category;
+        category?.save();
+        if (category) item.comic.category = category;
+        const tags = await Promise.all(
+          obj.listSpanGenres.map((tag) => this.createIfTagNotFound(tag)),
+        );
+        item.comic.genres = [];
+        tags.forEach((tag) => {
+          if (tag) item.comic.genres.push(tag);
+        });
+        await item.comic.save();
+      } catch (e) {
+        console.error(item.comic.id, item.comikId, e);
       }
-      category!.type = TagType.Category;
-      category?.save();
-      if (category) item.comic.category = category;
-      const tags = await Promise.all(
-        obj.listSpanGenres.map((tag) => this.createIfTagNotFound(tag)),
-      );
-      item.comic.genres = [];
-      tags.forEach((tag) => {
-        if (tag) item.comic.genres.push(tag);
-      });
-      await item.comic.save();
     }
-    //write not found
-    writeFileSync('not-found.json', JSON.stringify(notFound, null, 2), 'utf-8');
+    console.log('done');
+  }
 
+  public async crawlTagAndAuthor() {
+    const comics = await this.mangaModel.find();
+    const listCrawled = [];
+    let i = 0;
+    for await (const comic of comics) {
+      if (comic.genres.length > 0) continue;
+      // const asciiName = comic.otherNames.find((name) => !this.hasUnicode(name));
+      // if (!asciiName) {
+      //   notFound.push(comic.otherNames);
+      //   continue;
+      // }
+      const rs = await this.getBestMatch([...comic.otherNames, comic.title]);
+      if (!rs) {
+        continue;
+      }
+      const { title, slug, id } = rs;
+      listCrawled.push({
+        comikId: id,
+        slug,
+        comikTitle: title,
+        comic: comic,
+      });
+      console.log(++i + ' doned');
+    }
+    i = 0;
+    for await (const item of listCrawled) {
+      try {
+        console.log('start crawl', ++i);
+        const obj = await this.getData(item.slug);
+
+        let category = await this.createIfTagNotFound(obj.origination);
+        if (!category) {
+          category = await this.createIfTagNotFound('manga');
+        }
+        category!.type = TagType.Category;
+        category?.save();
+        if (category) item.comic.category = category;
+        const tags = await Promise.all(
+          obj.listSpanGenres.map((tag) => this.createIfTagNotFound(tag)),
+        );
+        item.comic.genres = [];
+        tags.forEach((tag) => {
+          if (tag) item.comic.genres.push(tag);
+        });
+        await item.comic.save();
+      } catch (e) {
+        console.error(item.comic.id, item.comikId, e);
+      }
+    }
     console.log('done');
   }
   private async createIfTagNotFound(tag: string) {
@@ -108,8 +186,14 @@ export class ComikService {
   }
   private async getData(slug: string) {
     const url = `https://comick.app/comic/${slug}`;
-    const response = await axios.get(url);
-    const $ = load(response.data);
+    const response = await new Promise((resolve, reject) => {
+      this.humanoid
+        .get(url)
+        .then((res) => resolve(res))
+        .catch((e) => resolve({ body: '' }));
+    });
+
+    const $ = load((response as any).body);
     const origination = $('.text-gray-500:contains("Origination:")')
       .first()
       .next()

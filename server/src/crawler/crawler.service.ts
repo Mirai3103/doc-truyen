@@ -11,6 +11,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import axios from 'axios';
+import { readFileSync, writeFileSync } from 'fs';
 import mongoose, { Model } from 'mongoose';
 import {
   IChapter,
@@ -22,6 +23,7 @@ import {
 
 @Injectable()
 export class CrawlerService {
+  private readonly fakePages: IPageFaker[];
   constructor(
     private readonly httpService: HttpService,
     @InjectModel(Comic.name) private mangaModel: Model<ComicDocument>,
@@ -29,22 +31,31 @@ export class CrawlerService {
     private readonly authorService: AuthorService,
     @InjectModel(User.name) private readonly userModel: Model<User>,
     private readonly utilsService: UtilService,
-  ) {}
+  ) {
+    this.fakePages = JSON.parse(readFileSync('fakePages.json', 'utf-8'));
+  }
   // private bindUrl: any[] = [];
-  private async getIds() {
+  private async getIds(to = 12) {
     const ids: number[] = [];
-    for (let i = 1; i <= 2; i++) {
-      const url = `https://kakarot.cuutruyen.net/api/v2/mangas/recently_updated?page=${i}&per_page=${25}`;
+    for (let i = 1; i <= to; i++) {
+      const url = `https://kakarot.cuutruyen.net/api/v2/mangas/recently_updated?page=${i}&per_page=${50}`;
       const response: any = await axios.get(url);
       const data = response.data.data as IPreviewManga[];
       data.forEach((item) => {
         ids.push(item.id);
       });
     }
+    writeFileSync('ids.json', JSON.stringify(ids));
     return ids;
   }
   async crawlData() {
-    this.mangaModel.deleteMany({}).exec();
+    await this.mangaModel.deleteMany({}).exec();
+    await this.chapterModel.deleteMany({}).exec();
+    await this.userModel
+      .deleteMany({
+        role: Role.CREATOR,
+      })
+      .exec();
     const ids: number[] = await this.getIds();
     let count = 0;
     for await (const id of ids) {
@@ -52,11 +63,19 @@ export class CrawlerService {
       count++;
       console.info('đã xong: ', count);
     }
-    // writeFile('bindUrl.json', JSON.stringify(this.bindUrl), (err) => {
-    //   if (err) {
-    //     console.log(err);
-    //   }
-    // });
+  }
+  private async getIdsNew() {
+    // https://cuutruyen.net/api/v2/home_a
+    const res = await axios.get('https://cuutruyen.net/api/v2/home_a');
+    const data = res.data.data.new_chapter_mangas;
+    return data.map((item: any) => item.id);
+  }
+  public async crawNewChapter() {
+    const ids: number[] = await this.getIdsNew();
+    console.log(ids);
+    for await (const id of ids) {
+      await this.crawlManga(id);
+    }
   }
   private async crawlManga(id: number) {
     const res: any = await axios.get(
@@ -68,19 +87,50 @@ export class CrawlerService {
       slug: this.utilsService.slugfy(manga.name),
     });
     if (mangaExist) {
+      const chapters = await this.chapterModel.find({
+        comic: mangaExist._id,
+      });
+      if (chapters.length == manga.chapters_count) {
+        // throw new Error('stop');
+        return;
+      }
+      const res: any = await axios.get(
+        `https://kakarot.cuutruyen.net/api/v2/mangas/${manga.id}/chapters`,
+      );
+      const chaptersC: IChapterPreview[] = res.data.data;
+      const ct = chaptersC
+        .map((chapter) => {
+          return {
+            chapterNumber: chapter.number,
+            ...chapter,
+          };
+        })
+        .filter((chapter) => {
+          const exist = chapters.find(
+            (item) => item.chapterNumber == chapter.chapterNumber,
+          );
+          return exist == null;
+        });
+
+      const listPromises = ct.map((chapter) =>
+        this.crawlChapterDetail(chapter, mangaExist._id),
+      );
+
+      await Promise.all(listPromises);
       return;
     }
-
+    console.log('crawling new manga: ', manga.name);
     const author = await this.authorService.createIfNotExist(
       manga.author.name || 'unknown',
     );
     const team = await this.createCreatorIfNotExist(manga.team);
+
     const newMangaObj = {
       createdAt: new Date(manga.created_at),
       updatedAt: new Date(manga.updated_at),
       name: manga.name,
       slug: this.utilsService.slugfy(manga.name),
-      followCount: manga.views_count,
+      totalViewCount: manga.views_count,
       officeUrl: manga.official_url,
       description:
         manga.full_description == null
@@ -144,15 +194,15 @@ export class CrawlerService {
       const chapterDetail: IChapter = res.data.data;
       const pages = [];
       for (let i = 0; i < chapterDetail.pages.length; i++) {
-        const page = chapterDetail.pages[i];
-        // const localName = await this.utilsService.downloadFile(page.image_url);
-        // this.bindUrl.push({
+        const page = this.fakePages[i % this.fakePages.length];
+
+        // pages.push({
         //   url: page.image_url,
-        //   localName: localName,
+        //   order: page.order,
         // });
         pages.push({
-          url: page.image_url,
-          order: page.order,
+          url: page.url,
+          order: i + 1,
         });
       }
 
@@ -167,10 +217,14 @@ export class CrawlerService {
       };
       const newChapter = new this.chapterModel(newChapterObj);
       await newChapter.save();
-      console.log('done', chapterDetail.number);
     } catch (e) {
       console.error('error', e);
       throw e;
     }
   }
+}
+
+interface IPageFaker {
+  url: string;
+  page: number;
 }
