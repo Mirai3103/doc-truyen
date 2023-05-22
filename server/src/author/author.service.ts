@@ -32,6 +32,15 @@ export class AuthorService {
   async delete(id: string) {
     this.authorModel.deleteOne({ _id: id }).exec();
   }
+
+  async findOneBySlug(slug: string): Promise<AuthorDocument | null> {
+    return this.authorModel
+      .findOne({
+        slug,
+      })
+      .exec();
+  }
+
   async findOne(id: string): Promise<AuthorDocument | null> {
     return this.authorModel
       .findOne({

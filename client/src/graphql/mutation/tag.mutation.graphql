@@ -1,11 +1,10 @@
 mutation createTag($createTagInput: CreateTagDto!) {
     createTag(createTagInput: $createTagInput) {
-        slug
+        _id
     }
 }
 mutation UpdateTag($UpdateTagInput: UpdateTagDto!, $id: String!) {
     updateTag(updateTagInput: $UpdateTagInput, id: $id) {
-        slug
         _id
         name
         description

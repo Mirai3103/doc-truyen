@@ -3,10 +3,10 @@ import { ValidateBy } from 'class-validator';
 
 export enum TrendingSortType {
   FOLLOW_COUNT = 'totalViewCount',
-  TOP_WEEK = 'topWeek',
-  TOP_MONTH = 'topMonth',
-  TOP_YEAR = 'topYear',
-  NEWEST = 'newest',
+  TOP_WEEK = 'weekViewCount',
+  TOP_MONTH = 'monthViewCount',
+  TOP_YEAR = 'yearViewCount',
+  NEWEST = 'updatedAt',
 }
 
 @InputType()

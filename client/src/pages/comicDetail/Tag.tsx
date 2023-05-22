@@ -1,7 +1,6 @@
 import { Tag as TagType } from "@/gql/generated/graphql";
 import { Badge, BadgeProps, useMantineTheme } from "@mantine/core";
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface Props extends BadgeProps {
     tag: TagType;
@@ -17,7 +16,7 @@ export default function Tag({ tag, ...props }: Props) {
             size={"lg"}
             radius={"md"}
             className="cursor-pointer hover:underline"
-            onClick={() => navigate(`/tag/${tag.slug}`)}
+            onClick={() => navigate(`/tag/${tag._id}`)}
         >
             {tag.name}
         </Badge>

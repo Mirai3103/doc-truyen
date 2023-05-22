@@ -16,10 +16,6 @@ export class Tag extends BaseSchema {
   name: string;
 
   @Prop()
-  @Field()
-  slug: string;
-
-  @Prop()
   @Field(() => String, { nullable: true })
   description: string;
   @Prop({ default: TagType.Genre })

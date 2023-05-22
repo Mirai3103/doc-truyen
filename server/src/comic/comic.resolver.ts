@@ -24,6 +24,7 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { ComicService } from './comic.service';
+import AdvanceSearchInput from './dto/advance-search.dto';
 import CreateComicInput from './dto/create-comic-input.dto';
 import { TrendingSortInput } from './dto/trendingSort.dto';
 import { Comic } from './schema/comic.schema';
@@ -196,5 +197,9 @@ export class ComicResolver {
   async deleteComic(@Args('id') id: string, @CurrentUser() user: UserPayload) {
     await this.commicService.deleteComic(id, user._id);
     return true;
+  }
+  @Query(() => [Comic])
+  async advanceSearchComics(@Args('input') input: AdvanceSearchInput) {
+    return await this.commicService.advanceSearch(input);
   }
 }

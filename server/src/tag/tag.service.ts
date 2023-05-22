@@ -16,7 +16,6 @@ export class TagService {
   async create(createTagDto: CreateTagDto): Promise<TagDocument> {
     const createdTag = new this.tagModel({
       ...createTagDto,
-      slug: this.utilService.slugfy(createTagDto.name),
     });
     return createdTag.save();
   }

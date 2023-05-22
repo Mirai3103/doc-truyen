@@ -15,12 +15,12 @@ query getTrendingComics($page: Float, $limit: Float) {
             updatedAt
         }
         category {
-            slug
+            _id
             name
         }
         author {
             name
-            slug
+            _id
         }
     }
     TopWeek: getTrendingComics(input: { page: $page, limit: $limit, type: "topWeek" }) {
@@ -39,12 +39,12 @@ query getTrendingComics($page: Float, $limit: Float) {
             updatedAt
         }
         category {
-            slug
+            _id
             name
         }
         author {
             name
-            slug
+            _id
         }
     }
     TopMonth: getTrendingComics(input: { page: $page, limit: $limit, type: "topMonth" }) {
@@ -63,12 +63,12 @@ query getTrendingComics($page: Float, $limit: Float) {
             updatedAt
         }
         category {
-            slug
+            _id
             name
         }
         author {
             name
-            slug
+            _id
         }
     }
     TopYear: getTrendingComics(input: { page: $page, limit: $limit, type: "topYear" }) {
@@ -87,12 +87,12 @@ query getTrendingComics($page: Float, $limit: Float) {
             updatedAt
         }
         category {
-            slug
+            _id
             name
         }
         author {
             name
-            slug
+            _id
         }
     }
     Newest: getTrendingComics(input: { page: $page, limit: $limit, type: "newest" }) {
@@ -111,12 +111,12 @@ query getTrendingComics($page: Float, $limit: Float) {
             updatedAt
         }
         category {
-            slug
+            _id
             name
         }
         author {
             name
-            slug
+            _id
         }
     }
 }
@@ -138,12 +138,12 @@ query getTopFollow($page: Float, $limit: Float) {
             updatedAt
         }
         category {
-            slug
+            _id
             name
         }
         author {
             name
-            slug
+            _id
         }
     }
 }
@@ -165,12 +165,12 @@ query getTopWeek($page: Float, $limit: Float) {
             updatedAt
         }
         category {
-            slug
+            _id
             name
         }
         author {
             name
-            slug
+            _id
         }
     }
 }
@@ -192,12 +192,12 @@ query getTopMonth($page: Float, $limit: Float) {
             updatedAt
         }
         category {
-            slug
+            _id
             name
         }
         author {
             name
-            slug
+            _id
         }
     }
 }
@@ -219,12 +219,12 @@ query getTopYear($page: Float, $limit: Float) {
             updatedAt
         }
         category {
-            slug
+            _id
             name
         }
         author {
             name
-            slug
+            _id
         }
     }
 }
@@ -246,12 +246,12 @@ query getNewest($page: Float, $limit: Float) {
             updatedAt
         }
         category {
-            slug
+            _id
             name
         }
         author {
             name
-            slug
+            _id
         }
     }
 }

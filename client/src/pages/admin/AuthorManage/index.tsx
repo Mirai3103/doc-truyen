@@ -84,7 +84,6 @@ export default function AuthorManagePage() {
                     <thead>
                         <tr>
                             <th>Tên</th>
-                            <th>Slug</th>
                             <th>Giới thiệu</th>
                             <th></th>
                         </tr>
@@ -108,7 +107,6 @@ export default function AuthorManagePage() {
                                     }
                                 >
                                     <td>{author.name}</td>
-                                    <td>{author.slug}</td>
                                     <td>
                                         <Tooltip label={author.description || ""} position="bottom">
                                             <span>

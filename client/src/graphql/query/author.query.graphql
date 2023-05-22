@@ -4,7 +4,6 @@ query searchAuthor($keyword: String, $limit: Float, $page: Float) {
             _id
             name
             description
-            slug
             createdAt
         }
         count
@@ -14,6 +13,5 @@ query FindAllAuthors {
     authors {
         _id
         name
-        slug
     }
 }

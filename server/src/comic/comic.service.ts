@@ -15,6 +15,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
+import AdvanceSearchInput from './dto/advance-search.dto';
 import CreateComicInput from './dto/create-comic-input.dto';
 import { TrendingSortInput, TrendingSortType } from './dto/trendingSort.dto';
 import { Comic, Status } from './schema/comic.schema';
@@ -105,7 +106,7 @@ export class ComicService {
     const skip = (page - 1) * limit;
     // order by createdAt
     return await this.getPublishComicQuery()
-      .sort({ createdAt: -1 })
+      .sort({ updatedAt: -1 })
       .skip(skip)
       .limit(limit);
   }
@@ -248,5 +249,72 @@ export class ComicService {
       },
     });
     await this.chapterService.deleteChapterOfComic(id);
+  }
+  public async advanceSearch(
+    advanceSearchInput: AdvanceSearchInput,
+  ): Promise<Comic[]> {
+    const {
+      authorId,
+      categoryId,
+      genreIds,
+      limit,
+      page,
+      sortType,
+      sortField,
+      artistId,
+      creatorId,
+      keyword,
+    } = advanceSearchInput;
+    const query: any = {};
+    if (authorId) {
+      query.author = {
+        _id: authorId,
+      };
+    }
+    if (categoryId) {
+      query.category = {
+        _id: categoryId,
+      };
+    }
+    if (genreIds) {
+      query.genres = {
+        $all: genreIds.map((id) => {
+          return {
+            _id: id,
+          };
+        }),
+      };
+    }
+    if (artistId) {
+      query.artist = {
+        _id: artistId,
+      };
+    }
+    if (creatorId) {
+      query.createdBy = {
+        _id: creatorId,
+      };
+    }
+    if (keyword) {
+      query.$or = [
+        {
+          name: {
+            $regex: keyword,
+            $options: 'i',
+          },
+        },
+        {
+          otherNames: {
+            $regex: keyword,
+            $options: 'i',
+          },
+        },
+      ];
+    }
+
+    const skip = (page - 1) * limit;
+    const sort: any = {};
+    sort[sortField] = sortType;
+    return await this.comicModal.find(query).sort(sort).skip(skip).limit(limit);
   }
 }

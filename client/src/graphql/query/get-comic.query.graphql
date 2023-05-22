@@ -3,22 +3,19 @@ query getComicBySlug($slug: String!) {
         _id
         artist {
             name
-            slug
+            _id
         }
         author {
             name
-            slug
+            _id
         }
         category {
             name
-            slug
+            _id
         }
         genres {
             name
-            slug
-        }
-        artist {
-            name
+            _id
         }
         createdAt
         updatedAt

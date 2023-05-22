@@ -15,12 +15,12 @@ query GetRecentComics($limit: Float, $page: Float) {
             updatedAt
         }
         category {
-            slug
+            _id
             name
         }
         author {
             name
-            slug
+            _id
         }
     }
 }
@@ -41,7 +41,7 @@ query GetTopComics($limit: Float, $page: Float) {
             updatedAt
         }
         category {
-            slug
+            _id
             name
         }
         author {

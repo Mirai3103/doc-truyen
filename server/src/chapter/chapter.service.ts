@@ -110,9 +110,7 @@ export class ChapterService {
     const chapter = await this.chapterModal.findByIdAndUpdate(chapterId, {
       order,
     });
-    if (chapter) {
-      // this.comicService.updateUpdatedAt(chapter.comic._id + '');
-    }
+
     return chapter;
   }
   public async changeChaptersOrder(chaptersOrderInput: ChapterOrder[]) {

@@ -85,7 +85,7 @@ export default function ComicManage() {
                                 <td>{comic.recentChapter?.chapterNumber}</td>
                                 <td>{comic.status}</td>
                                 <td>{comic.followCount}</td>
-                                <td>{comic.followCount}</td>
+                                <td>{comic.totalViewCount}</td>
                                 <td>{getDiffStr(comic.updatedAt)}</td>
                             </tr>
                         ))}

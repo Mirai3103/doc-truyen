@@ -93,7 +93,7 @@ export default function ComicDetail() {
                             {!loading ? (
                                 <>
                                     Tác giả:{` `}
-                                    <Link to={`/author/${data!.getComicBySlug.author.slug}`}>
+                                    <Link to={`/author/${data!.getComicBySlug.author._id}`}>
                                         {data!.getComicBySlug.author.name}
                                     </Link>
                                 </>
@@ -105,7 +105,7 @@ export default function ComicDetail() {
                             {!loading ? (
                                 <>
                                     Loại truyện:{" "}
-                                    <Link to={`/category/${data!.getComicBySlug.category?.slug || "manga"}`}>
+                                    <Link to={`/category/${data!.getComicBySlug.category?._id || "manga"}`}>
                                         {data!.getComicBySlug.category?.name || "Manga"}{" "}
                                     </Link>
                                 </>
@@ -147,7 +147,7 @@ export default function ComicDetail() {
                                     {" "}
                                     <Title order={5}>Thể loại: </Title>
                                     {data!.getComicBySlug.genres.map((tag: any) => (
-                                        <Tag key={tag.slug} tag={tag} />
+                                        <Tag key={tag._id} tag={tag} />
                                     ))}
                                 </>
                             ) : (

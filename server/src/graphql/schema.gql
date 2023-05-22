@@ -2,6 +2,19 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AdvanceSearchInput {
+  artistId: String
+  authorId: String
+  categoryId: String
+  creatorId: String
+  genreIds: [String!]
+  keyword: String
+  limit: Float = 25
+  page: Float = 1
+  sortField: String = "updatedAt"
+  sortType: String = "desc"
+}
+
 type Author {
   _id: String!
   createdAt: DateTime!
@@ -141,6 +154,7 @@ input PageInput {
 }
 
 type Query {
+  advanceSearchComics(input: AdvanceSearchInput!): [Comic!]!
   author(id: String!): Author!
   authors: [Author!]!
   getAllChapters(comicId: String!): [Chapter!]!
@@ -179,7 +193,6 @@ type Tag {
   createdAt: DateTime!
   description: String
   name: String!
-  slug: String!
   type: String!
   updatedAt: DateTime!
 }

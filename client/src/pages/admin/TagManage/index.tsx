@@ -61,7 +61,6 @@ export default function TagManagePage() {
                         <tr>
                             <th>Tên</th>
                             <td>Loại</td>
-                            <th>Slug</th>
                             <th>Giới thiệu</th>
                             <th></th>
                         </tr>
@@ -86,7 +85,6 @@ export default function TagManagePage() {
                                 >
                                     <td>{tag.name}</td>
                                     <td>{tag.type}</td>
-                                    <td>{tag.slug}</td>
                                     <td>
                                         <Tooltip label={tag.description || ""} position="bottom">
                                             <span>

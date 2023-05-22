@@ -2,7 +2,7 @@ query findAllTag {
     tags {
         _id
         name
-        slug
+
         type
         description
     }

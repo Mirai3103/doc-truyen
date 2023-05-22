@@ -174,13 +174,11 @@ export class ComikService {
   private async createIfTagNotFound(tag: string) {
     if (tag === '') return null;
 
-    const slug = this.utilsService.slugfy(tag);
-    const existed = await this.tagModel.findOne({ slug });
+    const existed = await this.tagModel.findOne({ name: tag });
     if (existed) return existed;
     const newTag = new this.tagModel({
       name: tag,
-      slug,
-      description: null,
+      description: '',
     });
     return await newTag.save({
       timestamps: false,
