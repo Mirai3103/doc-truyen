@@ -2293,7 +2293,7 @@
             "deprecationReason": null
           },
           {
-            "name": "getComicsCreatedByUser",
+            "name": "getContributedComics",
             "description": null,
             "args": [
               {

@@ -4,6 +4,7 @@ https://docs.nestjs.com/providers#services
 
 import { ChapterService } from '@/chapter/chapter.service';
 import { slugfy } from '@/common/utils';
+import { Role } from '@/user/schema/user.schema';
 import { UserService } from '@/user/user.service';
 import {
   ForbiddenException,
@@ -136,13 +137,18 @@ export class ComicService {
     userId: string | ObjectId,
     limit = 20,
     page = 1,
+    role: Role = Role.CREATOR,
   ) {
+    const query =
+      role === Role.CREATOR
+        ? {
+            createdBy: {
+              _id: userId,
+            },
+          }
+        : {};
     const result = await this.comicModal
-      .find({
-        createdBy: {
-          _id: userId,
-        },
-      })
+      .find(query)
       .skip((page - 1) * limit)
       .limit(limit)
       .exec();

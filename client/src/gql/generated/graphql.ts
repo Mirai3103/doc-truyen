@@ -239,7 +239,7 @@ export type Query = {
   getChapterById: Chapter;
   getComicById: Comic;
   getComicBySlug: Comic;
-  getComicsCreatedByUser: Array<Comic>;
+  getContributedComics: Array<Comic>;
   getGenres: Array<Tag>;
   getLastedChapterByComicId: Chapter;
   getRecentComics: Array<Comic>;
@@ -285,7 +285,7 @@ export type QueryGetComicBySlugArgs = {
 };
 
 
-export type QueryGetComicsCreatedByUserArgs = {
+export type QueryGetContributedComicsArgs = {
   limit?: InputMaybe<Scalars['Float']>;
   page?: InputMaybe<Scalars['Float']>;
   userId: Scalars['String'];
@@ -1575,7 +1575,7 @@ export type GetComicByIdLazyQueryHookResult = ReturnType<typeof useGetComicByIdL
 export type GetComicByIdQueryResult = Apollo.QueryResult<GetComicByIdQuery, GetComicByIdQueryVariables>;
 export const GetComicsCreatedByUserDocument = gql`
     query GetComicsCreatedByUser($userId: String!, $limit: Float, $page: Float) {
-  comics: getComicsCreatedByUser(userId: $userId, limit: $limit, page: $page) {
+  comics: getContributedComics(userId: $userId, limit: $limit, page: $page) {
     _id
     slug
     name

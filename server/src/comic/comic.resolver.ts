@@ -141,7 +141,24 @@ export class ComicResolver {
     return data;
   }
   @Query(() => [Comic])
-  async getComicsCreatedByUser(
+  @UseGuards(new WithRoleGuardGQL(Role.CREATOR))
+  async getContributedComics(
+    @Args('userId') userId: string,
+    @Args('limit', { type: () => Number, nullable: true, defaultValue: 10 })
+    limit: number,
+    @Args('page', { type: () => Number, nullable: true, defaultValue: 1 })
+    page: number,
+    @CurrentUser() user: UserPayload,
+  ) {
+    return await this.commicService.getContributedComics(
+      userId,
+      limit,
+      page,
+      user.role,
+    );
+  }
+  @Query(() => [Comic])
+  async getComicCreatedByUser(
     @Args('userId') userId: string,
     @Args('limit', { type: () => Number, nullable: true, defaultValue: 10 })
     limit: number,
