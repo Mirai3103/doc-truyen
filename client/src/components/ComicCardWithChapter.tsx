@@ -72,7 +72,7 @@ function ComicCardWithChapter({ comic, w = 200, ...props }: ComicCardProps) {
             </AspectRatio>
             <Box w={"100%"} p={"xs"} className={classes.description}>
                 <div className="text-sm font-extralight mb-1">{`Chương ` + comic.recentChapter!.chapterNumber}</div>
-                <div className="text-sm font-extralight mb-1">{getDiffStr(comic.recentChapter!.updatedAt)}</div>
+                <div className="text-sm font-extralight mb-1">{getDiffStr(comic.recentChapter!.createdAt)}</div>
 
                 <Tooltip label={comic.name} withArrow>
                     <Title
