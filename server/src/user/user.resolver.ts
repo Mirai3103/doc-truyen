@@ -7,7 +7,7 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { CreateUserDto } from './dto/createUser.dto';
 import { FindUserDto } from './dto/findUser.dto';
 import { UpdateImportantInfoDTO, UpdateUserDto } from './dto/updateUser.dto';
@@ -81,5 +81,9 @@ export class UserResolver {
       throw new NotFoundException(currentUser._id);
     }
     return user;
+  }
+  @Mutation(() => Int)
+  async totalUploadedComic(@Parent() user: User) {
+    return await this.userService.countUploadedComics(user._id + '');
   }
 }

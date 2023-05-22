@@ -35,7 +35,7 @@ export type Author = {
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   name: Scalars['String'];
-  slug: Scalars['String'];
+  totalComic: Scalars['Float'];
   updatedAt: Scalars['DateTime'];
 };
 
@@ -148,6 +148,7 @@ export type Mutation = {
   deleteComic: Scalars['Boolean'];
   removeAllHistories: Scalars['Boolean'];
   removeHistory: Scalars['Boolean'];
+  totalUploadedComic: Scalars['Int'];
   updateAuthor: Author;
   updateChaptersOrder: Array<Chapter>;
   updateComic: Comic;
@@ -254,6 +255,9 @@ export type Query = {
   getComicById: Comic;
   getComicBySlug: Comic;
   getComicCreatedByUser: Array<Comic>;
+  getComicsByAuthorId: Array<Comic>;
+  getComicsByTagId: Array<Comic>;
+  getComicsByUserId: Array<Comic>;
   getContributedComics: Array<Comic>;
   getGenres: Array<Tag>;
   getLastedChapterByComicId: Chapter;
@@ -309,6 +313,27 @@ export type QueryGetComicCreatedByUserArgs = {
   limit?: InputMaybe<Scalars['Float']>;
   page?: InputMaybe<Scalars['Float']>;
   userId: Scalars['String'];
+};
+
+
+export type QueryGetComicsByAuthorIdArgs = {
+  id: Scalars['String'];
+  limit?: InputMaybe<Scalars['Float']>;
+  page?: InputMaybe<Scalars['Float']>;
+};
+
+
+export type QueryGetComicsByTagIdArgs = {
+  id: Scalars['String'];
+  limit?: InputMaybe<Scalars['Float']>;
+  page?: InputMaybe<Scalars['Float']>;
+};
+
+
+export type QueryGetComicsByUserIdArgs = {
+  id: Scalars['String'];
+  limit?: InputMaybe<Scalars['Float']>;
+  page?: InputMaybe<Scalars['Float']>;
 };
 
 
@@ -382,6 +407,7 @@ export type Tag = {
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   name: Scalars['String'];
+  totalComic: Scalars['Float'];
   type: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
@@ -432,6 +458,7 @@ export type User = {
   followedComics: Array<Comic>;
   readingHistories: Array<ReadingHistory>;
   role: Scalars['Int'];
+  totalUploadedComic: Scalars['Int'];
   updatedAt: Scalars['DateTime'];
   username: Scalars['String'];
 };

@@ -62,6 +62,8 @@ export class User extends BaseSchema {
     type: [ReadingHistorySchema],
   })
   readingHistories: ReadingHistory[] = [];
+  @Field(() => Int)
+  totalUploadedComic: number;
 }
 export type UserDocument = User & Document;
 export const UserSchema = SchemaFactory.createForClass(User);

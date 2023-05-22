@@ -1,3 +1,4 @@
+import { Comic, ComicDocument } from '@/comic/schema/comic.schema';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
@@ -11,6 +12,7 @@ export class TagService {
     @InjectModel(Tag.name)
     private tagModel: Model<TagDocument>,
     @Inject(UtilService) private readonly utilService: UtilService,
+    @InjectModel(Comic.name) private comicModel: Model<ComicDocument>,
   ) {}
 
   async create(createTagDto: CreateTagDto): Promise<TagDocument> {
@@ -18,6 +20,44 @@ export class TagService {
       ...createTagDto,
     });
     return createdTag.save();
+  }
+  async countComicsByTagId(tagId: string | ObjectId) {
+    return this.comicModel
+      .countDocuments({
+        $or: [
+          {
+            genres: {
+              $in: [tagId],
+            },
+          },
+          {
+            category: {
+              _id: tagId,
+            },
+          },
+        ],
+      })
+      .exec();
+  }
+  async findAllByTagId(tagId: string | ObjectId, page = 1, limit = 25) {
+    return this.comicModel
+      .find({
+        $or: [
+          {
+            genres: {
+              $in: [tagId],
+            },
+          },
+          {
+            category: {
+              _id: tagId,
+            },
+          },
+        ],
+      })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
   }
 
   async findAll(): Promise<TagDocument[]> {

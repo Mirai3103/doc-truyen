@@ -14,7 +14,8 @@ export class Tag extends BaseSchema {
   @Prop()
   @Field()
   name: string;
-
+  @Field()
+  totalComic: number;
   @Prop()
   @Field(() => String, { nullable: true })
   description: string;

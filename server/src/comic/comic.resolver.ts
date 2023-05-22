@@ -202,4 +202,28 @@ export class ComicResolver {
   async advanceSearchComics(@Args('input') input: AdvanceSearchInput) {
     return await this.commicService.advanceSearch(input);
   }
+  @Query(() => [Comic])
+  async getComicsByAuthorId(
+    @Args('id') id: string,
+    @Args('page', { defaultValue: 1, nullable: true }) page: number,
+    @Args('limit', { defaultValue: 25, nullable: true }) limit: number,
+  ) {
+    return await this.authorService.findAllByAuthorId(id, page, limit);
+  }
+  @Query(() => [Comic])
+  async getComicsByTagId(
+    @Args('id') id: string,
+    @Args('page', { defaultValue: 1, nullable: true }) page: number,
+    @Args('limit', { defaultValue: 25, nullable: true }) limit: number,
+  ) {
+    return await this.tagService.findAllByTagId(id, page, limit);
+  }
+  @Query(() => [Comic])
+  async getComicsByUserId(
+    @Args('id') id: string,
+    @Args('page', { defaultValue: 1, nullable: true }) page: number,
+    @Args('limit', { defaultValue: 25, nullable: true }) limit: number,
+  ) {
+    return await this.userService.getUploadedComics(id, page, limit);
+  }
 }

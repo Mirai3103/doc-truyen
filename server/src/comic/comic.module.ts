@@ -23,7 +23,7 @@ import { Comic, ComicSchema } from './schema/comic.schema';
       },
     ]),
     CacheModule.register(),
-    forwardRef(() => AuthorModule),
+    AuthorModule,
     UserModule,
     TagModule,
     CommonModule,

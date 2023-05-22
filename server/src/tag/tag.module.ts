@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { Comic, ComicSchema } from '@/comic/schema/comic.schema';
+import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CommonModule } from '../common/common.module';
 import { DatabaseModule } from '../database/database.module';
@@ -15,7 +16,12 @@ import { TagService } from './tag.service';
         name: Tag.name,
         schema: TagSchema,
       },
+      {
+        name: Comic.name,
+        schema: ComicSchema,
+      },
     ]),
+    forwardRef(() => CommonModule),
   ],
   exports: [TagService],
   providers: [TagService, TagResolver],

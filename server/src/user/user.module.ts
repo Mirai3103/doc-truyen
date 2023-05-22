@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 https://docs.nestjs.com/modules
 */
 
+import { Comic, ComicSchema } from '@/comic/schema/comic.schema';
 import { CommonModule } from '@/common/common.module';
 import { DatabaseModule } from '@/database/database.module';
 import { CloudinaryModule } from '@/file/cloudinary/cloudinary.module';
@@ -20,6 +21,10 @@ import { UserResolver } from './user.resolver';
       {
         name: User.name,
         schema: UserSchema,
+      },
+      {
+        name: Comic.name,
+        schema: ComicSchema,
       },
     ]),
   ],

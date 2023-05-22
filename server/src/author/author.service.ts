@@ -2,9 +2,10 @@
 https://docs.nestjs.com/providers#services
 */
 
+import { Comic } from '@/comic/schema/comic.schema';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { UtilService } from '../common/util.service';
 import { CreateAuthorDto } from './dto/createAuthor.dto';
 import { QueryAuthorsDTO } from './dto/queryAuthor.dto';
@@ -16,6 +17,7 @@ export class AuthorService {
     @InjectModel(Author.name)
     private authorModel: Model<AuthorDocument>,
     @Inject(UtilService) private readonly utilService: UtilService,
+    @InjectModel(Comic.name) private comicModel: Model<Comic>,
   ) {}
 
   async create(createAuthorDto: CreateAuthorDto): Promise<AuthorDocument> {
@@ -24,6 +26,26 @@ export class AuthorService {
       slug: this.utilService.slugfy(createAuthorDto.name),
     });
     return createdAuthor.save();
+  }
+  public findAllByAuthorId(authorId: string | ObjectId, page = 1, limit = 25) {
+    return this.comicModel
+      .find({
+        author: {
+          _id: authorId,
+        },
+      })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+  }
+  public async countComicsByAuthorId(authorId: string | ObjectId) {
+    return this.comicModel
+      .countDocuments({
+        author: {
+          _id: authorId,
+        },
+      })
+      .exec();
   }
 
   async findAll(): Promise<AuthorDocument[]> {

@@ -1,7 +1,15 @@
 import { WithRoleGuardGQL } from '@/auth/guard/grapql-jwt.auth.guard';
 import { Role } from '@/user/schema/user.schema';
 import { NotFoundException, UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Int,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { CreateTagDto } from './dto/createTag.dto';
 import { UpdateTagDto } from './dto/updateTag.dto';
 import { Tag } from './schema/tag.schema';
@@ -46,5 +54,9 @@ export class TagResolver {
   @Query(() => [Tag])
   async getGenres() {
     return await this.tagService.getGenres();
+  }
+  @ResolveField(() => Int)
+  async totalComic(@Parent() tag: Tag) {
+    return await this.tagService.countComicsByTagId(tag._id);
   }
 }

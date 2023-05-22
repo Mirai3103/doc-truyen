@@ -1,3 +1,4 @@
+import { Comic } from '@/comic/schema/comic.schema';
 import { UtilService } from '@/common/util.service';
 import {
   ConflictException,
@@ -18,8 +19,32 @@ export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @Inject(UtilService) private utilService: UtilService,
+    @InjectModel(Comic.name) private comicModel: Model<UserDocument>,
   ) {}
-
+  public async countUploadedComics(userId: string) {
+    return this.comicModel
+      .countDocuments({
+        createdBy: {
+          _id: userId,
+        },
+      })
+      .exec();
+  }
+  public async getUploadedComics(
+    userId: string | mongoose.Types.ObjectId,
+    page = 1,
+    limit = 25,
+  ) {
+    return this.comicModel
+      .find({
+        createdBy: {
+          _id: userId,
+        },
+      })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+  }
   public async create(createUserDto: CreateUserDto): Promise<User> {
     //check if email is already taken
     const emailExists = await this.userModel.findOne({

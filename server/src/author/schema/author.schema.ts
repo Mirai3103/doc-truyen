@@ -11,10 +11,8 @@ export class Author extends BaseSchema {
   @Field()
   name: string;
 
-  @Prop()
   @Field()
-  slug: string;
-
+  totalComic: number;
   @Prop()
   @Field({ nullable: true })
   description?: string;

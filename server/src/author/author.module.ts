@@ -1,5 +1,5 @@
-import { ComicModule } from '@/comic/comic.module';
-import { Module, forwardRef } from '@nestjs/common';
+import { Comic, ComicSchema } from '@/comic/schema/comic.schema';
+import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CommonModule } from '../common/common.module';
 import { DatabaseModule } from '../database/database.module';
@@ -17,8 +17,11 @@ import { Author, AuthorSchema } from './schema/author.schema';
         name: Author.name,
         schema: AuthorSchema,
       },
+      {
+        name: Comic.name,
+        schema: ComicSchema,
+      },
     ]),
-    forwardRef(() => ComicModule),
   ],
   controllers: [AuthorController],
   providers: [AuthorService, AuthorResolver],
