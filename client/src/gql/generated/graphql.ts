@@ -61,7 +61,7 @@ export type Comic = {
   createdAt: Scalars['DateTime'];
   createdBy: User;
   description: Scalars['String'];
-  followCount: Scalars['Float'];
+  followCount?: Maybe<Scalars['Int']>;
   genres: Array<Tag>;
   imageCoverUrl: Scalars['String'];
   imageThumbUrl: Scalars['String'];
@@ -568,7 +568,7 @@ export type GetComicBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GetComicBySlugQuery = { __typename?: 'Query', getComicBySlug: { __typename?: 'Comic', _id: string, createdAt: any, updatedAt: any, description: string, followCount: number, imageCoverUrl: string, imageThumbUrl: string, name: string, otherNames: Array<string>, status: string, artist?: { __typename?: 'Author', name: string, slug: string } | null, author: { __typename?: 'Author', name: string, slug: string }, category?: { __typename?: 'Tag', name: string, slug: string } | null, genres: Array<{ __typename?: 'Tag', name: string, slug: string }>, createdBy: { __typename?: 'User', _id: string, description?: string | null, avatarUrl?: string | null, displayName: string } } };
+export type GetComicBySlugQuery = { __typename?: 'Query', getComicBySlug: { __typename?: 'Comic', _id: string, createdAt: any, updatedAt: any, description: string, followCount?: number | null, totalViewCount: number, imageCoverUrl: string, imageThumbUrl: string, name: string, otherNames: Array<string>, status: string, artist?: { __typename?: 'Author', name: string, slug: string } | null, author: { __typename?: 'Author', name: string, slug: string }, category?: { __typename?: 'Tag', name: string, slug: string } | null, genres: Array<{ __typename?: 'Tag', name: string, slug: string }>, createdBy: { __typename?: 'User', _id: string, description?: string | null, avatarUrl?: string | null, displayName: string } } };
 
 export type GetComicByIdQueryVariables = Exact<{
   id: Scalars['String'];
@@ -584,7 +584,7 @@ export type GetComicsCreatedByUserQueryVariables = Exact<{
 }>;
 
 
-export type GetComicsCreatedByUserQuery = { __typename?: 'Query', comics: Array<{ __typename?: 'Comic', _id: string, slug: string, name: string, chapterCount: number, updatedAt: any, followCount: number, imageCoverUrl: string, status: string, author: { __typename?: 'Author', name: string }, category?: { __typename?: 'Tag', name: string } | null, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null } | null }> };
+export type GetComicsCreatedByUserQuery = { __typename?: 'Query', comics: Array<{ __typename?: 'Comic', _id: string, slug: string, name: string, chapterCount: number, updatedAt: any, followCount?: number | null, totalViewCount: number, imageCoverUrl: string, status: string, author: { __typename?: 'Author', name: string }, category?: { __typename?: 'Tag', name: string } | null, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null } | null }> };
 
 export type GetRecentComicsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Float']>;
@@ -1466,6 +1466,7 @@ export const GetComicBySlugDocument = gql`
     updatedAt
     description
     followCount
+    totalViewCount
     imageCoverUrl
     imageThumbUrl
     name
@@ -1587,6 +1588,7 @@ export const GetComicsCreatedByUserDocument = gql`
     chapterCount
     updatedAt
     followCount
+    totalViewCount
     imageCoverUrl
     name
     recentChapter {
@@ -1826,7 +1828,7 @@ export type FindAllTagQueryResult = Apollo.QueryResult<FindAllTagQuery, FindAllT
 export const GetTrendingComicsDocument = gql`
     query getTrendingComics($page: Float, $limit: Float) {
   TopFollow: getTrendingComics(
-    input: {page: $page, limit: $limit, type: "followCount"}
+    input: {page: $page, limit: $limit, type: "totalViewCount"}
   ) {
     _id
     imageThumbUrl
@@ -1982,7 +1984,7 @@ export type GetTrendingComicsLazyQueryHookResult = ReturnType<typeof useGetTrend
 export type GetTrendingComicsQueryResult = Apollo.QueryResult<GetTrendingComicsQuery, GetTrendingComicsQueryVariables>;
 export const GetTopFollowDocument = gql`
     query getTopFollow($page: Float, $limit: Float) {
-  getTrendingComics(input: {page: $page, limit: $limit, type: "followCount"}) {
+  getTrendingComics(input: {page: $page, limit: $limit, type: "totalViewCount"}) {
     _id
     imageThumbUrl
     imageCoverUrl

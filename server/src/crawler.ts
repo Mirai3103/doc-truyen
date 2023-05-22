@@ -19,11 +19,11 @@ async function bootstrap() {
   await app.listen(Number(process.env.PORT) || 3000);
   console.log(`Application is running on: ${await app.getUrl()}`);
   console.log('Start crawl data');
-  cuuService.crawNewChapter().then(() => {
-    console.log('Done');
+  cuuService.crawlData().then(() => {
+    console.log('Done manga');
+    crawlerService.crawlTagAndAuthor().then(() => {
+      console.log('Done');
+    });
   });
-  // crawlerService.crawlTagAndAuthor().then(() => {
-  //   console.log('Done');
-  // });
 }
 bootstrap();

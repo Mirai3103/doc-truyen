@@ -44,5 +44,6 @@ import { ComikService } from './comik.service';
     AuthorModule,
   ],
   providers: [CrawlerService, ComikService],
+  exports: [CrawlerService, ComikService],
 })
 export class CrawlerModule {}

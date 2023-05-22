@@ -58,7 +58,7 @@ export class Comic extends BaseSchema {
   @Field(() => [Tag])
   genres: Tag[] = [];
   @Prop()
-  @Field()
+  @Field(() => Int, { nullable: true, defaultValue: 0 })
   followCount: number;
   @Field(() => Chapter, { nullable: true })
   recentChapter: Chapter;

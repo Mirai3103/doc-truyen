@@ -24,6 +24,7 @@ query getComicBySlug($slug: String!) {
         updatedAt
         description
         followCount
+        totalViewCount
         imageCoverUrl
         imageThumbUrl
         name

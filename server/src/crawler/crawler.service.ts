@@ -144,7 +144,9 @@ export class CrawlerService {
       createdBy: team,
     };
     const newManga = new this.mangaModel(newMangaObj);
-    const mangaSaved = await newManga.save();
+    const mangaSaved = await newManga.save({
+      timestamps: false,
+    });
     await this.crawlChapter(id, mangaSaved);
   }
   private async createCreatorIfNotExist(iteam: ITeam) {
@@ -169,7 +171,9 @@ export class CrawlerService {
       role: Role.CREATOR,
     };
     const newTeam = new this.userModel(newTeamObj);
-    return await newTeam.save();
+    return await newTeam.save({
+      timestamps: false,
+    });
   }
   private async crawlChapter(mangaId: number, mangaDoc: ComicDocument) {
     //  https://kakarot.cuutruyen.net/api/v2/mangas/576/chapters
@@ -216,7 +220,9 @@ export class CrawlerService {
         pages: pages,
       };
       const newChapter = new this.chapterModel(newChapterObj);
-      await newChapter.save();
+      await newChapter.save({
+        timestamps: false,
+      });
     } catch (e) {
       console.error('error', e);
       throw e;

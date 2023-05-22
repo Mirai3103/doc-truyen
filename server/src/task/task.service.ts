@@ -1,13 +1,11 @@
 import { CrawlerService } from '@/crawler/crawler.service';
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Injectable, Logger } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class TasksService {
   private readonly logger = new Logger(TasksService.name);
-  constructor(
-    @Inject(CrawlerService) private readonly crawlerService: CrawlerService,
-  ) {}
+  constructor(private readonly crawlerService: CrawlerService) {}
 
   @Cron('0 30 04 * * 0-6')
   crawNewest() {
@@ -16,8 +14,8 @@ export class TasksService {
     );
     this.crawlerService.crawNewChapter();
   }
-  @Cron(CronExpression.EVERY_10_SECONDS)
-  test() {
-    this.logger.debug('Called every 10 seconds');
-  }
+  //   @Cron(CronExpression.EVERY_10_SECONDS)
+  //   test() {
+  //     this.logger.debug('Called every 10 seconds');
+  //   }
 }

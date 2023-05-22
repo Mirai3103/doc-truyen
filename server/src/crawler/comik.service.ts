@@ -95,7 +95,9 @@ export class ComikService {
           category = await this.createIfTagNotFound('manga');
         }
         category!.type = TagType.Category;
-        category?.save();
+        category?.save({
+          timestamps: false,
+        });
         if (category) item.comic.category = category;
         const tags = await Promise.all(
           obj.listSpanGenres.map((tag) => this.createIfTagNotFound(tag)),
@@ -104,7 +106,9 @@ export class ComikService {
         tags.forEach((tag) => {
           if (tag) item.comic.genres.push(tag);
         });
-        await item.comic.save();
+        await item.comic.save({
+          timestamps: false,
+        });
       } catch (e) {
         console.error(item.comic.id, item.comikId, e);
       }
@@ -147,7 +151,9 @@ export class ComikService {
           category = await this.createIfTagNotFound('manga');
         }
         category!.type = TagType.Category;
-        category?.save();
+        category?.save({
+          timestamps: false,
+        });
         if (category) item.comic.category = category;
         const tags = await Promise.all(
           obj.listSpanGenres.map((tag) => this.createIfTagNotFound(tag)),
@@ -156,7 +162,9 @@ export class ComikService {
         tags.forEach((tag) => {
           if (tag) item.comic.genres.push(tag);
         });
-        await item.comic.save();
+        await item.comic.save({
+          timestamps: false,
+        });
       } catch (e) {
         console.error(item.comic.id, item.comikId, e);
       }
@@ -174,7 +182,9 @@ export class ComikService {
       slug,
       description: null,
     });
-    return await newTag.save();
+    return await newTag.save({
+      timestamps: false,
+    });
   }
   private hasUnicode(str: string) {
     for (let i = 0; i < str.length; i++) {

@@ -13,6 +13,7 @@ query GetComicsCreatedByUser($userId: String!, $limit: Float, $page: Float) {
         chapterCount
         updatedAt
         followCount
+        totalViewCount
         imageCoverUrl
         name
         recentChapter {

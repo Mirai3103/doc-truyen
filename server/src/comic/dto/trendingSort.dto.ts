@@ -2,7 +2,7 @@ import { Field, InputType } from '@nestjs/graphql';
 import { ValidateBy } from 'class-validator';
 
 export enum TrendingSortType {
-  FOLLOW_COUNT = 'followCount',
+  FOLLOW_COUNT = 'totalViewCount',
   TOP_WEEK = 'topWeek',
   TOP_MONTH = 'topMonth',
   TOP_YEAR = 'topYear',

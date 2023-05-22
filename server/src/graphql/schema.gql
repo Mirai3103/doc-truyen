@@ -44,7 +44,7 @@ type Comic {
   createdAt: DateTime!
   createdBy: User!
   description: String!
-  followCount: Float!
+  followCount: Int
   genres: [Tag!]!
   imageCoverUrl: String!
   imageThumbUrl: String!

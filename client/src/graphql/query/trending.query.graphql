@@ -1,5 +1,5 @@
 query getTrendingComics($page: Float, $limit: Float) {
-    TopFollow: getTrendingComics(input: { page: $page, limit: $limit, type: "followCount" }) {
+    TopFollow: getTrendingComics(input: { page: $page, limit: $limit, type: "totalViewCount" }) {
         _id
         imageThumbUrl
         imageCoverUrl
@@ -122,7 +122,7 @@ query getTrendingComics($page: Float, $limit: Float) {
 }
 
 query getTopFollow($page: Float, $limit: Float) {
-    getTrendingComics(input: { page: $page, limit: $limit, type: "followCount" }) {
+    getTrendingComics(input: { page: $page, limit: $limit, type: "totalViewCount" }) {
         _id
         imageThumbUrl
         imageCoverUrl
