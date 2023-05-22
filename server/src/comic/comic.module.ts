@@ -8,6 +8,7 @@ import { ChapterModule } from '@/chapter/chapter.module';
 import { CommonModule } from '@/common/common.module';
 import { TagModule } from '@/tag/tag.module';
 import { UserModule } from '@/user/user.module';
+import { CacheModule } from '@nestjs/cache-manager';
 import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ComicResolver } from './comic.resolver';
@@ -21,6 +22,7 @@ import { Comic, ComicSchema } from './schema/comic.schema';
         schema: ComicSchema,
       },
     ]),
+    CacheModule.register(),
     AuthorModule,
     UserModule,
     TagModule,

@@ -1,3 +1,4 @@
+import { ComikService } from '@/crawler/comik.service';
 import { CrawlerService } from '@/crawler/crawler.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
@@ -5,17 +6,17 @@ import { Cron } from '@nestjs/schedule';
 @Injectable()
 export class TasksService {
   private readonly logger = new Logger(TasksService.name);
-  constructor(private readonly crawlerService: CrawlerService) {}
+  constructor(
+    private readonly crawlerService: CrawlerService,
+    private readonly commikService: ComikService,
+  ) {}
 
   @Cron('0 30 04 * * 0-6')
-  crawNewest() {
+  async crawNewest() {
     this.logger.debug(
       'Called when the current time is 04:30:00 every day of the week.',
     );
-    this.crawlerService.crawNewChapter();
+    await this.crawlerService.crawNewChapter();
+    await this.commikService.crawlNewManga();
   }
-  //   @Cron(CronExpression.EVERY_10_SECONDS)
-  //   test() {
-  //     this.logger.debug('Called every 10 seconds');
-  //   }
 }

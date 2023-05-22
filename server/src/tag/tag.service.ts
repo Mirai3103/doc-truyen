@@ -24,7 +24,7 @@ export class TagService {
   async findAll(): Promise<TagDocument[]> {
     return this.tagModel.find().exec();
   }
-  async findOne(id: string | ObjectId): Promise<TagDocument | null> {
+  async findOne(id: string | ObjectId | null): Promise<TagDocument | null> {
     return this.tagModel
       .findOne({
         _id: id,

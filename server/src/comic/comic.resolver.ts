@@ -13,6 +13,7 @@ import { TagService } from '@/tag/tag.service';
 import { UserPayload } from '@/auth/interface/user-payload.jwt';
 import { Role, User } from '@/user/schema/user.schema';
 import { UserService } from '@/user/user.service';
+import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
 import { Inject, UseGuards } from '@nestjs/common';
 import {
   Args,
@@ -33,6 +34,7 @@ export class ComicResolver {
     @Inject(AuthorService) private readonly authorService: AuthorService,
     @Inject(TagService) private readonly tagService: TagService,
     @Inject(ChapterService) private readonly chapterService: ChapterService,
+    @Inject(CACHE_MANAGER) private cacheManager: CacheStore,
     private readonly userService: UserService,
   ) {}
   @Query(() => Comic)
@@ -46,18 +48,20 @@ export class ComicResolver {
   // define how to get Author populated
   @ResolveField(() => Author)
   async author(@Parent() comic: Comic) {
+    if (comic.author.name) return comic.author;
     const author = await this.authorService.findOne(comic.author._id + '');
-
     return author;
   }
   @ResolveField(() => Author)
   async artist(@Parent() comic: Comic) {
+    if (comic.artist?.name) return comic.artist;
     if (!comic.artist) return null;
     const author = await this.authorService.findOne(comic.artist._id + '');
     return author;
   }
   @ResolveField(() => User)
   async createdBy(@Parent() comic: Comic) {
+    if (comic.createdBy.email) return comic.createdBy;
     const user = await this.userService.findByUniqueField(
       comic.createdBy._id + '',
     );
@@ -65,6 +69,7 @@ export class ComicResolver {
   }
   @ResolveField(() => [Tag])
   async genres(@Parent() comic: Comic) {
+    if (comic.genres && comic.genres[0].name) return comic.genres;
     const tags = await this.tagService.getListsTag(
       comic.genres.map((tag) => tag._id),
     );
@@ -72,6 +77,7 @@ export class ComicResolver {
   }
   @ResolveField(() => [Tag])
   async category(@Parent() comic: Comic) {
+    if (comic.category.name) return comic.category;
     if (!comic.category) return null;
     const tags = await this.tagService.findOne(comic.category._id);
     return tags;
@@ -83,7 +89,18 @@ export class ComicResolver {
     @Args('page', { type: () => Number, nullable: true, defaultValue: 1 })
     page: number,
   ) {
-    return await this.commicService.getRecentComics(limit, page);
+    const key = `recent-comics-${limit}-${page}`;
+    const cached = await this.cacheManager.get(key);
+
+    if (cached) {
+      return cached;
+    }
+
+    const data = await this.commicService.getRecentComics(limit, page);
+    const expireTime = 60 * 15; //15 minutes
+    this.cacheManager.set(key, data, { ttl: expireTime });
+
+    return data;
   }
   @ResolveField(() => Chapter)
   async recentChapter(@Parent() comic: Comic) {
@@ -96,7 +113,15 @@ export class ComicResolver {
     @Args('page', { type: () => Number, nullable: true, defaultValue: 1 })
     page: number,
   ) {
-    return await this.commicService.getTopComics(limit, page);
+    const key = `top-comics-${limit}-${page}`;
+    const cached = await this.cacheManager.get(key);
+    if (cached) {
+      return cached;
+    }
+    const data = await this.commicService.getTopComics(limit, page);
+    const expireTime = 60 * 15; //15 minutes
+    this.cacheManager.set(key, data, { ttl: expireTime });
+    return data;
   }
   @Query(() => Comic)
   @UseGuards(GrapqlMayBeNeedIdentityGuard)
@@ -105,7 +130,15 @@ export class ComicResolver {
   }
   @Query(() => [Comic])
   async getTrendingComics(@Args('input') input: TrendingSortInput) {
-    return await this.commicService.getTrendingComics(input);
+    const key = `trending-comics-${JSON.stringify(input)}`;
+    const cached = await this.cacheManager.get(key);
+    if (cached) {
+      return cached;
+    }
+    const data = await this.commicService.getTrendingComics(input);
+    const expireTime = 60 * 15; //15 minutes
+    await this.cacheManager.set(key, data, { ttl: expireTime });
+    return data;
   }
   @Query(() => [Comic])
   async getComicsCreatedByUser(
