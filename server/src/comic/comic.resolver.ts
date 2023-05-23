@@ -13,7 +13,7 @@ import { TagService } from '@/tag/tag.service';
 import { UserPayload } from '@/auth/interface/user-payload.jwt';
 import { Role, User } from '@/user/schema/user.schema';
 import { UserService } from '@/user/user.service';
-import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, UseGuards } from '@nestjs/common';
 import {
   Args,
@@ -23,19 +23,22 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { Cache } from 'cache-manager';
 import { ComicService } from './comic.service';
 import AdvanceSearchInput from './dto/advance-search.dto';
 import CreateComicInput from './dto/create-comic-input.dto';
 import { TrendingSortInput } from './dto/trendingSort.dto';
 import { Comic } from './schema/comic.schema';
+
 @Resolver(() => Comic)
 export class ComicResolver {
+  private readonly EXPIRE_TIME = 15 * 60 * 1000; //15 minutes
   constructor(
     @Inject(ComicService) private readonly commicService: ComicService,
     @Inject(AuthorService) private readonly authorService: AuthorService,
     @Inject(TagService) private readonly tagService: TagService,
     @Inject(ChapterService) private readonly chapterService: ChapterService,
-    @Inject(CACHE_MANAGER) private cacheManager: CacheStore,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private readonly userService: UserService,
   ) {}
   @Query(() => Comic)
@@ -94,12 +97,13 @@ export class ComicResolver {
     const cached = await this.cacheManager.get(key);
 
     if (cached) {
+      console.log('cached found');
       return cached;
     }
+    console.log('cached miss');
 
     const data = await this.commicService.getRecentComics(limit, page);
-    const expireTime = 60 * 15; //15 minutes
-    this.cacheManager.set(key, data, { ttl: expireTime });
+    this.cacheManager.set(key, data, this.EXPIRE_TIME);
 
     return data;
   }
@@ -120,8 +124,7 @@ export class ComicResolver {
       return cached;
     }
     const data = await this.commicService.getTopComics(limit, page);
-    const expireTime = 60 * 15; //15 minutes
-    this.cacheManager.set(key, data, { ttl: expireTime });
+    this.cacheManager.set(key, data, this.EXPIRE_TIME);
     return data;
   }
   @Query(() => Comic)
@@ -137,8 +140,7 @@ export class ComicResolver {
       return cached;
     }
     const data = await this.commicService.getTrendingComics(input);
-    const expireTime = 60 * 15; //15 minutes
-    await this.cacheManager.set(key, data, { ttl: expireTime });
+    this.cacheManager.set(key, data, this.EXPIRE_TIME);
     return data;
   }
   @Query(() => [Comic])

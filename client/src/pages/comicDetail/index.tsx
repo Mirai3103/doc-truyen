@@ -10,6 +10,7 @@ import {
     Skeleton,
     Spoiler,
     Title,
+    Tooltip,
     TypographyStylesProvider,
     useMantineTheme,
 } from "@mantine/core";
@@ -59,9 +60,11 @@ export default function ComicDetail() {
                                 ml={112.5 + 225 + 16}
                                 p={"xs"}
                             >
-                                <Title maw={"80%"} color="gray.1" className="truncate-two-lines" order={1}>
-                                    {data!.getComicBySlug.name}
-                                </Title>
+                                <Tooltip label={data!.getComicBySlug.name}>
+                                    <Title maw={"80%"} color="gray.1" className="truncate-two-lines" order={1}>
+                                        {data!.getComicBySlug.name}
+                                    </Title>
+                                </Tooltip>
                                 <Title color="gray.1" order={5}>
                                     Tác giả: {data!.getComicBySlug.author.name}
                                 </Title>
@@ -84,9 +87,11 @@ export default function ComicDetail() {
                         />
                     )}
                     <div className="more-md:hidden flex flex-col items-center mt-2">
-                        <Title maw={"80%"} className="truncate-two-lines text-2xl my-1" order={4}>
-                            {!loading ? data!.getComicBySlug.name : <Skeleton height={20} width={"100%"} />}
-                        </Title>
+                        <Tooltip label={!loading ? data!.getComicBySlug.name : ""}>
+                            <Title maw={"80%"} className="truncate-two-lines text-2xl my-1" order={4}>
+                                {!loading ? data!.getComicBySlug.name : <Skeleton height={20} width={"100%"} />}
+                            </Title>
+                        </Tooltip>
                     </div>
                     <Flex direction={"column"} px="xs" py={"sm"} gap="xs" className="ml-2">
                         <Title order={5} className="more-md:hidden block">

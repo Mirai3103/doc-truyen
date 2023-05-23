@@ -3,7 +3,7 @@ import React from "react";
 
 import { Chapter, useGetAllChaptersQuery } from "@/gql/generated/graphql";
 import { getDiffStr } from "@/utils/dateUtils";
-import { createStyles, rem, ScrollArea, Table } from "@mantine/core";
+import { ScrollArea, Table, createStyles, rem } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
 import { IconFilterOff } from "@tabler/icons-react";
 import { useState } from "react";
@@ -78,7 +78,7 @@ export function TableChapters({ data, skeletonRows = 5 }: TableChaptersProps) {
         }
         return data.filter((chapter) => {
             return (
-                chapter.name!.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+                (chapter.name || "").toLowerCase().includes(debouncedSearch.toLowerCase()) ||
                 chapter.chapterNumber.toString().includes(debouncedSearch)
             );
         });
@@ -103,7 +103,7 @@ export function TableChapters({ data, skeletonRows = 5 }: TableChaptersProps) {
                 <IconFilterOff className="text-red-300 cursor-pointer" size={"35"} onClick={() => setSearch("")} />
             </Flex>
             <ScrollArea h={800} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
-                <Table withBorder withColumnBorders striped highlightOnHover verticalSpacing={"sm"} miw={700}>
+                <Table withBorder withColumnBorders striped highlightOnHover verticalSpacing={"sm"}>
                     <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
                         <tr>
                             <th className="w-1 whitespace-nowrap md:w-auto">
