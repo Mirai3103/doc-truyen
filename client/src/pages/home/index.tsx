@@ -11,12 +11,15 @@ const skeleton = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 export default function Home() {
     const [searchParams, setSearchParam] = useSearchParams();
     const page = Number(searchParams.get("page") || 1);
-    const { data, loading } = useGetRecentComicsQuery({
+    const { data, loading, error } = useGetRecentComicsQuery({
         variables: {
             limit: 35,
             page: page,
         },
     });
+    if (error) {
+        throw error;
+    }
     const matchesSm = useMediaQuery("(min-width: 640px)");
     const matchesMoreMd = useMediaQuery("(min-width: 768px)");
     const matchesMoreXl = useMediaQuery("(min-width: 1280px)");

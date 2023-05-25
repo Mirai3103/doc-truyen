@@ -1,6 +1,5 @@
-import React from "react";
-
-import { createStyles, Title, Text, Button, Container, Group, rem } from "@mantine/core";
+import { Button, Container, Group, Text, Title, createStyles, rem } from "@mantine/core";
+import { useRouteError } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
     root: {
@@ -47,15 +46,15 @@ const useStyles = createStyles((theme) => ({
 
 export default function ErrorPage(): JSX.Element {
     const { classes } = useStyles();
-
+    const error = useRouteError();
+    console.log(error);
     return (
         <div className={classes.root}>
             <Container>
-                <div className={classes.label}>500</div>
-                <Title className={classes.title}>Something bad just happened...</Title>
+                <div className={classes.label}>503</div>
+                <Title className={classes.title}>Server sập</Title>
                 <Text size="lg" align="center" className={classes.description}>
-                    Our servers could not handle your request. Don&apos;t worry, our development team was already
-                    notified. Try refreshing the page.
+                    Có thể là đến giới hạn vì đéo có tiền để host 24/24
                 </Text>
                 <Group position="center">
                     <Button variant="white" size="md" onClick={() => window.location.reload()}>

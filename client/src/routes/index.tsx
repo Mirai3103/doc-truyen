@@ -14,6 +14,7 @@ import LoginPage from "@/pages/auth";
 import Callback from "@/pages/auth/callback";
 import ChapterPage from "@/pages/chapter";
 import ComicDetail from "@/pages/comicDetail";
+import ErrorPage from "@/pages/error";
 import Home from "@/pages/home";
 import ProfilePage from "@/pages/profile";
 import ReadingHistoryPage from "@/pages/readingHistory";
@@ -21,7 +22,6 @@ import TrendingPage from "@/pages/trending";
 import React, { Suspense, useLayoutEffect } from "react";
 import { NavigationType, Outlet, createBrowserRouter, useLocation, useNavigationType } from "react-router-dom";
 import MainLayout from "../components/layouts/MainLayout";
-import ErrorPage from "../pages/error";
 import NotFoundPage from "../pages/error/404";
 
 const CreateComicPage = React.lazy(() => import("@/pages/admin/ComicManage/CreateComic"));
@@ -51,6 +51,7 @@ const routes = createBrowserRouter(
                 {
                     path: "/",
                     element: <Home />,
+                    errorElement: <ErrorPage />,
                 },
                 {
                     path: "profile",
@@ -172,7 +173,6 @@ const routes = createBrowserRouter(
         {
             path: "*",
             element: <NotFoundPage />,
-            errorElement: <ErrorPage />,
         },
     ],
     {}
