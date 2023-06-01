@@ -21,6 +21,7 @@ import {
   IPreviewManga,
   ITeam,
 } from './crawler.type';
+import { CloudinaryService } from '@/file/cloudinary/cloudinary.service';
 
 @Injectable()
 export class CrawlerService {
@@ -33,6 +34,7 @@ export class CrawlerService {
     @InjectModel(User.name) private readonly userModel: Model<User>,
     private readonly utilsService: UtilService,
     private readonly comicService: ComicService,
+    private readonly cloundinaryService: CloudinaryService,
   ) {
     this.fakePages = JSON.parse(readFileSync('fakePages.json', 'utf-8'));
   }
@@ -123,11 +125,18 @@ export class CrawlerService {
       return;
     }
     console.log('crawling new manga: ', manga.name);
-    const author = await this.authorService.createIfNotExist(
+    const author = this.authorService.createIfNotExist(
       manga.author.name || 'unknown',
     );
-    const team = await this.createCreatorIfNotExist(manga.team);
-
+    const team = this.createCreatorIfNotExist(manga.team);
+    const newimageCoverUrl = this.cloundinaryService.uploadFromUrl(
+      manga.cover_url,
+    );
+    const newimageThumbUrl = this.cloundinaryService.uploadFromUrl(
+      manga.panorama_url,
+    );
+    const [teamSaved, authorSaved, imageCoverUrl, imageThumbUrl] =
+      await Promise.all([team, author, newimageCoverUrl, newimageThumbUrl]);
     const newMangaObj = {
       createdAt: new Date(manga.created_at),
       updatedAt: new Date(manga.updated_at),
@@ -139,12 +148,12 @@ export class CrawlerService {
         manga.full_description == null
           ? manga.description
           : manga.full_description,
-      imageCoverUrl: manga.cover_url,
-      imageThumbUrl: manga.panorama_url,
+      imageCoverUrl: imageCoverUrl ? imageCoverUrl : manga.cover_url,
+      imageThumbUrl: imageThumbUrl ? imageThumbUrl : manga.panorama_url,
       status: Status.Ongoing,
       otherNames: manga.titles.map((title) => title.name),
-      author: author,
-      createdBy: team,
+      author: authorSaved,
+      createdBy: teamSaved,
     };
     const newManga = new this.mangaModel(newMangaObj);
     const mangaSaved = await newManga.save({

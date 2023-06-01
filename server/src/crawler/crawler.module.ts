@@ -15,6 +15,7 @@ import { User, UserSchema } from '@/user/schema/user.schema';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ComikService } from './comik.service';
+import { CloudinaryModule } from '@/file/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { ComikService } from './comik.service';
     CommonModule,
     AuthorModule,
     ComicModule,
+    CloudinaryModule,
   ],
   providers: [CrawlerService, ComikService],
   exports: [CrawlerService, ComikService],

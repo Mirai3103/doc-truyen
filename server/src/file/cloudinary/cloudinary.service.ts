@@ -56,7 +56,11 @@ export class CloudinaryService {
         resolve(result as any);
       });
     });
-    const newFileName = (await promise).secure_url;
-    return newFileName;
+    try {
+      const newFileName = (await promise).secure_url;
+      return newFileName;
+    } catch (e) {
+      return '';
+    }
   }
 }
