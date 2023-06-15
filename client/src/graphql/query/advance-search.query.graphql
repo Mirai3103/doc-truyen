@@ -1,0 +1,26 @@
+query AdvanceSearchComics($input: AdvanceSearchInput!) {
+    data: advanceSearchComics(input: $input) {
+        _id
+        imageThumbUrl
+        imageCoverUrl
+        name
+        description
+        slug
+        recentChapter {
+            chapterNumber
+            name
+            order
+            _id
+            createdAt
+            updatedAt
+        }
+        category {
+            _id
+            name
+        }
+        author {
+            name
+            _id
+        }
+    }
+}

@@ -569,6 +569,13 @@ export type UpdateImportantUserInfoMutationVariables = Exact<{
 
 export type UpdateImportantUserInfoMutation = { __typename?: 'Mutation', updateImportantInfo: { __typename?: 'User', _id: string } };
 
+export type AdvanceSearchComicsQueryVariables = Exact<{
+  input: AdvanceSearchInput;
+}>;
+
+
+export type AdvanceSearchComicsQuery = { __typename?: 'Query', data: Array<{ __typename?: 'Comic', _id: string, imageThumbUrl: string, imageCoverUrl: string, name: string, description: string, slug: string, recentChapter?: { __typename?: 'Chapter', chapterNumber: string, name?: string | null, order: number, _id: string, createdAt: any, updatedAt: any } | null, category?: { __typename?: 'Tag', _id: string, name: string } | null, author: { __typename?: 'Author', name: string, _id: string } }> };
+
 export type SearchAuthorQueryVariables = Exact<{
   keyword?: InputMaybe<Scalars['String']>;
   limit?: InputMaybe<Scalars['Float']>;
@@ -1193,6 +1200,62 @@ export function useUpdateImportantUserInfoMutation(baseOptions?: Apollo.Mutation
 export type UpdateImportantUserInfoMutationHookResult = ReturnType<typeof useUpdateImportantUserInfoMutation>;
 export type UpdateImportantUserInfoMutationResult = Apollo.MutationResult<UpdateImportantUserInfoMutation>;
 export type UpdateImportantUserInfoMutationOptions = Apollo.BaseMutationOptions<UpdateImportantUserInfoMutation, UpdateImportantUserInfoMutationVariables>;
+export const AdvanceSearchComicsDocument = gql`
+    query AdvanceSearchComics($input: AdvanceSearchInput!) {
+  data: advanceSearchComics(input: $input) {
+    _id
+    imageThumbUrl
+    imageCoverUrl
+    name
+    description
+    slug
+    recentChapter {
+      chapterNumber
+      name
+      order
+      _id
+      createdAt
+      updatedAt
+    }
+    category {
+      _id
+      name
+    }
+    author {
+      name
+      _id
+    }
+  }
+}
+    `;
+
+/**
+ * __useAdvanceSearchComicsQuery__
+ *
+ * To run a query within a React component, call `useAdvanceSearchComicsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAdvanceSearchComicsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAdvanceSearchComicsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAdvanceSearchComicsQuery(baseOptions: Apollo.QueryHookOptions<AdvanceSearchComicsQuery, AdvanceSearchComicsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AdvanceSearchComicsQuery, AdvanceSearchComicsQueryVariables>(AdvanceSearchComicsDocument, options);
+      }
+export function useAdvanceSearchComicsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AdvanceSearchComicsQuery, AdvanceSearchComicsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AdvanceSearchComicsQuery, AdvanceSearchComicsQueryVariables>(AdvanceSearchComicsDocument, options);
+        }
+export type AdvanceSearchComicsQueryHookResult = ReturnType<typeof useAdvanceSearchComicsQuery>;
+export type AdvanceSearchComicsLazyQueryHookResult = ReturnType<typeof useAdvanceSearchComicsLazyQuery>;
+export type AdvanceSearchComicsQueryResult = Apollo.QueryResult<AdvanceSearchComicsQuery, AdvanceSearchComicsQueryVariables>;
 export const SearchAuthorDocument = gql`
     query searchAuthor($keyword: String, $limit: Float, $page: Float) {
   searchAuthor(keyword: $keyword, limit: $limit, page: $page) {

@@ -49,11 +49,11 @@ export const menuData: MenuItemProps[] = [
         },
     },
     {
-        link: "/advance-search",
+        link: "/advanced-search",
         label: "Tìm kiếm ",
         icon: IconListSearch,
         action: () => {
-            appNavigate("/advance-search");
+            appNavigate("/advanced-search");
         },
     },
     // {

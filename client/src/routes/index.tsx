@@ -23,6 +23,7 @@ import React, { Suspense, useLayoutEffect } from "react";
 import { NavigationType, Outlet, createBrowserRouter, useLocation, useNavigationType } from "react-router-dom";
 import MainLayout from "../components/layouts/MainLayout";
 import NotFoundPage from "../pages/error/404";
+import SearchPage from "@/pages/search";
 
 const CreateComicPage = React.lazy(() => import("@/pages/admin/ComicManage/CreateComic"));
 const ScrollToTopWrapper = ({ children }: { children: JSX.Element }) => {
@@ -56,6 +57,10 @@ const routes = createBrowserRouter(
                 {
                     path: "profile",
                     element: <ProfilePage />,
+                },
+                {
+                    path: "advanced-search",
+                    element: <SearchPage />,
                 },
                 {
                     path: "/comic/:slug",

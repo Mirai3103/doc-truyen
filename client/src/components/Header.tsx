@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import AuthMenu from "./AuthMenu";
 import Logo from "./Logo";
 import { MenuItemProps, defaultSection } from "./layouts/appMenuItems";
+import SearchBox from "./SearchBox";
 
 const useStyles = createStyles((theme) => ({
     link: {
@@ -88,12 +89,7 @@ export default function MyHeader({ withBurgerMenu = false, burgerMenuItems = def
                         <Logo w={150} />
                     </Flex>
                     <Group className={"hidden sm:flex items-center grow"} maw={"700px"} spacing={0}>
-                        <Autocomplete
-                            w={"100%"}
-                            placeholder="Search"
-                            icon={<IconSearch size="1rem" stroke={1.5} />}
-                            data={["React", "Angular", "Vue", "Next.js", "Riot.js", "Svelte", "Blitz.js"]}
-                        />
+                        <SearchBox />
                     </Group>
 
                     <Group
@@ -109,12 +105,7 @@ export default function MyHeader({ withBurgerMenu = false, burgerMenuItems = def
                                 <IconSearch size={"25"} stroke={1.5} />
                             </Menu.Target>
                             <Menu.Dropdown>
-                                <Autocomplete
-                                    w={"100%"}
-                                    placeholder="Search"
-                                    icon={<IconSearch size="1rem" stroke={1.5} />}
-                                    data={["React", "Angular", "Vue", "Next.js", "Riot.js", "Svelte", "Blitz.js"]}
-                                />
+                                <SearchBox />
                             </Menu.Dropdown>
                         </Menu>
                     </Group>
