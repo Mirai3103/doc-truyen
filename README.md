@@ -1,7 +1,7 @@
 
 # Đọc truyện
 
-Một trang web đọc truyện
+My project is a web application for reading comic books, where users can upload and read comics. I have utilized Typescript and MongoDB for the database in the development of this project, with NestJS for the backend and ReactJS for the user interface. The website offers features such as comic CRUD operations, trending comics, user registration, login, and role-based authorization. Data caching is also implemented to enhance performance. To automate the process of updating comics, I have incorporated a Cron job to crawl and fetch comics from another website :v.
 
 
 ## Tech Stack
@@ -10,9 +10,8 @@ Một trang web đọc truyện
 
 **Server:** Node, Nestjs, Graphql
 
-## Todo
 
-My project is a web application for reading comic books, where users can upload and read comics. I have utilized Typescript and MongoDB for the database in the development of this project, with NestJS for the backend and ReactJS for the user interface. The website offers features such as comic CRUD operations, trending comics, user registration, login, and role-based authorization. Data caching is also implemented to enhance performance. To automate the process of updating comics, I have incorporated a Cron job to crawl and fetch comics from another website :v.
+
 
 
 ## Run Locally
