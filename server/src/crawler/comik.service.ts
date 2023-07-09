@@ -92,7 +92,7 @@ export class ComikService {
 
         let category = await this.createIfTagNotFound(obj.origination);
         if (!category) {
-          category = await this.createIfTagNotFound('manga');
+          category = await this.createIfTagNotFound('Manga');
         }
         category!.type = TagType.Category;
         category?.save({
