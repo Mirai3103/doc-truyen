@@ -50,6 +50,8 @@ export class CloudinaryService {
     return newFileName;
   }
   async uploadFromUrl(url: string): Promise<string> {
+    if (!url)
+      return 'https://cdn.discordapp.com/attachments/1109544174711218248/1128680948163153960/love-live-sunshine-404-error-4k-wo.jpg';
     const promise = new Promise<CloudinaryResponse>((resolve, reject) => {
       const res = cloudinary.uploader.upload(url, (error, result) => {
         if (error) return reject(error);
