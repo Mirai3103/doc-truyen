@@ -17,6 +17,7 @@ import { ReadingHistoryModule } from './readingHistory/reading-history.module';
 import { TagModule } from './tag/tag.module';
 import { AppScheduleModule } from './task/schedule.module';
 import { UserModule } from './user/user.module';
+import { SeederModule } from './seeder/seeder.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { UserModule } from './user/user.module';
     AuthModule,
     ComicModule,
     ChapterModule,
+    SeederModule,
   ],
   controllers: [AppController],
 })
