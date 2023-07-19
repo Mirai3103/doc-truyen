@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { View, ViewDocument } from './schema/view.schema';
+import { Chapter, ChapterDocument } from '@/chapter/schema/chapter.schema';
 
 @Injectable()
 export class ViewService {
@@ -44,7 +45,6 @@ export class ViewService {
       .exec();
     return todayView;
   }
-
   public async createViewReport(from: Date, to: Date) {
     const view = await this.viewModel
       .aggregate([
