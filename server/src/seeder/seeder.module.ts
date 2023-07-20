@@ -9,6 +9,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SeederService } from './seeder.service';
 import { ViewModule } from '@/view/view.module';
+import { Comic, ComicSchema } from '@/comic/schema/comic.schema';
 
 @Module({
   imports: [
@@ -16,6 +17,10 @@ import { ViewModule } from '@/view/view.module';
       {
         name: Chapter.name,
         schema: ChapterSchema,
+      },
+      {
+        name: Comic.name,
+        schema: ComicSchema,
       },
     ]),
     ViewModule,
