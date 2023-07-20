@@ -21,19 +21,19 @@ export class SeederService {
       const diffDay = this.getDiffDay(chapter.createdAt, new Date());
 
       if (diffDay <= 1) {
-        const randomIncrease = Math.floor(Math.random() * 60);
+        const randomIncrease = Math.floor(Math.random() * 600);
 
         for (let i = 0; i < randomIncrease; i++) {
           await this.viewService.increaseView(chapter._id + '');
         }
       } else if (diffDay < 7) {
-        const randomIncrease = Math.floor(Math.random() * 40);
+        const randomIncrease = Math.floor(Math.random() * 400);
 
         for (let i = 0; i < randomIncrease; i++) {
           await this.viewService.increaseView(chapter._id + '');
         }
       } else {
-        const randomIncrease = Math.floor(Math.random() * 10);
+        const randomIncrease = Math.floor(Math.random() * 100);
 
         for (let i = 0; i < randomIncrease; i++) {
           await this.viewService.increaseView(chapter._id + '');
@@ -50,6 +50,7 @@ export class SeederService {
   }
   async updateDateView() {
     const views = await this.viewService.createDayViewReport();
+    console.log(views.length);
     for await (const view of views) {
       const chapter = await this.chapterModel.findById(view.chapter._id);
       if (chapter) {
