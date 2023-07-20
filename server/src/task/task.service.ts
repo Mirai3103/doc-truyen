@@ -16,7 +16,7 @@ export class TasksService {
   @Cron(CronExpression.EVERY_6_HOURS)
   async crawNewest() {
     this.logger.debug(
-      'Called when the current time is 04:30:00 every day of the week.',
+      'start craw newest when the current time is 00:00:00, 06:00:00, 12:00:00, 18:00:00 every day of the week.',
     );
     await this.crawlerService.crawNewChapter();
     await this.commikService.crawlNewManga();
@@ -24,7 +24,7 @@ export class TasksService {
   @Cron(CronExpression.EVERY_30_MINUTES)
   async seedViewChapter() {
     this.logger.debug(
-      'Start seed view chapter when the current time is 04:30:00 every day of the week.',
+      'start seed view chapter when the current time is 00:00:00, 06:00:00, 12:00:00, 18:00:00 every day of the week.',
     );
     await this.seedService.seedViewChapter();
     await Promise.all([

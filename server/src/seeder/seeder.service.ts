@@ -1,4 +1,5 @@
 import { Chapter, ChapterDocument } from '@/chapter/schema/chapter.schema';
+import { Comic, ComicDocument } from '@/comic/schema/comic.schema';
 import { View } from '@/view/schema/view.schema';
 import { ViewService } from '@/view/view.service';
 import { Injectable, Logger } from '@nestjs/common';
@@ -11,6 +12,7 @@ export class SeederService {
     @InjectModel(Chapter.name)
     private readonly chapterModel: Model<ChapterDocument>,
     private readonly viewService: ViewService,
+    @InjectModel(Comic.name) private readonly comicModel: Model<ComicDocument>,
   ) {}
   async seedViewChapter() {
     const chapters = await this.chapterModel
@@ -28,13 +30,11 @@ export class SeederService {
         }
       } else if (diffDay < 7) {
         const randomIncrease = Math.floor(Math.random() * 400);
-
         for (let i = 0; i < randomIncrease; i++) {
           await this.viewService.increaseView(chapter._id + '');
         }
       } else {
         const randomIncrease = Math.floor(Math.random() * 100);
-
         for (let i = 0; i < randomIncrease; i++) {
           await this.viewService.increaseView(chapter._id + '');
         }
@@ -50,9 +50,8 @@ export class SeederService {
   }
   async updateDateView() {
     const views = await this.viewService.createDayViewReport();
-    console.log(views.length);
     for await (const view of views) {
-      const chapter = await this.chapterModel.findById(view.chapter._id);
+      const chapter = await this.chapterModel.findById(view.chapter._id).exec();
       if (chapter) {
         chapter.todayViewCount = view.count;
         await chapter.save();
@@ -68,6 +67,7 @@ export class SeederService {
         await chapter.save();
       }
     }
+    const comics = await this.comicModel.find({}).select('_id').lean();
   }
   async updateMonthView() {
     const views = await this.viewService.createDayViewReport();
