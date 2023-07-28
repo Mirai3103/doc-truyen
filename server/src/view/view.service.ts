@@ -7,7 +7,7 @@ import { Chapter, ChapterDocument } from '@/chapter/schema/chapter.schema';
 @Injectable()
 export class ViewService {
   constructor(@InjectModel(View.name) private viewModel: Model<ViewDocument>) {}
-  public async increaseView(chapterId: string) {
+  public async increaseView(chapterId: string, amount = 1) {
     const today = new Date();
     const view = await this.viewModel.findOne({
       chapter: {
@@ -32,7 +32,7 @@ export class ViewService {
         console.error(chapterId, today);
       }
     } else {
-      view.count += 1;
+      view.count += amount;
       await view.save();
     }
   }

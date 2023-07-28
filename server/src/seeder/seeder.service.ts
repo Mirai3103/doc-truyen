@@ -25,19 +25,13 @@ export class SeederService {
       if (diffDay <= 1) {
         const randomIncrease = Math.floor(Math.random() * 600);
 
-        for (let i = 0; i < randomIncrease; i++) {
-          await this.viewService.increaseView(chapter._id + '');
-        }
+        await this.viewService.increaseView(chapter._id + '', randomIncrease);
       } else if (diffDay < 7) {
         const randomIncrease = Math.floor(Math.random() * 400);
-        for (let i = 0; i < randomIncrease; i++) {
-          await this.viewService.increaseView(chapter._id + '');
-        }
+        await this.viewService.increaseView(chapter._id + '', randomIncrease);
       } else {
         const randomIncrease = Math.floor(Math.random() * 100);
-        for (let i = 0; i < randomIncrease; i++) {
-          await this.viewService.increaseView(chapter._id + '');
-        }
+        await this.viewService.increaseView(chapter._id + '', randomIncrease);
       }
     }
   }
@@ -50,44 +44,39 @@ export class SeederService {
   }
   async updateDateView() {
     const views = await this.viewService.createDayViewReport();
-    for await (const view of views) {
-      const chapter = await this.chapterModel.findById(view.chapter._id).exec();
-      if (chapter) {
-        chapter.todayViewCount = view.count;
-        await chapter.save();
-      }
+    for (const view of views) {
+      await this.chapterModel.updateOne(
+        { _id: view.chapter._id },
+        { $set: { dateViewCount: view.count } },
+      );
     }
   }
   async updateWeekView() {
     const views = await this.viewService.createDayViewReport();
-    for await (const view of views) {
-      const chapter = await this.chapterModel.findById(view.chapter._id);
-      if (chapter) {
-        chapter.weekViewCount = view.count;
-        await chapter.save();
-      }
+    for (const view of views) {
+      await this.chapterModel.updateOne(
+        { _id: view.chapter._id },
+        { $set: { weekViewCount: view.count } },
+      );
     }
-    const comics = await this.comicModel.find({}).select('_id').lean();
   }
   async updateMonthView() {
     const views = await this.viewService.createDayViewReport();
-    for await (const view of views) {
-      const chapter = await this.chapterModel.findById(view.chapter._id);
-      if (chapter) {
-        chapter.monthViewCount = view.count;
-        await chapter.save();
-      }
+    for (const view of views) {
+      await this.chapterModel.updateOne(
+        { _id: view.chapter._id },
+        { $set: { monthViewCount: view.count } },
+      );
     }
   }
 
   async updateYearView() {
     const views = await this.viewService.createDayViewReport();
     for await (const view of views) {
-      const chapter = await this.chapterModel.findById(view.chapter._id);
-      if (chapter) {
-        chapter.yearViewCount = view.count;
-        await chapter.save();
-      }
+      await this.chapterModel.updateOne(
+        { _id: view.chapter._id },
+        { $set: { yearViewCount: view.count } },
+      );
     }
   }
 }
