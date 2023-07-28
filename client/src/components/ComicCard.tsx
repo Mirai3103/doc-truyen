@@ -1,4 +1,5 @@
 import { Comic } from "@/gql/generated/graphql";
+import { getDiffStr } from "@/utils/dateUtils";
 import { getImageUrl } from "@/utils/imageUtils";
 import {
     AspectRatio,
@@ -54,8 +55,8 @@ function ComicCard({ comic, w = 200, ...props }: ComicCardProps) {
                     radius="sm"
                     src={getImageUrl(comic.imageCoverUrl)}
                 >
-                    <Badge variant={"filled"} pos={"absolute"} top="7px" right="7px" color="green" radius="sm">
-                        {comic.category?.name || "manga"}
+                    <Badge variant={"filled"} pos={"absolute"} top="7px" left="7px" color="green" radius="sm">
+                        {getDiffStr(comic.recentChapter!.updatedAt)}
                     </Badge>
                     <Box
                         pos={"absolute"}

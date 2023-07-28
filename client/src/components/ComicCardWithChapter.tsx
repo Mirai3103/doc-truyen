@@ -67,15 +67,12 @@ function ComicCardWithChapter({ comic, w = 200, ...props }: ComicCardProps) {
                     radius="sm"
                     src={getImageUrl(comic.imageCoverUrl) || ""}
                 >
-                    <Badge variant={"filled"} pos={"absolute"} top="7px" right="7px" color="green" radius="sm">
-                        {comic.category?.name || "manga"}
+                    <Badge variant={"filled"} pos={"absolute"} top="7px" left="7px" color="green" radius="sm">
+                        {getDiffStr(comic.recentChapter?.createdAt || comic.createdAt)}
                     </Badge>
                 </BackgroundImage>
             </AspectRatio>
             <Box w={"100%"} p={"xs"} className={classes.description}>
-                <div className="text-sm font-extralight mb-1">{`Chương ` + comic.recentChapter!.chapterNumber}</div>
-                <div className="text-sm font-extralight mb-1">{getDiffStr(comic.recentChapter!.createdAt)}</div>
-
                 <Tooltip label={comic.name} withArrow>
                     <Title
                         mt={"xs"}
@@ -94,11 +91,15 @@ function ComicCardWithChapter({ comic, w = 200, ...props }: ComicCardProps) {
                         {comic.name}
                     </Title>
                 </Tooltip>
+                <div className="text-sm font-extralight text-center mb-1">
+                    {`Chương ` + comic.recentChapter!.chapterNumber}
+                </div>
+                {/* 
                 <Tooltip label={comic.author.name} withArrow>
                     <Title mt={"2px"} weight={"400"} align="center" size={"12px"} order={6}>
                         {comic.author.name.length > 20 ? comic.author.name.slice(0, 20) + "..." : comic.author.name}
                     </Title>
-                </Tooltip>
+                </Tooltip> */}
             </Box>
         </Flex>
     );
