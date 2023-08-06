@@ -5,7 +5,7 @@ https://docs.nestjs.com/providers#services
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import fs from 'fs';
-import sharp from 'sharp';
+import { join } from 'path';
 
 export interface FilesUploadMapResult {
   [key: string]: string;
@@ -45,19 +45,14 @@ export class FileService {
     });
     return newFiles;
   }
-  public async getImage(filename: string, width?: number, height?: number) {
+  public async getImage(filename: string) {
     const dir = process.env.UPLOAD_PATH || 'uploads';
     const filePath = `${dir}/${filename}`;
     if (!fs.existsSync(filePath)) {
       throw new NotFoundException("File doesn't exist");
     }
-    let pipeline = sharp(filePath);
-    if (width && height) {
-      pipeline = pipeline.resize(Number(width), Number(height), {
-        fit: 'fill',
-        withoutEnlargement: true,
-      });
-    }
-    return pipeline;
+
+    const file = fs.createReadStream(filePath);
+    return file;
   }
 }

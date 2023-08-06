@@ -49,10 +49,8 @@ export class FileController {
   public async getFile(
     @Param('filename') filename: string,
     @Res() res: Response,
-    @Query('width') width?: number,
-    @Query('height') height?: number,
   ) {
-    const image = await this.fileService.getImage(filename, width, height);
+    const image = await this.fileService.getImage(filename);
     res.setHeader('Content-Type', 'image/jpeg'); // 'image/png
     image.pipe(res as any);
   }
