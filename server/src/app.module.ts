@@ -10,20 +10,17 @@ import { AuthorModule } from './author/author.module';
 import { ChapterModule } from './chapter/chapter.module';
 import { ComicModule } from './comic/comic.module';
 import { CommonModule } from './common/common.module';
-import { CrawlerModule } from './crawler/crawler.module';
 import { DatabaseModule } from './database/database.module';
 import { FileModule } from './file/file.module';
 import { ReadingHistoryModule } from './readingHistory/reading-history.module';
 import { TagModule } from './tag/tag.module';
 import { AppScheduleModule } from './task/schedule.module';
 import { UserModule } from './user/user.module';
-import { SeederModule } from './seeder/seeder.module';
 
 @Module({
   imports: [
     FileModule,
     ReadingHistoryModule,
-    CrawlerModule,
     AppScheduleModule,
     ConfigModule.forRoot({
       envFilePath: '../../dev.env',
@@ -46,7 +43,6 @@ import { SeederModule } from './seeder/seeder.module';
     AuthModule,
     ComicModule,
     ChapterModule,
-    SeederModule,
   ],
   controllers: [AppController],
 })
