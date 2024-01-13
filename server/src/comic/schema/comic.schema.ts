@@ -44,7 +44,7 @@ export class Comic extends BaseSchema {
   status: Status = Status.NonPublished;
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Tag' })
   @Field({ nullable: true })
-  category: Tag;
+  category: Tag = '64362ce5372c92c23ca0bcc8' as any;
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
   @Field(() => User)
   createdBy: User;

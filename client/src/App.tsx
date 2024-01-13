@@ -13,71 +13,86 @@ import "./index.css";
 import { themeOverride } from "./mantine.config";
 import routes from "./routes";
 const client = new ApolloClient({
-    uri: "/graphql",
-    cache: new InMemoryCache(),
-    connectToDevTools: true,
-    link: ApolloLink.from([
-        authLink,
-        new HttpLink({
-            uri: "/graphql",
-        }),
-    ]),
+  uri: "/graphql",
+  cache: new InMemoryCache(),
+  connectToDevTools: true,
+  link: ApolloLink.from([
+    authLink,
+    new HttpLink({
+      uri: "/graphql",
+    }),
+  ]),
 });
 function App() {
-    const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
-    const toggleColorScheme = (value?: ColorScheme) =>
-        setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
-    useHotkeys([["mod+J", () => toggleColorScheme()]]);
-    React.useEffect(() => {
-        notifications.show({
-            title: "Lưu ý",
-            message: "Tất cả dữ liệu ở web này được ăn cắp cho mục đích học tập, không có ý định nào khác cả :)",
-            color: "yellow",
-            autoClose: 15000,
-            styles: (theme) => ({
-                title: {
-                    fontSize: theme.fontSizes.xl,
-                    fontStyle: "700",
-                },
-                body: {
-                    fontSize: theme.fontSizes.lg,
-                },
-            }),
-        });
-        tryAuthenticate();
-    }, []);
-    return (
-        <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-            <MantineProvider
-                theme={{
-                    ...themeOverride,
-                    colorScheme,
-                    components: {
-                        Title: {
-                            defaultProps: {
-                                color: colorScheme === "dark" ? "gray.1" : "dark",
-                            },
-                        },
-                        Text: {
-                            defaultProps: {
-                                color: colorScheme === "dark" ? "gray.1" : "dark",
-                            },
-                        },
-                    },
-                }}
-                withCSSVariables
-                withGlobalStyles
-                withNormalizeCSS
-            >
-                <ModalsProvider>
-                    <Notifications position="top-right" />
-                    <ApolloProvider client={client}>
-                        <RouterProvider router={routes} />
-                    </ApolloProvider>
-                </ModalsProvider>
-            </MantineProvider>
-        </ColorSchemeProvider>
-    );
+  const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
+  const toggleColorScheme = (value?: ColorScheme) =>
+    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+  useHotkeys([["mod+J", () => toggleColorScheme()]]);
+  React.useEffect(() => {
+    notifications.show({
+      title: "Lưu ý",
+      message: "Tất cả dữ liệu ở web này được ăn cắp cho mục đích học tập, không có ý định nào khác cả :)",
+      color: "yellow",
+      autoClose: 15000,
+      styles: (theme) => ({
+        title: {
+          fontSize: theme.fontSizes.xl,
+          fontStyle: "700",
+        },
+        body: {
+          fontSize: theme.fontSizes.lg,
+        },
+      }),
+    });
+    notifications.show({
+      title: "Test account",
+      message: "ningsbasement@gmail.com:Kaito1412",
+      color: "green",
+      autoClose: 100000,
+      styles: (theme) => ({
+        title: {
+          fontSize: theme.fontSizes.xl,
+          fontStyle: "700",
+        },
+        body: {
+          fontSize: theme.fontSizes.xl,
+        },
+      }),
+    });
+    tryAuthenticate();
+  }, []);
+  return (
+    <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+      <MantineProvider
+        theme={{
+          ...themeOverride,
+          colorScheme,
+          components: {
+            Title: {
+              defaultProps: {
+                color: colorScheme === "dark" ? "gray.1" : "dark",
+              },
+            },
+            Text: {
+              defaultProps: {
+                color: colorScheme === "dark" ? "gray.1" : "dark",
+              },
+            },
+          },
+        }}
+        withCSSVariables
+        withGlobalStyles
+        withNormalizeCSS
+      >
+        <ModalsProvider>
+          <Notifications position="top-right" />
+          <ApolloProvider client={client}>
+            <RouterProvider router={routes} />
+          </ApolloProvider>
+        </ModalsProvider>
+      </MantineProvider>
+    </ColorSchemeProvider>
+  );
 }
 
 export default App;

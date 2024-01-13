@@ -1,7 +1,7 @@
 {
-  "rewrites":  [
-    {"source": "/api/(.*)", "destination": "https://doc-truyen-production.up.railway.app/$1"}
-    ,{"source": "/graphql", "destination": "https://doc-truyen-production.up.railway.app/graphql"},
-    {"source": "/(.*)", "destination": "/"}
-  ]
+    "rewrites": [
+        { "source": "/api/(.*)", "destination": "http://103.82.37.161:3000/$1" },
+        { "source": "/graphql", "destination": "http://103.82.37.161:3000/graphql" },
+        { "source": "/(.*)", "destination": "/" }
+    ]
 }

@@ -3,16 +3,9 @@ import { NestFactory } from '@nestjs/core';
 import dotenv from 'dotenv';
 
 import morgan from 'morgan';
-import path from 'path';
-const parentPath = path.resolve(path.resolve(), '..');
-if (process.env.NODE_ENV !== 'production') {
-  dotenv.config({
-    path: `${parentPath}${path.sep}dev.env`,
-    override: true,
-  });
-}
+
+dotenv.config();
 import { AppModule } from './app.module';
-import { SeederService } from './seeder/seeder.service';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
