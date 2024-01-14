@@ -24,17 +24,3 @@ query AdvanceSearchComics($input: AdvanceSearchInput!) {
         }
     }
 }
-
-query SearchByKeyword($keyword: String!, $limit: Float) {
-    data: advanceSearchComics(input: { keyword: $keyword, limit: $limit }) {
-        _id
-        imageThumbUrl
-        imageCoverUrl
-        name
-        slug
-        author {
-            name
-            _id
-        }
-    }
-}

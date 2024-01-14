@@ -1,14 +1,15 @@
 // app/providers.tsx
 "use client";
 import { NextUIProvider } from "@nextui-org/react";
-import { ApolloProvider } from "@apollo/client";
+import { ApolloNextAppProvider } from "@apollo/experimental-nextjs-app-support/ssr";
 import { ReactNode, useState } from "react";
-import createApolloClient from "./apollo-client";
-const client = createApolloClient();
+import { makeClient } from "./core/apollo/apollo-client";
+import { useRouter } from "next/navigation";
 export function Providers({ children }: { children: React.ReactNode }) {
+    const router = useRouter();
     return (
-        <ApolloProvider client={client}>
-            <NextUIProvider>{children}</NextUIProvider>
-        </ApolloProvider>
+        <ApolloNextAppProvider makeClient={makeClient}>
+            <NextUIProvider navigate={router.push}>{children}</NextUIProvider>
+        </ApolloNextAppProvider>
     );
 }

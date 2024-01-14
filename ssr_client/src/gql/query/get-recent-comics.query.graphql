@@ -24,28 +24,3 @@ query GetRecentComics($limit: Float, $page: Float) {
         }
     }
 }
-query GetTopComics($limit: Float, $page: Float) {
-    getTopComics(limit: $limit, page: $page) {
-        _id
-        imageThumbUrl
-        imageCoverUrl
-        name
-        description
-        slug
-        recentChapter {
-            chapterNumber
-            name
-            order
-            _id
-            createdAt
-            updatedAt
-        }
-        category {
-            _id
-            name
-        }
-        author {
-            name
-        }
-    }
-}
