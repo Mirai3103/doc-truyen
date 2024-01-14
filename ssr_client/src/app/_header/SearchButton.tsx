@@ -12,6 +12,7 @@ import {
     ListboxItem,
     Spacer,
     Image,
+    CircularProgress,
 } from "@nextui-org/react";
 import { Comic, useSearchByKeywordLazyQuery } from "@/gql/generated/graphql";
 import React from "react";
@@ -57,6 +58,7 @@ export default function SearchButton() {
             <Modal
                 scrollBehavior="inside"
                 backdrop="blur"
+                size="3xl"
                 hideCloseButton
                 isOpen={isOpen}
                 placement={"center"}
@@ -82,24 +84,41 @@ export default function SearchButton() {
                                     type="search"
                                 />
                             </ModalHeader>
-                            <ModalBody className="p-unit-sm">
-                                <Listbox variant="flat" items={data?.data || []} aria-label="Dynamic Actions">
-                                    {(item: Comic) => (
-                                        <ListboxItem
-                                            startContent={
-                                                <Image
-                                                    className="aspect-[3/4] w-unit-18 min-w-unit-18 rounded-small"
-                                                    alt={"title"}
-                                                    src={item.imageCoverUrl || "https://placewaifu.com/image/300/400"}
-                                                />
-                                            }
-                                            key={item._id}
-                                            description={item.author?.name || ""}
-                                        >
-                                            {item.name}
-                                        </ListboxItem>
-                                    )}
-                                </Listbox>
+                            <ModalBody className="p-unit-sm min-h-unit-6xl">
+                                {loading && (
+                                    <div className="w-full flex justify-center items-center min-h-unit-5xl">
+                                        <CircularProgress size="lg" color="primary" aria-label="Loading..." />
+                                    </div>
+                                )}
+                                {!loading && (
+                                    <Listbox
+                                        emptyContent="Không có kết quả"
+                                        variant="flat"
+                                        items={(data?.data || []) as Comic[]}
+                                        aria-label="Dynamic Actions"
+                                    >
+                                        {(item: Comic) => (
+                                            <ListboxItem
+                                                classNames={{
+                                                    title: "text-wrap",
+                                                }}
+                                                startContent={
+                                                    <Image
+                                                        className="aspect-[3/4]  w-unit-18 min-w-unit-18 rounded-small"
+                                                        alt={"title"}
+                                                        src={
+                                                            item.imageCoverUrl || "https://placewaifu.com/image/300/400"
+                                                        }
+                                                    />
+                                                }
+                                                key={item._id}
+                                                description={item.author?.name || ""}
+                                            >
+                                                {item.name}
+                                            </ListboxItem>
+                                        )}
+                                    </Listbox>
+                                )}
                             </ModalBody>
                         </>
                     )}
