@@ -1,0 +1,6 @@
+mutation removeHistory($chapterId: String!) {
+    removeHistory(chapterId: $chapterId)
+}
+mutation removeAllHistory {
+    removeAllHistories
+}

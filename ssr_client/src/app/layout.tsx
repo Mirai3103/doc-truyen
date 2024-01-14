@@ -1,10 +1,10 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Nunito } from "next/font/google";
 import { Providers } from "./providers";
-import Header from "./Header";
-const inter = Inter({ subsets: ["latin"] });
+import Header from "./_header/Header";
+const inter = Nunito({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -13,13 +13,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="vi">
+        <html lang="vi" className="dark">
             <head>
                 <link rel="icon" href="/favicon.png" sizes="any" />
             </head>
-            <body className={inter.className}>
-                <Header />
-                <Providers>{children}</Providers>
+            <body className={`${inter.className} bg-default-50 `}>
+                <Providers>
+                    <Header />
+                    <main className="container mx-auto p-unit-4 min-h-screen">{children}</main>
+                </Providers>
             </body>
         </html>
     );

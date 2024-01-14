@@ -1,0 +1,19 @@
+mutation createComic($input: CreateComicInput!) {
+    createComic(input: $input) {
+        name
+    }
+}
+mutation updateComic($id: String!, $input: CreateComicInput!) {
+    updateComic(id: $id, input: $input) {
+        name
+    }
+}
+
+mutation updateChaptersOrder($input: UpdateChaptersOrderInput!) {
+    data: updateChaptersOrder(input: $input) {
+        order
+    }
+}
+mutation deleteComic($id: String!) {
+    deleteComic(id: $id)
+}

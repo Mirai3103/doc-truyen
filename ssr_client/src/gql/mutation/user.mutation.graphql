@@ -1,0 +1,11 @@
+mutation updateUser($id: String!, $updateUserInput: UpdateUserDto!) {
+    updateUser(id: $id, updateUserInput: $updateUserInput) {
+        _id
+    }
+}
+
+mutation updateImportantUserInfo($updateUserInput: UpdateImportantInfoDTO!) {
+    updateImportantInfo(input: $updateUserInput) {
+        _id
+    }
+}

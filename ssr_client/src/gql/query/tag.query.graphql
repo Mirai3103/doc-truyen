@@ -1,0 +1,9 @@
+query findAllTag {
+    tags {
+        _id
+        name
+
+        type
+        description
+    }
+}

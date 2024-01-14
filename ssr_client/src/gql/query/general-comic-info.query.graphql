@@ -1,0 +1,14 @@
+query GetGeneralInfo {
+    authors {
+        name
+        _id
+    }
+    genres: getGenres {
+        name
+        _id
+    }
+    categories: getCategories {
+        name
+        _id
+    }
+}

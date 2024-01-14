@@ -1,0 +1,51 @@
+query getAllChapters($comicId: String!) {
+    getAllChapters(comicId: $comicId) {
+        _id
+        chapterNumber
+        createdAt
+        order
+        name
+    }
+}
+query getAllChaptersAdmin($comicId: String!) {
+    chapters: getAllChapters(comicId: $comicId) {
+        _id
+        chapterNumber
+        createdAt
+        order
+        name
+        updatedAt
+        pageCount
+    }
+}
+query getChapterById($chapterId: String!) {
+    getChapterById(chapterId: $chapterId) {
+        chapterNumber
+        nextChapter {
+            chapterNumber
+        }
+        previousChapter {
+            chapterNumber
+        }
+        order
+        comic {
+            name
+            slug
+            _id
+        }
+        pages {
+            order
+            url
+        }
+        name
+    }
+}
+query getLastedChapterByComicId($comicId: String!) {
+    getLastedChapterByComicId(comicId: $comicId) {
+        _id
+        chapterNumber
+        createdAt
+        order
+        name
+    }
+}

@@ -1,0 +1,5 @@
+mutation createChapter($input: CreateChapterDto!) {
+    createChapter(input: $input) {
+        order
+    }
+}

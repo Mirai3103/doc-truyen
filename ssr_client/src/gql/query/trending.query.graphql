@@ -1,0 +1,257 @@
+query getTrendingComics($page: Float, $limit: Float) {
+    TopFollow: getTrendingComics(input: { page: $page, limit: $limit, type: "totalViewCount" }) {
+        _id
+        imageThumbUrl
+        imageCoverUrl
+        name
+        description
+        slug
+        recentChapter {
+            chapterNumber
+            name
+            order
+            _id
+            createdAt
+            updatedAt
+        }
+        category {
+            _id
+            name
+        }
+        author {
+            name
+            _id
+        }
+    }
+    TopWeek: getTrendingComics(input: { page: $page, limit: $limit, type: "weekViewCount" }) {
+        _id
+        imageThumbUrl
+        imageCoverUrl
+        name
+        description
+        slug
+        recentChapter {
+            chapterNumber
+            name
+            order
+            _id
+            createdAt
+            updatedAt
+        }
+        category {
+            _id
+            name
+        }
+        author {
+            name
+            _id
+        }
+    }
+    TopMonth: getTrendingComics(input: { page: $page, limit: $limit, type: "monthViewCount" }) {
+        _id
+        imageThumbUrl
+        imageCoverUrl
+        name
+        description
+        slug
+        recentChapter {
+            chapterNumber
+            name
+            order
+            _id
+            createdAt
+            updatedAt
+        }
+        category {
+            _id
+            name
+        }
+        author {
+            name
+            _id
+        }
+    }
+    TopYear: getTrendingComics(input: { page: $page, limit: $limit, type: "yearViewCount" }) {
+        _id
+        imageThumbUrl
+        imageCoverUrl
+        name
+        description
+        slug
+        recentChapter {
+            chapterNumber
+            name
+            order
+            _id
+            createdAt
+            updatedAt
+        }
+        category {
+            _id
+            name
+        }
+        author {
+            name
+            _id
+        }
+    }
+    Newest: getTrendingComics(input: { page: $page, limit: $limit, type: "updatedAt" }) {
+        _id
+        imageThumbUrl
+        imageCoverUrl
+        name
+        description
+        slug
+        recentChapter {
+            chapterNumber
+            name
+            order
+            _id
+            createdAt
+            updatedAt
+        }
+        category {
+            _id
+            name
+        }
+        author {
+            name
+            _id
+        }
+    }
+}
+
+query getTopFollow($page: Float, $limit: Float) {
+    getTrendingComics(input: { page: $page, limit: $limit, type: "totalViewCount" }) {
+        _id
+        imageThumbUrl
+        imageCoverUrl
+        name
+        description
+        slug
+        recentChapter {
+            chapterNumber
+            name
+            order
+            _id
+            createdAt
+            updatedAt
+        }
+        category {
+            _id
+            name
+        }
+        author {
+            name
+            _id
+        }
+    }
+}
+
+query getTopWeek($page: Float, $limit: Float) {
+    getTrendingComics(input: { page: $page, limit: $limit, type: "weekViewCount" }) {
+        _id
+        imageThumbUrl
+        imageCoverUrl
+        name
+        description
+        slug
+        recentChapter {
+            chapterNumber
+            name
+            order
+            _id
+            createdAt
+            updatedAt
+        }
+        category {
+            _id
+            name
+        }
+        author {
+            name
+            _id
+        }
+    }
+}
+
+query getTopMonth($page: Float, $limit: Float) {
+    getTrendingComics(input: { page: $page, limit: $limit, type: "monthViewCount" }) {
+        _id
+        imageThumbUrl
+        imageCoverUrl
+        name
+        description
+        slug
+        recentChapter {
+            chapterNumber
+            name
+            order
+            _id
+            createdAt
+            updatedAt
+        }
+        category {
+            _id
+            name
+        }
+        author {
+            name
+            _id
+        }
+    }
+}
+
+query getTopYear($page: Float, $limit: Float) {
+    getTrendingComics(input: { page: $page, limit: $limit, type: "yearViewCount" }) {
+        _id
+        imageThumbUrl
+        imageCoverUrl
+        name
+        description
+        slug
+        recentChapter {
+            chapterNumber
+            name
+            order
+            _id
+            createdAt
+            updatedAt
+        }
+        category {
+            _id
+            name
+        }
+        author {
+            name
+            _id
+        }
+    }
+}
+
+query getNewest($page: Float, $limit: Float) {
+    getTrendingComics(input: { page: $page, limit: $limit, type: "updatedAt" }) {
+        _id
+        imageThumbUrl
+        imageCoverUrl
+        name
+        description
+        slug
+        recentChapter {
+            chapterNumber
+            name
+            order
+            _id
+            createdAt
+            updatedAt
+        }
+        category {
+            _id
+            name
+        }
+        author {
+            name
+            _id
+        }
+    }
+}

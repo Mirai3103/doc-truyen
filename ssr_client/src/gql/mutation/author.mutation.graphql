@@ -1,0 +1,15 @@
+mutation createAuthor($createAuthorInput: CreateAuthorDto!) {
+    createAuthor(createAuthorInput: $createAuthorInput) {
+        _id
+    }
+}
+mutation UpdateAuthor($UpdateAuthorInput: UpdateAuthorDto!, $id: String!) {
+    updateAuthor(updateAuthorInput: $UpdateAuthorInput, id: $id) {
+        _id
+        name
+        description
+    }
+}
+mutation deleteAuthor($id: String!) {
+    deleteAuthor(id: $id)
+}

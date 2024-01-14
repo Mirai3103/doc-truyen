@@ -1,0 +1,25 @@
+query GetComicsCreatedByUser($userId: String!, $limit: Float, $page: Float) {
+    comics: getContributedComics(userId: $userId, limit: $limit, page: $page) {
+        _id
+        slug
+        name
+        author {
+            name
+        }
+
+        category {
+            name
+        }
+        chapterCount
+        updatedAt
+        followCount
+        totalViewCount
+        imageCoverUrl
+        name
+        recentChapter {
+            chapterNumber
+            name
+        }
+        status
+    }
+}
