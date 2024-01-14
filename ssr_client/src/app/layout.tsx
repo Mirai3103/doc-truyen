@@ -13,14 +13,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="vi" className="dark">
+        <html lang="vi" className="">
             <head>
                 <link rel="icon" href="/favicon.png" sizes="any" />
             </head>
-            <body className={`${inter.className} bg-default-50 `}>
+            <body className={`${inter.className} bg-default-100 h-full `}>
                 <Providers>
                     <Header />
-                    <main className="container mx-auto p-unit-4 min-h-screen">{children}</main>
+                    <main className="container ">{children}</main>
                 </Providers>
             </body>
         </html>

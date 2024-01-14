@@ -10,14 +10,31 @@ import {
     Input,
     Listbox,
     ListboxItem,
-    Spacer,
     Image,
     CircularProgress,
 } from "@nextui-org/react";
-import { Comic, useSearchByKeywordLazyQuery } from "@/gql/generated/graphql";
+import { graphql } from "@/gql/generated";
+import { useQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 import React from "react";
 import useDebounceState from "@/hooks/useDebounceState";
-const tem: object[] = Array.from({ length: 5 }).map((_, index) => ({ key: index, value: `item ${index})` }));
+import { Comic } from "@/gql/generated/graphql";
+
+const SearchByKeywordQuery = graphql(/* GraphQL */ `
+    query SearchByKeyword($keyword: String!, $limit: Float) {
+        data: advanceSearchComics(input: { keyword: $keyword, limit: $limit }) {
+            _id
+            imageThumbUrl
+            imageCoverUrl
+            name
+            slug
+            author {
+                name
+                _id
+            }
+        }
+    }
+`);
+
 function SearchIcon({ className }: { className?: string }) {
     return (
         <svg
@@ -42,13 +59,7 @@ export default function SearchButton() {
     // not search util user input
 
     const { state, setState, debouncedState } = useDebounceState("", 500);
-    const [search, { data, loading, error }] = useSearchByKeywordLazyQuery();
-    console.log(data);
-    React.useEffect(() => {
-        if (debouncedState) {
-            search({ variables: { keyword: debouncedState, limit: 5 } });
-        }
-    }, [debouncedState, search]);
+    const { data, loading } = useQuery(SearchByKeywordQuery, { variables: { keyword: debouncedState, limit: 5 } });
 
     return (
         <>
