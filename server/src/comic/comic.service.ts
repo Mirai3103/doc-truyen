@@ -14,11 +14,12 @@ import {
   forwardRef,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { Model, ObjectId, Query } from 'mongoose';
 import AdvanceSearchInput from './dto/advance-search.dto';
 import CreateComicInput from './dto/create-comic-input.dto';
 import { TrendingSortInput, TrendingSortType } from './dto/trendingSort.dto';
 import { Comic, Status } from './schema/comic.schema';
+import { PageClass } from '@/common/dto/pagination.dto';
 @Injectable()
 export class ComicService {
   constructor(
@@ -65,45 +66,76 @@ export class ComicService {
       });
     }
   }
-  public async getRecentComics(limit = 10, page = 1) {
+  public async paginatedResult(
+    query: Query<any, any, any, any>,
+    page = 1,
+    limit = 25,
+    sort: any = {},
+  ) {
     const skip = (page - 1) * limit;
+    const result: PageClass<Comic> = {
+      data: await this.comicModal
+        .find(query)
+        .sort(sort)
+        .skip(skip)
+        .limit(limit),
+      totalPages: Math.ceil(
+        (await this.comicModal.countDocuments(query)) / limit,
+      ),
+    };
+    return result;
+  }
+
+  public async getRecentComics(limit = 10, page = 1) {
     // order by updateAt
-    return await this.getPublishComicQuery()
-      .sort({ updatedAt: -1 })
-      .skip(skip)
-      .limit(limit);
+    return await this.paginatedResult(
+      this.getPublishComicQuery(),
+      page,
+      limit,
+      {
+        updatedAt: -1,
+      },
+    );
   }
   public async getTopComics(limit = 10, page = 1) {
-    const skip = (page - 1) * limit;
-    // order by followCount
-    return await this.getPublishComicQuery()
-      .sort({ followCount: -1 })
-      .skip(skip)
-      .limit(limit);
+    return await this.paginatedResult(
+      this.getPublishComicQuery(),
+      page,
+      limit,
+      {
+        followCount: -1,
+      },
+    );
   }
   public async getTopWeekComics(limit = 10, page = 1) {
-    const skip = (page - 1) * limit;
-    // order by followCount
-    return await this.getPublishComicQuery()
-      .sort({ slug: -1 })
-      .skip(skip)
-      .limit(limit);
+    return await this.paginatedResult(
+      this.getPublishComicQuery(),
+      page,
+      limit,
+      {
+        weekViewCount: -1,
+      },
+    );
   }
   public async getTopMonthComics(limit = 10, page = 1) {
-    const skip = (page - 1) * limit;
-    // order by followCount
-    return await this.getPublishComicQuery()
-      .sort({ followCount: -1 })
-      .skip(skip)
-      .limit(limit);
+    return await this.paginatedResult(
+      this.getPublishComicQuery(),
+      page,
+      limit,
+      {
+        monthViewCount: -1,
+      },
+    );
   }
   public async getTopYearComics(limit = 10, page = 1) {
-    const skip = (page - 1) * limit;
-    // order by followCount
-    return await this.getPublishComicQuery()
-      .sort({ slug: 1 })
-      .skip(skip)
-      .limit(limit);
+    return await this.paginatedResult(
+      this.getPublishComicQuery(),
+      page,
+      limit,
+      {
+        yearViewCount: -1,
+      },
+    );
   }
 
   public async getComicBySlug(slug: string) {
@@ -259,7 +291,7 @@ export class ComicService {
   }
   public async advanceSearch(
     advanceSearchInput: AdvanceSearchInput,
-  ): Promise<Comic[]> {
+  ): Promise<PageClass<Comic>> {
     const {
       authorId,
       categoryId,
@@ -322,6 +354,16 @@ export class ComicService {
     const skip = (page - 1) * limit;
     const sort: any = {};
     sort[sortField] = sortType;
-    return await this.comicModal.find(query).sort(sort).skip(skip).limit(limit);
+    const result: PageClass<Comic> = {
+      data: await this.comicModal
+        .find(query)
+        .sort(sort)
+        .skip(skip)
+        .limit(limit),
+      totalPages: Math.ceil(
+        (await this.comicModal.countDocuments(query)) / limit,
+      ),
+    };
+    return result;
   }
 }

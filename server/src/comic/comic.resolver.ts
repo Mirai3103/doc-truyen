@@ -18,6 +18,7 @@ import { Inject, UseGuards } from '@nestjs/common';
 import {
   Args,
   Mutation,
+  ObjectType,
   Parent,
   Query,
   ResolveField,
@@ -25,11 +26,11 @@ import {
 } from '@nestjs/graphql';
 import { Cache } from 'cache-manager';
 import { ComicService } from './comic.service';
-import AdvanceSearchInput from './dto/advance-search.dto';
+import AdvanceSearchInput, { ComicPage } from './dto/advance-search.dto';
 import CreateComicInput from './dto/create-comic-input.dto';
-import { TrendingSortInput } from './dto/trendingSort.dto';
+import { TrendingSortInput, TrendingSortType } from './dto/trendingSort.dto';
 import { Comic } from './schema/comic.schema';
-
+import { PaginateResult } from '@/common/dto/pagination.dto';
 @Resolver(() => Comic)
 export class ComicResolver {
   private readonly EXPIRE_TIME = 15 * 60 * 1000; //15 minutes
@@ -86,7 +87,7 @@ export class ComicResolver {
     const tags = await this.tagService.findOne(comic.category._id);
     return tags;
   }
-  @Query(() => [Comic])
+  @Query(() => ComicPage)
   async getRecentComics(
     @Args('limit', { type: () => Number, nullable: true, defaultValue: 10 })
     limit: number,
@@ -111,7 +112,7 @@ export class ComicResolver {
   async recentChapter(@Parent() comic: Comic) {
     return await this.chapterService.getLastedChapterByComicId(comic._id);
   }
-  @Query(() => [Comic])
+  @Query(() => ComicPage)
   async getTopComics(
     @Args('limit', { type: () => Number, nullable: true, defaultValue: 10 })
     limit: number,
@@ -200,32 +201,50 @@ export class ComicResolver {
     await this.commicService.deleteComic(id, user._id);
     return true;
   }
-  @Query(() => [Comic])
+  @Query(() => ComicPage)
   async advanceSearchComics(@Args('input') input: AdvanceSearchInput) {
     return await this.commicService.advanceSearch(input);
   }
-  @Query(() => [Comic])
+  @Query(() => ComicPage)
   async getComicsByAuthorId(
     @Args('id') id: string,
     @Args('page', { defaultValue: 1, nullable: true }) page: number,
     @Args('limit', { defaultValue: 25, nullable: true }) limit: number,
   ) {
-    return await this.authorService.findAllByAuthorId(id, page, limit);
+    return await this.commicService.advanceSearch({
+      authorId: id,
+      limit,
+      page,
+      sortField: TrendingSortType.NEWEST,
+      sortType: 'desc',
+    });
   }
-  @Query(() => [Comic])
+  @Query(() => ComicPage)
   async getComicsByTagId(
     @Args('id') id: string,
     @Args('page', { defaultValue: 1, nullable: true }) page: number,
     @Args('limit', { defaultValue: 25, nullable: true }) limit: number,
   ) {
-    return await this.tagService.findAllByTagId(id, page, limit);
+    return await this.commicService.advanceSearch({
+      genreIds: [id],
+      limit,
+      page,
+      sortField: TrendingSortType.NEWEST,
+      sortType: 'desc',
+    });
   }
-  @Query(() => [Comic])
+  @Query(() => ComicPage)
   async getComicsByUserId(
     @Args('id') id: string,
     @Args('page', { defaultValue: 1, nullable: true }) page: number,
     @Args('limit', { defaultValue: 25, nullable: true }) limit: number,
   ) {
-    return await this.userService.getUploadedComics(id, page, limit);
+    return await this.commicService.advanceSearch({
+      creatorId: id,
+      limit,
+      page,
+      sortField: TrendingSortType.NEWEST,
+      sortType: 'desc',
+    });
   }
 }

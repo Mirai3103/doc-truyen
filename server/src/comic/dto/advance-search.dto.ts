@@ -1,6 +1,8 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { ValidateBy } from 'class-validator';
 import { TrendingSortType } from './trendingSort.dto';
+import { PaginateResult } from '@/common/dto/pagination.dto';
+import { Comic } from '../schema/comic.schema';
 
 @InputType()
 export default class AdvanceSearchInput {
@@ -33,3 +35,5 @@ export default class AdvanceSearchInput {
   @Field({ defaultValue: 1, nullable: true })
   page: number;
 }
+@ObjectType()
+export class ComicPage extends PaginateResult(Comic) {}
