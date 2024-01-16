@@ -22,14 +22,16 @@ import { Comic } from "@/gql/generated/graphql";
 const SearchByKeywordQuery = graphql(/* GraphQL */ `
     query SearchByKeyword($keyword: String!, $limit: Float) {
         data: advanceSearchComics(input: { keyword: $keyword, limit: $limit }) {
-            _id
-            imageThumbUrl
-            imageCoverUrl
-            name
-            slug
-            author {
-                name
+            data {
                 _id
+                imageThumbUrl
+                imageCoverUrl
+                name
+                slug
+                author {
+                    name
+                    _id
+                }
             }
         }
     }
@@ -60,10 +62,9 @@ export default function SearchButton() {
 
     const { state, setState, debouncedState } = useDebounceState("", 500);
     const { data, loading } = useQuery(SearchByKeywordQuery, { variables: { keyword: debouncedState, limit: 5 } });
-
     return (
         <>
-            <Button variant="flat" onClick={onOpen}>
+            <Button size="md" variant="flat" className="px-0 min-w-0 aspect-square" onClick={onOpen}>
                 <SearchIcon />
             </Button>
             <Modal
@@ -105,7 +106,7 @@ export default function SearchButton() {
                                     <Listbox
                                         emptyContent="Không có kết quả"
                                         variant="flat"
-                                        items={(data?.data || []) as Comic[]}
+                                        items={(data?.data.data || []) as Comic[]}
                                         aria-label="Dynamic Actions"
                                     >
                                         {(item: Comic) => (

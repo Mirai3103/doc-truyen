@@ -3,7 +3,7 @@ import "swiper/css/pagination";
 import Hero from "./_hero/Hero";
 import { graphql } from "@/gql/generated";
 import { useQuery } from "@apollo/experimental-nextjs-app-support/ssr";
-import { getClient } from "./core/apollo/apolloRsc";
+import { getClient } from "@/core/apollo/apolloRsc";
 import { Comic } from "@/gql/generated/graphql";
 import RecentUpdate from "./RecentUpdate";
 import { Spacer } from "@nextui-org/react";
@@ -11,24 +11,26 @@ import { Spacer } from "@nextui-org/react";
 const GetTopComicsQuery = graphql(/* GraphQL */ `
     query GetTopComics($limit: Float, $page: Float) {
         getTopComics(limit: $limit, page: $page) {
-            _id
-            imageCoverUrl
-            name
-            slug
-            recentChapter {
-                chapterNumber
-                name
-                order
+            data {
                 _id
-                createdAt
-                updatedAt
-            }
-            category {
-                _id
+                imageCoverUrl
                 name
-            }
-            author {
-                name
+                slug
+                recentChapter {
+                    chapterNumber
+                    name
+                    order
+                    _id
+                    createdAt
+                    updatedAt
+                }
+                category {
+                    _id
+                    name
+                }
+                author {
+                    name
+                }
             }
         }
     }
@@ -37,25 +39,27 @@ const GetTopComicsQuery = graphql(/* GraphQL */ `
 const GetRecentComicsQuery = graphql(/* GraphQL */ `
     query GetRecentComics($limit: Float, $page: Float) {
         getRecentComics(limit: $limit, page: $page) {
-            _id
-            imageCoverUrl
-            name
-            slug
-            recentChapter {
-                chapterNumber
-                name
-                order
+            data {
                 _id
-                createdAt
-                updatedAt
-            }
-            category {
-                _id
+                imageCoverUrl
                 name
-            }
-            author {
-                name
-                _id
+                slug
+                recentChapter {
+                    chapterNumber
+                    name
+                    order
+                    _id
+                    createdAt
+                    updatedAt
+                }
+                category {
+                    _id
+                    name
+                }
+                author {
+                    name
+                    _id
+                }
             }
         }
     }
@@ -80,9 +84,9 @@ export default async function Home() {
     const { topComic, recentComic } = await fetchData();
     return (
         <div className="py-8">
-            <Hero items={(topComic.data.getTopComics || []) as Comic[]} />
+            <Hero items={(topComic.data.getTopComics.data || []) as Comic[]} />
             <Spacer y={10} />
-            <RecentUpdate items={(recentComic.data.getRecentComics || []) as Comic[]} />
+            <RecentUpdate items={(recentComic.data.getRecentComics.data || []) as Comic[]} />
         </div>
     );
 }

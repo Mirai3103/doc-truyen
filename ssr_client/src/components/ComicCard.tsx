@@ -1,17 +1,19 @@
 import { Comic } from "@/gql/generated/graphql";
-import { Card, CardBody, CardFooter, CardHeader, Chip, Image } from "@nextui-org/react";
+import { Card, CardBody, CardFooter, CardHeader, Chip, Image, Spacer } from "@nextui-org/react";
 import Link from "next/link";
 import { Tooltip } from "@nextui-org/react";
 import React from "react";
 import { useRouter } from "next/navigation";
+import { toReadbleTime } from "@/core/utils";
 interface ComicCardProps {
     comic: Comic;
     classNames?: {
         img?: string;
     };
     width?: number;
+    withTimeAgo?: boolean;
 }
-export default function ComicCard({ comic, classNames, width }: ComicCardProps) {
+export default function ComicCard({ comic, classNames, width, withTimeAgo = false }: ComicCardProps) {
     const router = useRouter();
     return (
         <Card
@@ -35,6 +37,13 @@ export default function ComicCard({ comic, classNames, width }: ComicCardProps) 
                 >
                     {comic.recentChapter ? "Chương " + comic.recentChapter.chapterNumber : "Mới"}
                 </Chip>
+                <Spacer y={1} />
+
+                {withTimeAgo && (
+                    <Chip size="sm" color="success">
+                        {toReadbleTime(comic.recentChapter?.createdAt)}
+                    </Chip>
+                )}
             </CardHeader>
             <Image
                 shadow="none"
@@ -47,9 +56,7 @@ export default function ComicCard({ comic, classNames, width }: ComicCardProps) 
                 <Tooltip content={comic.name} placement="top">
                     <div className="line-clamp-2  leading-5 font-semibold">
                         {comic.name}
-                        <span>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </div>
                 </Tooltip>
             </CardFooter>

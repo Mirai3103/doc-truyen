@@ -18,6 +18,7 @@ import {
 } from "@nextui-org/react";
 import Logo from "@/components/Logo";
 import SearchButton from "./SearchButton";
+import DarkModeToggleButton from "./DarkModeToggleButton";
 
 interface HeaderNavigationItem {
     label: string;
@@ -57,7 +58,7 @@ export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
     return (
-        <Navbar onMenuOpenChange={setIsMenuOpen}>
+        <Navbar maxWidth="xl" onMenuOpenChange={setIsMenuOpen}>
             <NavbarContent>
                 <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className="sm:hidden" />
                 <NavbarBrand>
@@ -81,12 +82,15 @@ export default function Header() {
                     <SearchButton />
                 </NavbarItem>
                 <NavbarItem className="hidden lg:flex">
-                    <Link href="#">Login</Link>
+                    <Link href="#">Đăng nhập</Link>
                 </NavbarItem>
                 <NavbarItem>
                     <Button as={Link} color="primary" href="#" variant="flat">
-                        Sign Up
+                        Đăng ký
                     </Button>
+                </NavbarItem>
+                <NavbarItem>
+                    <DarkModeToggleButton />
                 </NavbarItem>
             </NavbarContent>
             <NavbarMenu>

@@ -75,6 +75,11 @@ type Comic {
   yearViewCount: Int!
 }
 
+type ComicPage {
+  data: [Comic!]!
+  totalPages: Int!
+}
+
 input CreateAuthorDto {
   description: String!
   name: String!
@@ -155,7 +160,7 @@ input PageInput {
 }
 
 type Query {
-  advanceSearchComics(input: AdvanceSearchInput!): [Comic!]!
+  advanceSearchComics(input: AdvanceSearchInput!): ComicPage!
   author(id: String!): Author!
   authors: [Author!]!
   getAllChapters(comicId: String!): [Chapter!]!
@@ -166,14 +171,14 @@ type Query {
   getComicById(id: String!): Comic!
   getComicBySlug(slug: String!): Comic!
   getComicCreatedByUser(limit: Float = 10, page: Float = 1, userId: String!): [Comic!]!
-  getComicsByAuthorId(id: String!, limit: Float = 25, page: Float = 1): [Comic!]!
-  getComicsByTagId(id: String!, limit: Float = 25, page: Float = 1): [Comic!]!
-  getComicsByUserId(id: String!, limit: Float = 25, page: Float = 1): [Comic!]!
+  getComicsByAuthorId(id: String!, limit: Float = 25, page: Float = 1): ComicPage!
+  getComicsByTagId(id: String!, limit: Float = 25, page: Float = 1): ComicPage!
+  getComicsByUserId(id: String!, limit: Float = 25, page: Float = 1): ComicPage!
   getContributedComics(limit: Float = 10, page: Float = 1, userId: String!): [Comic!]!
   getGenres: [Tag!]!
   getLastedChapterByComicId(comicId: String!): Chapter!
-  getRecentComics(limit: Float = 10, page: Float = 1): [Comic!]!
-  getTopComics(limit: Float = 10, page: Float = 1): [Comic!]!
+  getRecentComics(limit: Float = 10, page: Float = 1): ComicPage!
+  getTopComics(limit: Float = 10, page: Float = 1): ComicPage!
   getTrendingComics(input: TrendingSortInput!): [Comic!]!
   searchAuthor(keyword: String = "", limit: Float = 25, page: Float = 1): QueryAuthorsDTO!
   tag(id: String!): Tag!

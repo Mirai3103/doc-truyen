@@ -21,7 +21,7 @@ export default function RecentUpdate({ items }: HeroProps) {
                 ))}
             </div>
             <div className=" mt-4 flex justify-center items-center">
-                <Button as={Link} href="#" color="primary">
+                <Button as={Link} href="/truyen-moi-cap-nhat" color="primary">
                     Xem thêm
                 </Button>
             </div>

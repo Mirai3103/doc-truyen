@@ -958,6 +958,57 @@
         "possibleTypes": null
       },
       {
+        "kind": "OBJECT",
+        "name": "ComicPage",
+        "description": null,
+        "fields": [
+          {
+            "name": "data",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "Comic",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "totalPages",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
         "kind": "INPUT_OBJECT",
         "name": "CreateAuthorDto",
         "description": null,
@@ -2162,17 +2213,9 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "Comic",
-                    "ofType": null
-                  }
-                }
+                "kind": "OBJECT",
+                "name": "ComicPage",
+                "ofType": null
               }
             },
             "isDeprecated": false,
@@ -2602,17 +2645,9 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "Comic",
-                    "ofType": null
-                  }
-                }
+                "kind": "OBJECT",
+                "name": "ComicPage",
+                "ofType": null
               }
             },
             "isDeprecated": false,
@@ -2667,17 +2702,9 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "Comic",
-                    "ofType": null
-                  }
-                }
+                "kind": "OBJECT",
+                "name": "ComicPage",
+                "ofType": null
               }
             },
             "isDeprecated": false,
@@ -2732,17 +2759,9 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "Comic",
-                    "ofType": null
-                  }
-                }
+                "kind": "OBJECT",
+                "name": "ComicPage",
+                "ofType": null
               }
             },
             "isDeprecated": false,
@@ -2903,17 +2922,9 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "Comic",
-                    "ofType": null
-                  }
-                }
+                "kind": "OBJECT",
+                "name": "ComicPage",
+                "ofType": null
               }
             },
             "isDeprecated": false,
@@ -2952,17 +2963,9 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "Comic",
-                    "ofType": null
-                  }
-                }
+                "kind": "OBJECT",
+                "name": "ComicPage",
+                "ofType": null
               }
             },
             "isDeprecated": false,
