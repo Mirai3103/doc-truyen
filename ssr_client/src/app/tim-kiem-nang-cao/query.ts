@@ -1,5 +1,22 @@
 import { graphql } from "@/gql/generated";
 
+export const GetFilterOptionsQuery = graphql(/* GraphQL */ `
+    query GetFilterOptions {
+        categories: getCategories {
+            _id
+            name
+        }
+        tags: getGenres {
+            _id
+            name
+        }
+        authors: authors {
+            _id
+            name
+        }
+    }
+`);
+
 export const GetAdvanceSearchQuery = graphql(/* GraphQL */ `
     query AdvanceSearchComics($input: AdvanceSearchInput!) {
         advanceSearchComics(input: $input) {

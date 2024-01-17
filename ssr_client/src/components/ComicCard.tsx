@@ -24,7 +24,6 @@ export default function ComicCard({ comic, classNames, width, withTimeAgo = fals
             isPressable
             as={Link}
             href={`/truyen/${comic.slug}`}
-            onPress={() => console.log("item pressed")}
         >
             <CardHeader className="absolute z-20 -left-1 -top-1 flex-col items-start">
                 <Chip

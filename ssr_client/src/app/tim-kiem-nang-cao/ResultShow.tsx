@@ -27,7 +27,6 @@ export default function ResultShow({ initalItems, totalPage, currentPage, limit,
             input: initalSearchParams,
         },
     });
-    console.log({ activePage });
     React.useEffect(() => {
         setSearchQueryParams({
             page: activePage,
@@ -43,7 +42,7 @@ export default function ResultShow({ initalItems, totalPage, currentPage, limit,
         <>
             <div className="flex gap-x-4 mb-4">
                 <div className="w-unit-sm  bg-primary-400"></div>
-                <div className="flex-1 text-2xl font-semibold text-primary-400">Mới cập nhật</div>
+                <div className="flex-1 text-2xl font-semibold text-primary-400">Kết quả tìm kiếm</div>
             </div>
             <div className="grid grid-cols-2 sm:gap-x-2 xl:gap-x-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-x-2">
                 {comics.map((item) => (

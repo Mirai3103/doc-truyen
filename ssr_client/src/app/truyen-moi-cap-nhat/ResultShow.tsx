@@ -27,7 +27,6 @@ export default function ResultShow({ initalItems, totalPage, currentPage, limit 
             page: currentPage,
         },
     });
-    console.log({ activePage });
     React.useEffect(() => {
         setSearchQueryParams({
             page: activePage,

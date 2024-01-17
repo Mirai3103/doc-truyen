@@ -50,7 +50,7 @@ const headerNavigationItems: HeaderNavigationItem[] = [
     },
     {
         label: "Tìm truyện",
-        href: "#",
+        href: "/tim-kiem-nang-cao",
     },
 ];
 
@@ -58,7 +58,7 @@ export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
     return (
-        <Navbar maxWidth="xl" onMenuOpenChange={setIsMenuOpen}>
+        <Navbar shouldHideOnScroll maxWidth="xl" onMenuOpenChange={setIsMenuOpen}>
             <NavbarContent>
                 <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className="sm:hidden" />
                 <NavbarBrand>
