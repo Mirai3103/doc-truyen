@@ -1,6 +1,6 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { ValidateBy } from 'class-validator';
-import { TrendingSortType } from './trendingSort.dto';
+import { SortOption, TrendingSortType } from './trendingSort.dto';
 import { PaginateResult } from '@/common/dto/pagination.dto';
 import { Comic } from '../schema/comic.schema';
 
@@ -18,16 +18,8 @@ export default class AdvanceSearchInput {
   genreIds?: string[];
   @Field(() => String, { nullable: true })
   creatorId?: string;
-  @Field({ defaultValue: TrendingSortType.NEWEST, nullable: true })
-  @ValidateBy({
-    name: 'isTrendingSortField',
-    validator: {
-      validate: (value: string) => {
-        return Object.values(TrendingSortType).includes(value as any);
-      },
-    },
-  })
-  sortField: TrendingSortType;
+  @Field({ defaultValue: 'updatedAt', nullable: true })
+  sortField: string;
   @Field({ defaultValue: 'desc', nullable: true })
   sortType: 'asc' | 'desc';
   @Field({ defaultValue: 25, nullable: true })
