@@ -14,9 +14,19 @@ export enum Status {
   Drop = 'Drop',
   NonPublished = 'Chưa xuất bản',
 }
-@Schema({
-  timestamps: true,
-})
+
+@ObjectType()
+export class ComicStatus {
+  @Field(() => String)
+  id: string;
+  @Field()
+  name: string;
+  public static readonly allStatus = Object.keys(Status).map((key) => ({
+    id: key,
+    name: (Status as any)[key],
+  }));
+}
+
 @ObjectType()
 export class Comic extends BaseSchema {
   @Prop()

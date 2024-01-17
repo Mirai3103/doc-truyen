@@ -28,8 +28,12 @@ import { Cache } from 'cache-manager';
 import { ComicService } from './comic.service';
 import AdvanceSearchInput, { ComicPage } from './dto/advance-search.dto';
 import CreateComicInput from './dto/create-comic-input.dto';
-import { TrendingSortInput, TrendingSortType } from './dto/trendingSort.dto';
-import { Comic } from './schema/comic.schema';
+import {
+  SortOption,
+  TrendingSortInput,
+  TrendingSortType,
+} from './dto/trendingSort.dto';
+import { Comic, ComicStatus } from './schema/comic.schema';
 import { PaginateResult } from '@/common/dto/pagination.dto';
 @Resolver(() => Comic)
 export class ComicResolver {
@@ -246,5 +250,15 @@ export class ComicResolver {
       sortField: TrendingSortType.NEWEST,
       sortType: 'desc',
     });
+  }
+
+  @Query(() => [SortOption])
+  async getSortOptions() {
+    return SortOption.allSortOptions;
+  }
+
+  @Query(() => [ComicStatus])
+  async getAllComicStatus() {
+    return ComicStatus.allStatus;
   }
 }

@@ -80,6 +80,11 @@ type ComicPage {
   totalPages: Int!
 }
 
+type ComicStatus {
+  id: String!
+  name: String!
+}
+
 input CreateAuthorDto {
   description: String!
   name: String!
@@ -164,6 +169,7 @@ type Query {
   author(id: String!): Author!
   authors: [Author!]!
   getAllChapters(comicId: String!): [Chapter!]!
+  getAllComicStatus: [ComicStatus!]!
   getAllComics: [Comic!]!
   getAllHistories(limit: Float = 200, page: Float = 1, userId: String!): [ReadingHistory!]!
   getCategories: [Tag!]!
@@ -178,6 +184,7 @@ type Query {
   getGenres: [Tag!]!
   getLastedChapterByComicId(comicId: String!): Chapter!
   getRecentComics(limit: Float = 10, page: Float = 1): ComicPage!
+  getSortOptions: [SortOption!]!
   getTopComics(limit: Float = 10, page: Float = 1): ComicPage!
   getTrendingComics(input: TrendingSortInput!): [Comic!]!
   searchAuthor(keyword: String = "", limit: Float = 25, page: Float = 1): QueryAuthorsDTO!
@@ -195,6 +202,16 @@ type QueryAuthorsDTO {
 type ReadingHistory {
   chapter: Chapter
   createdAt: DateTime!
+}
+
+type SortOption {
+  name: String!
+  value: SortType!
+}
+
+type SortType {
+  direction: String!
+  field: String!
 }
 
 type Tag {
