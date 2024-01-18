@@ -15,10 +15,12 @@ import {
     DropdownTrigger,
     DropdownMenu,
     DropdownItem,
+    useDisclosure,
 } from "@nextui-org/react";
 import Logo from "@/components/Logo";
 import SearchButton from "./SearchButton";
 import DarkModeToggleButton from "./DarkModeToggleButton";
+import LoginModal from "@/components/LoginModal";
 
 interface HeaderNavigationItem {
     label: string;
@@ -56,9 +58,11 @@ const headerNavigationItems: HeaderNavigationItem[] = [
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     return (
         <Navbar shouldHideOnScroll maxWidth="xl" onMenuOpenChange={setIsMenuOpen}>
+            <LoginModal isOpen={isOpen} onOpenChange={onOpenChange} />
             <NavbarContent>
                 <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className="sm:hidden" />
                 <NavbarBrand>
@@ -82,7 +86,9 @@ export default function Header() {
                     <SearchButton />
                 </NavbarItem>
                 <NavbarItem className="hidden lg:flex">
-                    <Link href="#">Đăng nhập</Link>
+                    <Button variant="flat" onClick={onOpen}>
+                        Đăng nhập
+                    </Button>
                 </NavbarItem>
                 <NavbarItem>
                     <Button as={Link} color="primary" href="#" variant="flat">

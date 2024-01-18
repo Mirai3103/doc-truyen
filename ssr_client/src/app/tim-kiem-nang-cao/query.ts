@@ -1,16 +1,34 @@
 import { graphql } from "@/gql/generated";
 
+export const SearchAuthorQuery = graphql(/* GraphQL */ `
+    query SearchAuthor($keyword: String!) {
+        searchAuthor(keyword: $keyword, page: 1, limit: 10) {
+            authors {
+                _id
+                name
+            }
+        }
+    }
+`);
+
 export const GetFilterOptionsQuery = graphql(/* GraphQL */ `
-    query GetFilterOptions {
+    query GetFilterOptionsQuery {
+        statuses: getAllComicStatus {
+            name
+            id
+        }
+        sortOptions: getSortOptions {
+            name
+            value {
+                direction
+                field
+            }
+        }
         categories: getCategories {
             _id
             name
         }
         tags: getGenres {
-            _id
-            name
-        }
-        authors: authors {
             _id
             name
         }

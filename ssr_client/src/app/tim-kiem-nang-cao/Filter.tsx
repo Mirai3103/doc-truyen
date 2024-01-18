@@ -1,150 +1,79 @@
 "use client";
 
 import React from "react";
-import { Accordion, AccordionItem, Button, ButtonGroup, Chip, Input, Select, SelectItem } from "@nextui-org/react";
+import {
+    Accordion,
+    AccordionItem,
+    Autocomplete,
+    AutocompleteItem,
+    Button,
+    ButtonGroup,
+    Chip,
+    Input,
+    Select,
+    SelectItem,
+} from "@nextui-org/react";
+import {
+    AdvanceSearchInput,
+    Author,
+    ComicStatus,
+    GetFilterOptionsQueryQuery,
+    SortOption,
+    Tag,
+} from "@/gql/generated/graphql";
+import { SearchAuthorQuery } from "./query";
+import useDebounceState from "@/hooks/useDebounceState";
+import { useQuery } from "@apollo/client";
+import { useRecoilState } from "recoil";
+import filterState from "./filter.state";
+import { Controller, useForm } from "react-hook-form";
+import useSearchQueryParams from "@/hooks/useSearchQueryParams";
 
-const categories = [
-    {
-        _id: "1",
-        name: "Manga",
-    },
-    {
-        _id: "2",
-        name: "Manhua",
-    },
-    {
-        _id: "3",
-        name: "Manhwa",
-    },
-    {
-        _id: "4",
-        name: "Comic",
-    },
-];
-const tags = [
-    {
-        _id: "1",
-        name: "Action",
-    },
-    {
-        _id: "2",
-        name: "Adventure",
-    },
-    {
-        _id: "3",
-        name: "Comedy",
-    },
-    {
-        _id: "4",
-        name: "Drama",
-    },
-    {
-        _id: "5",
-        name: "Fantasy",
-    },
-    {
-        _id: "6",
-        name: "Horror",
-    },
-    {
-        _id: "7",
-        name: "Mystery",
-    },
-    {
-        _id: "8",
-        name: "Psychological",
-    },
-    {
-        _id: "9",
-        name: "Romance",
-    },
-    {
-        _id: "10",
-        name: "Sci-fi",
-    },
-    {
-        _id: "11",
-        name: "Slice of life",
-    },
-    {
-        _id: "12",
-        name: "Supernatural",
-    },
-    {
-        _id: "13",
-        name: "Tragedy",
-    },
-];
-
-const authors = [
-    {
-        _id: "1",
-        name: "Author 1",
-    },
-    {
-        _id: "2",
-        name: "Author 2",
-    },
-    {
-        _id: "3",
-        name: "Author 3",
-    },
-    {
-        _id: "4",
-        name: "Author 4",
-    },
-    {
-        _id: "5",
-        name: "Author 5",
-    },
-    {
-        _id: "6",
-        name: "Author 6",
-    },
-    {
-        _id: "7",
-        name: "Author 7",
-    },
-    {
-        _id: "8",
-        name: "Author 8",
-    },
-    {
-        _id: "9",
-        name: "Author 9",
-    },
-    {
-        _id: "10",
-        name: "Author 10",
-    },
-    {
-        _id: "11",
-        name: "Author 11",
-    },
-    {
-        _id: "12",
-        name: "Author 12",
-    },
-    {
-        _id: "13",
-        name: "Author 13",
-    },
-];
-const statuses = ["Đang tiến hành", "Đã hoàn thành", "Đã dừng", "Tạm ngưng", "Chưa biết"].map((item) => ({
-    _id: item,
-    name: item,
-}));
-
-const sortOptions = [
-    "Mới nhất",
-    "Cũ nhất",
-    "Tên A-Z",
-    "Tên Z-A",
-    "Ngày đăng mới nhất",
-    "Ngày đăng cũ nhất",
-    "Ngày cập nhật mới nhất",
-];
-export default function Filter() {
+interface FilterProps {
+    queryOptions: GetFilterOptionsQueryQuery;
+    initialFilter: AdvanceSearchInput;
+}
+let renderCount = 0;
+export default function Filter({ queryOptions, initialFilter }: FilterProps) {
+    console.log("render filter", renderCount++);
+    const [filter, setFilter] = useRecoilState(filterState);
+    const { setSearchQueryParams } = useSearchQueryParams();
+    const { state, setState, debouncedState } = useDebounceState("", 1000);
+    const { data, loading } = useQuery(SearchAuthorQuery, {
+        variables: {
+            keyword: debouncedState,
+        },
+    });
+    const [currentSortOption, setCurrentSortOption] = React.useState<string>(queryOptions.sortOptions[0].name);
+    const { register, handleSubmit, control, setValue } = useForm<AdvanceSearchInput>({
+        defaultValues: {
+            ...initialFilter,
+        },
+    });
+    const onSubmit = (data: AdvanceSearchInput) => {
+        const newParams = {
+            authorIds: data.authorIds || undefined,
+            categoryIds: [...(data.categoryIds || [])],
+            genreIds: [...(data.genreIds || [])],
+            keyword: data.keyword || undefined,
+            sortField: data.sortField || undefined,
+            sortType: data.sortType || undefined,
+            limit: 28,
+            page: 1,
+        };
+        setSearchQueryParams(newParams);
+        setFilter({
+            isFirstSet: false,
+            params: newParams,
+        });
+    };
+    React.useEffect(() => {
+        setFilter({
+            isFirstSet: true,
+            params: initialFilter,
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [initialFilter]);
     return (
         <Accordion variant="shadow" defaultExpandedKeys={["1"]}>
             <AccordionItem
@@ -170,7 +99,10 @@ export default function Filter() {
                     </div>
                 }
             >
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 px-2 py-unit-lg">
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 px-2 py-unit-lg"
+                >
                     <div>
                         <Input
                             label="Từ khóa"
@@ -194,98 +126,110 @@ export default function Filter() {
                                 </svg>
                             }
                             type="search"
+                            {...register("keyword")}
                         />
                     </div>
                     <div>
-                        <Select
-                            items={categories}
-                            label="Thể loại"
-                            variant="bordered"
-                            isMultiline={true}
-                            selectionMode="multiple"
-                            placeholder="Có bất kì thể loại nào trong danh sách"
-                            labelPlacement="outside"
-                            classNames={{
-                                trigger: "min-h-unit-12 py-2",
-                            }}
-                            renderValue={(items) => {
+                        <Controller
+                            control={control}
+                            name="categoryIds"
+                            render={({ field: { value, onChange } }) => {
                                 return (
-                                    <div className="flex flex-wrap gap-2">
-                                        {items.map((item) => (
-                                            <Chip key={item.key}>{item.textValue}</Chip>
-                                        ))}
-                                    </div>
+                                    <Select
+                                        items={queryOptions.categories}
+                                        label="Thể loại"
+                                        selectedKeys={value || []}
+                                        variant="bordered"
+                                        isMultiline={true}
+                                        selectionMode="multiple"
+                                        placeholder="Có bất kì thể loại nào trong danh sách"
+                                        labelPlacement="outside"
+                                        classNames={{
+                                            trigger: "min-h-unit-12 py-2",
+                                        }}
+                                        onSelectionChange={onChange}
+                                        renderValue={(items) => {
+                                            return (
+                                                <div className="flex flex-wrap gap-2">
+                                                    {items.map((item) => (
+                                                        <Chip key={item.key}>{item.textValue}</Chip>
+                                                    ))}
+                                                </div>
+                                            );
+                                        }}
+                                    >
+                                        {(category) => (
+                                            <SelectItem key={category._id} textValue={category.name}>
+                                                <span className="text-small">{category.name}</span>
+                                            </SelectItem>
+                                        )}
+                                    </Select>
                                 );
                             }}
-                        >
-                            {(category) => (
-                                <SelectItem key={category._id} textValue={category.name}>
-                                    <span className="text-small">{category.name}</span>
-                                </SelectItem>
-                            )}
-                        </Select>
+                        ></Controller>
                     </div>
                     <div>
-                        <Select
-                            items={tags}
-                            label="Tag"
-                            variant="bordered"
-                            isMultiline={true}
-                            selectionMode="multiple"
-                            placeholder="Có tất cả các tag trong danh sách"
-                            labelPlacement="outside"
-                            classNames={{
-                                trigger: "min-h-unit-12 py-2",
-                            }}
-                            renderValue={(items) => {
+                        <Controller
+                            control={control}
+                            name="genreIds"
+                            render={({ field: { value, onChange } }) => {
                                 return (
-                                    <div className="flex flex-wrap gap-2">
-                                        {items.map((item) => (
-                                            <Chip key={item.key}>{item.textValue}</Chip>
-                                        ))}
-                                    </div>
+                                    <Select
+                                        items={queryOptions.tags}
+                                        label="Tag"
+                                        variant="bordered"
+                                        isMultiline={true}
+                                        selectionMode="multiple"
+                                        placeholder="Có tất cả các tag trong danh sách"
+                                        labelPlacement="outside"
+                                        classNames={{
+                                            trigger: "min-h-unit-12 py-2",
+                                        }}
+                                        value={value || []}
+                                        onSelectionChange={onChange}
+                                        renderValue={(items) => {
+                                            return (
+                                                <div className="flex flex-wrap gap-2">
+                                                    {items.map((item) => (
+                                                        <Chip key={item.key}>{item.textValue}</Chip>
+                                                    ))}
+                                                </div>
+                                            );
+                                        }}
+                                    >
+                                        {(tag) => (
+                                            <SelectItem key={tag._id} textValue={tag.name}>
+                                                <span className="text-small">{tag.name}</span>
+                                            </SelectItem>
+                                        )}
+                                    </Select>
                                 );
                             }}
-                        >
-                            {(tag) => (
-                                <SelectItem key={tag._id} textValue={tag.name}>
-                                    <span className="text-small">{tag.name}</span>
-                                </SelectItem>
-                            )}
-                        </Select>
+                        ></Controller>
                     </div>
                     <div>
-                        <Select
-                            items={authors}
+                        <Autocomplete
+                            inputValue={state}
+                            isLoading={loading}
+                            size="lg"
+                            items={data?.searchAuthor.authors || []}
                             label="Tác giả"
-                            variant="bordered"
-                            isMultiline={true}
-                            selectionMode="multiple"
-                            placeholder="Có bất kì tác giả trong danh sách"
                             labelPlacement="outside"
-                            classNames={{
-                                trigger: "min-h-unit-12 py-2",
-                            }}
-                            renderValue={(items) => {
-                                return (
-                                    <div className="flex flex-wrap gap-2">
-                                        {items.map((item) => (
-                                            <Chip key={item.key}>{item.textValue}</Chip>
-                                        ))}
-                                    </div>
-                                );
-                            }}
+                            placeholder="Bất kì tác giả nào trong danh sách"
+                            variant="bordered"
+                            onInputChange={setState}
+                            {...register("authorIds")}
                         >
-                            {(author) => (
-                                <SelectItem key={author._id} textValue={author.name}>
-                                    <span className="text-small">{author.name}</span>
-                                </SelectItem>
+                            {(item) => (
+                                <AutocompleteItem textValue={item.name} key={item.name}>
+                                    {item.name}
+                                </AutocompleteItem>
                             )}
-                        </Select>
+                        </Autocomplete>
                     </div>
                     <div>
                         <Select
-                            items={statuses}
+                            items={queryOptions.statuses}
                             label="Tình trạng"
                             variant="bordered"
                             isMultiline={true}
@@ -306,7 +250,7 @@ export default function Filter() {
                             }}
                         >
                             {(status) => (
-                                <SelectItem key={status._id} textValue={status.name}>
+                                <SelectItem key={status.id} textValue={status.name}>
                                     <span className="text-small">{status.name}</span>
                                 </SelectItem>
                             )}
@@ -321,10 +265,24 @@ export default function Filter() {
                             classNames={{
                                 trigger: "min-h-unit-12 py-2",
                             }}
+                            value={[currentSortOption]}
+                            onSelectionChange={(e: any) => {
+                                const sortOption = queryOptions.sortOptions.find(
+                                    (o) => o.name == ([...e][0] as string)
+                                );
+                                if (sortOption) {
+                                    setValue("sortField", sortOption.value.field);
+                                    setValue("sortType", sortOption.value.direction);
+                                } else {
+                                    setValue("sortField", "createdAt");
+                                    setValue("sortType", "desc");
+                                }
+                                setCurrentSortOption([...e][0] as string);
+                            }}
                         >
-                            {sortOptions.map((o) => (
-                                <SelectItem key={o} value={o}>
-                                    {o}
+                            {queryOptions.sortOptions.map((o, i) => (
+                                <SelectItem key={o.name} value={i} textValue={o.name}>
+                                    {o.name}
                                 </SelectItem>
                             ))}
                         </Select>
@@ -332,10 +290,12 @@ export default function Filter() {
                     <div className="md:col-span-2 lg:col-span-3 flex justify-end">
                         <ButtonGroup size="lg">
                             <Button>Xoá lọc</Button>
-                            <Button color="primary">Áp dụng</Button>
+                            <Button type="submit" color="primary">
+                                Áp dụng
+                            </Button>
                         </ButtonGroup>
                     </div>
-                </div>
+                </form>
             </AccordionItem>
         </Accordion>
     );

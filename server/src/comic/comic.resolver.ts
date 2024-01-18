@@ -216,7 +216,7 @@ export class ComicResolver {
     @Args('limit', { defaultValue: 25, nullable: true }) limit: number,
   ) {
     return await this.commicService.advanceSearch({
-      authorId: id,
+      authorIds: [id],
       limit,
       page,
       sortField: TrendingSortType.NEWEST,

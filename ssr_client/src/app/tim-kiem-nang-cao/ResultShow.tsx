@@ -6,6 +6,8 @@ import { GetAdvanceSearchQuery } from "./query";
 import { useLazyQuery } from "@apollo/client";
 import { Pagination, usePagination } from "@nextui-org/react";
 import useSearchQueryParams from "@/hooks/useSearchQueryParams";
+import { useRecoilState } from "recoil";
+import filterState from "./filter.state";
 
 interface Props {
     initalItems: Comic[];
@@ -27,6 +29,17 @@ export default function ResultShow({ initalItems, totalPage, currentPage, limit,
             input: initalSearchParams,
         },
     });
+    const [filter, setFilter] = useRecoilState(filterState);
+    React.useEffect(() => {
+        if (!filter.isFirstSet) {
+            fetch({
+                variables: {
+                    input: { ...filter.params, page: 1 },
+                },
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filter]);
     React.useEffect(() => {
         setSearchQueryParams({
             page: activePage,
@@ -36,6 +49,7 @@ export default function ResultShow({ initalItems, totalPage, currentPage, limit,
                 input: { ...initalSearchParams, page: activePage },
             },
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activePage, currentPage]);
     const comics: Comic[] = (data?.advanceSearchComics.data as Comic[]) || initalItems;
     return (

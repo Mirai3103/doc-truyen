@@ -6,7 +6,17 @@ import morgan from 'morgan';
 
 dotenv.config();
 import { AppModule } from './app.module';
+import mongoose from 'mongoose';
 async function bootstrap() {
+  mongoose.set('debug', function (coll, method, query, doc, options) {
+    console.log({
+      coll,
+      method,
+      query,
+      doc,
+      options,
+    });
+  });
   const app = await NestFactory.create(AppModule);
 
   app.use(morgan(process.env.MORGAN_LOG_FORMAT || 'dev'));

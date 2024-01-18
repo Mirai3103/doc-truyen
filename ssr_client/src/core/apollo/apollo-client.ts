@@ -1,12 +1,13 @@
 "use client";
 
 import { ApolloLink, HttpLink } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import {
     NextSSRApolloClient,
     NextSSRInMemoryCache,
     SSRMultipartLink,
 } from "@apollo/experimental-nextjs-app-support/ssr";
-
+import Cookies from "universal-cookie";
 /**
  * Make a Apollo client compatible with Client components
  * This requires you to wrap up the parent(s) with ApolloNextAppProvider
@@ -16,7 +17,18 @@ export function makeClient() {
     const httpLink = new HttpLink({
         uri: process.env.SERVER_URI ? process.env.SERVER_URI + "/graphql" : "/api/graphql",
     });
-
+    const authLink = setContext((_, { headers }) => {
+        // get the authentication token from local storage if it exists
+        const cookies = new Cookies();
+        const token = cookies.get("accessToken");
+        // return the headers to the context so httpLink can read them
+        return {
+            headers: {
+                ...headers,
+                authorization: token ? `Bearer ${token}` : "",
+            },
+        };
+    });
     return new NextSSRApolloClient({
         cache: new NextSSRInMemoryCache(),
         link:

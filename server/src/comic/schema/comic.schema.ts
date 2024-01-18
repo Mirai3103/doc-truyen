@@ -27,6 +27,9 @@ export class ComicStatus {
   }));
 }
 
+@Schema({
+  timestamps: true,
+})
 @ObjectType()
 export class Comic extends BaseSchema {
   @Prop()

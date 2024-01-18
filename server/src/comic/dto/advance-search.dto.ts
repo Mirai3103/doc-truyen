@@ -1,6 +1,5 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { ValidateBy } from 'class-validator';
-import { SortOption, TrendingSortType } from './trendingSort.dto';
+
 import { PaginateResult } from '@/common/dto/pagination.dto';
 import { Comic } from '../schema/comic.schema';
 
@@ -8,12 +7,11 @@ import { Comic } from '../schema/comic.schema';
 export default class AdvanceSearchInput {
   @Field(() => String, { nullable: true })
   keyword?: string;
-  @Field(() => String, { nullable: true })
-  categoryId?: string;
-  @Field(() => String, { nullable: true })
-  authorId?: string;
-  @Field(() => String, { nullable: true })
-  artistId?: string;
+  @Field(() => [String], { nullable: true })
+  categoryIds?: string[];
+  @Field(() => [String], { nullable: true })
+  authorIds?: string[];
+
   @Field(() => [String], { nullable: true })
   genreIds?: string[];
   @Field(() => String, { nullable: true })

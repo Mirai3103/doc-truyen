@@ -3,9 +3,8 @@
 # ------------------------------------------------------
 
 input AdvanceSearchInput {
-  artistId: String
-  authorId: String
-  categoryId: String
+  authorIds: [String!]
+  categoryIds: [String!]
   creatorId: String
   genreIds: [String!]
   keyword: String

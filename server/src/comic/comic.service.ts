@@ -20,6 +20,7 @@ import CreateComicInput from './dto/create-comic-input.dto';
 import { TrendingSortInput, TrendingSortType } from './dto/trendingSort.dto';
 import { Comic, Status } from './schema/comic.schema';
 import { PageClass } from '@/common/dto/pagination.dto';
+import { ObjectId as ObjectIdClass } from 'mongodb';
 @Injectable()
 export class ComicService {
   constructor(
@@ -293,46 +294,34 @@ export class ComicService {
     advanceSearchInput: AdvanceSearchInput,
   ): Promise<PageClass<Comic>> {
     const {
-      authorId,
-      categoryId,
+      authorIds,
+      categoryIds,
       genreIds,
       limit,
       page,
       sortType,
       sortField,
-      artistId,
       creatorId,
       keyword,
     } = advanceSearchInput;
     const query: any = {};
-    if (authorId) {
+    if (authorIds && authorIds.length) {
       query.author = {
-        _id: authorId,
+        $in: authorIds,
       };
     }
-    if (categoryId) {
+    if (categoryIds && categoryIds.length) {
       query.category = {
-        _id: categoryId,
+        $in: categoryIds,
       };
     }
-    if (genreIds) {
+    if (genreIds && genreIds.length) {
       query.genres = {
-        $all: genreIds.map((id) => {
-          return {
-            _id: id,
-          };
-        }),
-      };
-    }
-    if (artistId) {
-      query.artist = {
-        _id: artistId,
+        $all: genreIds,
       };
     }
     if (creatorId) {
-      query.createdBy = {
-        _id: creatorId,
-      };
+      query.createdBy = creatorId;
     }
     if (keyword) {
       query.$or = [
@@ -350,7 +339,6 @@ export class ComicService {
         },
       ];
     }
-
     const skip = (page - 1) * limit;
     const sort: any = {};
     sort[sortField] = sortType;
