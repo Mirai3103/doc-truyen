@@ -11,6 +11,7 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import crypto from 'crypto';
 import { LoginDto } from './dto/login.dto';
+import ms from 'ms';
 @Injectable()
 export class AuthService {
   constructor(
@@ -58,6 +59,8 @@ export class AuthService {
     });
     return {
       accessToken: this.jwtService.sign(payload),
+      accessTokenExpiresIn: ms(process.env.JWT_ACCESS_TOKEN_EXPIRES || '15m'),
+      refreshTokenExpiresIn: ms(process.env.JWT_REFRESH_TOKEN_EXPIRES || '15d'),
       refreshToken: refreshToken,
     };
   }
@@ -81,6 +84,7 @@ export class AuthService {
         displayName: user.displayName,
         avatarUrl: user.avatarUrl,
       }),
+      accessTokenExpiresIn: ms(process.env.JWT_ACCESS_TOKEN_EXPIRES || '15m'),
     };
   }
   async logout(refreshToken: string) {

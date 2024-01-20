@@ -21,6 +21,8 @@ import Logo from "@/components/Logo";
 import SearchButton from "./SearchButton";
 import DarkModeToggleButton from "./DarkModeToggleButton";
 import LoginModal from "@/components/LoginModal";
+import AuthButton from "./AuthButton";
+import CategoryNavItem from "./CategoryNavItem";
 
 interface HeaderNavigationItem {
     label: string;
@@ -57,14 +59,10 @@ const headerNavigationItems: HeaderNavigationItem[] = [
 ];
 
 export default function Header() {
-    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
     return (
-        <Navbar shouldHideOnScroll maxWidth="xl" onMenuOpenChange={setIsMenuOpen}>
-            <LoginModal isOpen={isOpen} onOpenChange={onOpenChange} />
+        <Navbar shouldHideOnScroll maxWidth="xl">
             <NavbarContent>
-                <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className="sm:hidden" />
+                <NavbarMenuToggle className="sm:hidden" />
                 <NavbarBrand>
                     <Link className="h-6" href="/">
                         <Logo />
@@ -73,31 +71,26 @@ export default function Header() {
             </NavbarContent>
 
             <NavbarContent className="hidden sm:flex gap-4" justify="center">
-                {headerNavigationItems.map((item, index) => (
-                    <NavbarItem key={`${item.label}-${index}`}>
-                        <Link color="foreground" href={item.href}>
-                            {item.label}
-                        </Link>
-                    </NavbarItem>
-                ))}
+                <CategoryNavItem />
+                <NavbarItem>
+                    <Link color="foreground" href={"#"}>
+                        {`Top truyện`}
+                    </Link>
+                </NavbarItem>
+                <NavbarItem>
+                    <Link color="foreground" href={"/tim-kiem-nang-cao"}>
+                        {`Tìm truyện`}
+                    </Link>
+                </NavbarItem>
             </NavbarContent>
             <NavbarContent justify="end">
                 <NavbarItem>
                     <SearchButton />
                 </NavbarItem>
-                <NavbarItem className="hidden lg:flex">
-                    <Button variant="flat" onClick={onOpen}>
-                        Đăng nhập
-                    </Button>
-                </NavbarItem>
-                <NavbarItem>
-                    <Button as={Link} color="primary" href="#" variant="flat">
-                        Đăng ký
-                    </Button>
-                </NavbarItem>
                 <NavbarItem>
                     <DarkModeToggleButton />
                 </NavbarItem>
+                <AuthButton />
             </NavbarContent>
             <NavbarMenu>
                 {headerNavigationItems.map((item, index) => (

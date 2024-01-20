@@ -143,4 +143,12 @@ export class UserService {
         : undefined,
     });
   }
+  public async getProfile(userId: string): Promise<User | null> {
+    return this.userModel
+      .findById(userId)
+      .select(
+        '-hashPassword -refreshTokens -followedComics -readingHistories -totalUploadedComic',
+      )
+      .lean();
+  }
 }

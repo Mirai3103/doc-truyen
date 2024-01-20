@@ -15,6 +15,7 @@ import {
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import Cookies from "universal-cookie";
+import moment from "moment";
 const LockIcon = (props: any) => (
     <svg
         aria-hidden="true"
@@ -81,10 +82,20 @@ export default function LoginModal({ isOpen, onOpenChange }: Props) {
         axios
             .post("/api/auth/login", data)
             .then((res) => {
-                const { accessToken, refreshToken } = res.data;
-                const cookies = new Cookies(null, { path: "/" });
-                cookies.set("accessToken", accessToken, { path: "/", httpOnly: true, sameSite: "strict" });
-                cookies.set("refreshToken", refreshToken, { path: "/", httpOnly: true, sameSite: "strict" });
+                const { accessToken, refreshToken, accessTokenExpiresIn, refreshTokenExpiresIn } = res.data;
+                console.log(accessToken, refreshToken);
+                const cookies = new Cookies();
+                cookies.set("accessToken", accessToken, {
+                    expires: moment(moment()).add(accessTokenExpiresIn, "milliseconds").toDate(),
+                });
+                cookies.set("refreshToken", refreshToken, {
+                    expires: moment(moment()).add(refreshTokenExpiresIn, "milliseconds").toDate(),
+                });
+                console.log(
+                    cookies.get("accessToken"),
+                    cookies.get("refreshToken"),
+                    moment(moment()).add(accessTokenExpiresIn, "milliseconds").toDate()
+                );
             })
             .catch((err) => {
                 console.log(err);
