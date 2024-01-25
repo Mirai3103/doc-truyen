@@ -48,7 +48,7 @@ export default function Chapter({ comic }: Props) {
                 {(item) => (
                     <TableRow
                         onClick={() => {
-                            router.push(`/truyen/${comic.slug}/chuong/${item?.order}`);
+                            router.push(`/truyen/${comic.slug}/chuong/${item?._id}?chuong=${item?.chapterNumber}`);
                         }}
                         className="cursor-pointer hover:text-primary-700"
                         key={item?.name}

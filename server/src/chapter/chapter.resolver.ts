@@ -43,7 +43,15 @@ export class ChapterResolver {
   ) {
     return await this.chapterService.getChapterByComicId(comicId);
   }
-
+  @Query(() => [Chapter])
+  async getChaptersByComicSlug(
+    @Args('slug', {
+      type: () => String,
+    })
+    comicSlug: string,
+  ) {
+    return await this.chapterService.getChaptersByComicSlug(comicSlug);
+  }
   @Query(() => Chapter)
   @UseGuards(GrapqlMayBeNeedIdentityGuard)
   async getChapterById(

@@ -64,6 +64,13 @@ export class ChapterService {
       .exec();
     return chapter;
   }
+  public async getChaptersByComicSlug(comicSlug: string) {
+    const comic = await this.comicService.getComicBySlug(comicSlug);
+    if (!comic) {
+      return [];
+    }
+    return await this.getChapterByComicId(comic._id);
+  }
   public async getChapterByComicId(comicId: string | ObjectId) {
     return await this.chapterModal
       .find({

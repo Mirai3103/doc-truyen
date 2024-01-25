@@ -65,7 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <AuthProvider>
                         <NextTopLoader color="#005FCC" />
                         <Header />
-                        <main className="container py-2 ">{children}</main>
+                        <main className="container py-2 bg-default-50">{children}</main>
                     </AuthProvider>
                 </Providers>
             </body>

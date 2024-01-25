@@ -6,6 +6,14 @@ const nextConfig = {
             destination: "http://localhost:8080/:path*",
         },
     ],
+    images: {
+        remotePatterns: [
+            {
+                // any host ;
+                hostname: "*",
+            },
+        ],
+    },
 };
 
 module.exports = nextConfig;
