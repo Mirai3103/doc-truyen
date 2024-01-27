@@ -182,6 +182,7 @@ type Query {
   getComicsByTagId(id: String!, limit: Float = 25, page: Float = 1): ComicPage!
   getComicsByUserId(id: String!, limit: Float = 25, page: Float = 1): ComicPage!
   getContributedComics(limit: Float = 10, page: Float = 1, userId: String!): [Comic!]!
+  getFollowedComics(limit: Float = 25, page: Float = 1): ComicPage!
   getGenres: [Tag!]!
   getLastedChapterByComicId(comicId: String!): Chapter!
   getRecentComics(limit: Float = 10, page: Float = 1): ComicPage!

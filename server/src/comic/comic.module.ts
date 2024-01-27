@@ -13,6 +13,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ComicResolver } from './comic.resolver';
 import { Comic, ComicSchema } from './schema/comic.schema';
+import { User, UserSchema } from '@/user/schema/user.schema';
 
 @Module({
   imports: [
@@ -20,6 +21,10 @@ import { Comic, ComicSchema } from './schema/comic.schema';
       {
         name: Comic.name,
         schema: ComicSchema,
+      },
+      {
+        name: User.name,
+        schema: UserSchema,
       },
     ]),
     CacheModule.register(),

@@ -4,7 +4,7 @@ https://docs.nestjs.com/providers#services
 
 import { ChapterService } from '@/chapter/chapter.service';
 import { slugfy } from '@/common/utils';
-import { Role } from '@/user/schema/user.schema';
+import { Role, User } from '@/user/schema/user.schema';
 import { UserService } from '@/user/user.service';
 import {
   ForbiddenException,
@@ -28,6 +28,7 @@ export class ComicService {
     private readonly userService: UserService,
     @Inject(forwardRef(() => ChapterService))
     private readonly chapterService: ChapterService,
+    @InjectModel(User.name) private readonly userModel = Model<User>,
   ) {}
   public async getAll() {
     return await this.comicModal.find();
@@ -43,6 +44,34 @@ export class ComicService {
       },
     });
     return !!comic;
+  }
+
+  public async getUserFollowedComic(userId: string, page = 1, limit = 25) {
+    const user = await this.userModel
+      .findOne({
+        _id: userId,
+      })
+      .select('followedComics')
+      .exec();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    const skip = (page - 1) * limit;
+    const listComicId = user.followedComics.slice(skip, skip + limit);
+    const result = await this.comicModal
+      .find({
+        _id: {
+          $in: listComicId,
+        },
+      })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+    const pageResult: PageClass<Comic> = {
+      data: result,
+      totalPages: Math.ceil(user.followedComics.length / limit),
+    };
+    return pageResult;
   }
   public async updateUpdatedAtAll() {
     const comics = await this.comicModal.find();

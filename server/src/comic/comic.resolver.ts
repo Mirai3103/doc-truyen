@@ -252,6 +252,15 @@ export class ComicResolver {
     });
   }
 
+  @Query(() => ComicPage)
+  @UseGuards(new WithRoleGuardGQL(Role.USER))
+  async getFollowedComics(
+    @Args('page', { defaultValue: 1, nullable: true }) page: number,
+    @Args('limit', { defaultValue: 25, nullable: true }) limit: number,
+    @CurrentUser() user: UserPayload,
+  ) {
+    return await this.commicService.getUserFollowedComic(user._id, page, limit);
+  }
   @Query(() => [SortOption])
   async getSortOptions() {
     return SortOption.allSortOptions;
