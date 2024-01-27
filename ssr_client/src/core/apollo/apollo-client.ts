@@ -1,6 +1,6 @@
 "use client";
 
-import { ApolloLink, HttpLink } from "@apollo/client";
+import { ApolloLink, HttpLink, concat } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import {
     NextSSRApolloClient,
@@ -17,17 +17,18 @@ export function makeClient() {
     const httpLink = new HttpLink({
         uri: process.env.SERVER_URI ? process.env.SERVER_URI + "/graphql" : "/api/graphql",
     });
-    const authLink = setContext((_, { headers }) => {
-        // get the authentication token from local storage if it exists
+    const authMiddleware = new ApolloLink((operation, forward) => {
+        // add the authorization to the headers
         const cookies = new Cookies();
         const token = cookies.get("accessToken");
-        // return the headers to the context so httpLink can read them
-        return {
-            headers: {
-                ...headers,
-                authorization: token ? `Bearer ${token}` : "",
-            },
-        };
+        if (token) {
+            operation.setContext({
+                headers: {
+                    authorization: token ? `Bearer ${token}` : "",
+                },
+            });
+        }
+        return forward(operation);
     });
     return new NextSSRApolloClient({
         cache: new NextSSRInMemoryCache(),
@@ -37,8 +38,8 @@ export function makeClient() {
                       new SSRMultipartLink({
                           stripDefer: true,
                       }),
-                      httpLink,
+                      concat(authMiddleware, httpLink),
                   ])
-                : httpLink,
+                : concat(authMiddleware, httpLink),
     });
 }

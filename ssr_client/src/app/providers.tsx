@@ -9,6 +9,11 @@ import { RecoilRoot, atom, selector, useRecoilState, useRecoilValue } from "reco
 import userStore from "@/store/userStore";
 import React from "react";
 import Cookies from "universal-cookie";
+import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
+
+// Adds messages only in a dev environment
+loadDevMessages();
+loadErrorMessages();
 export function Providers({ children }: { children: React.ReactNode }) {
     const router = useRouter();
 

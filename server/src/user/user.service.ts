@@ -45,6 +45,37 @@ export class UserService {
       .limit(limit)
       .exec();
   }
+  public async isInFollowedComics(
+    userId: string | mongoose.Types.ObjectId,
+    comicId: string | mongoose.Types.ObjectId,
+  ) {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      return false;
+    }
+    return user.followedComics.some((comic) => comic + '' === comicId + '');
+  }
+  public async toggleFollowComic(
+    userId: string | mongoose.Types.ObjectId,
+    comicId: string | mongoose.Types.ObjectId,
+  ) {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException('Không tìm thấy người dùng');
+    }
+    const index = user.followedComics.findIndex(
+      (comic) => comic + '' === comicId + '',
+    );
+    if (index === -1) {
+      user.followedComics.push(comicId);
+      user.save();
+      return true;
+    } else {
+      user.followedComics.splice(index, 1);
+      user.save();
+      return false;
+    }
+  }
   public async create(createUserDto: CreateUserDto): Promise<User> {
     //check if email is already taken
     const emailExists = await this.userModel.findOne({

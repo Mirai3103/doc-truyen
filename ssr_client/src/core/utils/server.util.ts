@@ -13,7 +13,7 @@ export async function getAccessToken() {
             return null;
         }
     }
-    return accessToken;
+    return accessToken.value;
 }
 
 export async function useUser() {
@@ -39,7 +39,7 @@ export async function useUser() {
 }
 export async function tryRefreshToken() {
     const cookieStore = cookies();
-    const refreshToken = cookieStore.get("refreshToken");
+    const refreshToken = cookieStore.get("refreshToken")?.value;
     try {
         if (!getNewAccessTokenPromise) {
             getNewAccessTokenPromise = axios

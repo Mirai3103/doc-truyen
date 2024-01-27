@@ -3,8 +3,13 @@ import { graphql } from "@/gql/generated";
 import { Button, ButtonGroup, Image, Spacer } from "@nextui-org/react";
 import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 import Bread from "./BreadCrumbs";
-import { Comic } from "@/gql/generated/graphql";
-import Chapter from "./Chapter";
+import { Comic, Chapter } from "@/gql/generated/graphql";
+import ChapterView from "./ChapterView";
+import { cookies } from "next/headers";
+import { getAccessToken } from "@/core/utils/server.util";
+import FollowButton from "./FollowButton";
+import { useRouter } from "next/router";
+import Link from "next/link";
 const GetComicBySlugQuery = graphql(/* GraphQL */ `
     query getComicBySlug($slug: String!) {
         getComicBySlug(slug: $slug) {
@@ -47,13 +52,34 @@ const GetComicBySlugQuery = graphql(/* GraphQL */ `
     }
 `);
 
+const GetChaptersByIdQuery = graphql(/* GraphQL */ `
+    query getAllChapters($comicId: String!) {
+        getAllChapters(comicId: $comicId) {
+            _id
+            chapterNumber
+            createdAt
+            order
+            name
+        }
+    }
+`);
+
 export default async function ComicPage({ params }: { params: { slug: string } }) {
+    console.log(await getAccessToken());
     const { data, loading, error } = await getClient().query({
         query: GetComicBySlugQuery,
         variables: {
             slug: params.slug,
         },
     });
+
+    const { data: chaptersData } = await getClient().query({
+        query: GetChaptersByIdQuery,
+        variables: {
+            comicId: data.getComicBySlug._id,
+        },
+    });
+
     return (
         <div className="min-h-[100vh] py-unit-lg px-unit-lg md:px-unit-xl  lg:px-unit-4xl gap-y-unit-lg  flex flex-col bg-default-50 ">
             <Bread comic={data.getComicBySlug as Comic} />
@@ -98,25 +124,25 @@ export default async function ComicPage({ params }: { params: { slug: string } }
                     </div>
                     <div className="flex gap-x-unit-lg">
                         <ButtonGroup size="lg">
-                            <Button color="primary">Đọc mới nhất</Button>
-                            <Button>Đọc từ đầu</Button>
-                        </ButtonGroup>
-                        <Button variant="ghost" className="px-0 min-w-0 aspect-square" size="lg">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={1.5}
-                                stroke="currentColor"
-                                className="w-6 h-6"
+                            <Button
+                                color="primary"
+                                as={Link}
+                                href={`/truyen/${data.getComicBySlug.slug}/chuong/${chaptersData.getAllChapters[0]._id}?chuong=${chaptersData.getAllChapters[0].chapterNumber}`}
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"
-                                />
-                            </svg>
-                        </Button>
+                                Đọc mới nhất
+                            </Button>
+                            <Button
+                                as={Link}
+                                href={`/truyen/${data.getComicBySlug.slug}/chuong/${
+                                    chaptersData.getAllChapters[chaptersData.getAllChapters.length - 1]._id
+                                }?chuong=${
+                                    chaptersData.getAllChapters[chaptersData.getAllChapters.length - 1].chapterNumber
+                                }`}
+                            >
+                                Đọc từ đầu
+                            </Button>
+                        </ButtonGroup>
+                        <FollowButton comicId={data.getComicBySlug._id} />
                     </div>
                 </div>
             </div>
@@ -131,7 +157,7 @@ export default async function ComicPage({ params }: { params: { slug: string } }
             </div>
             <div>
                 <h2 className="text-3xl font-bold mb-unit-md">Danh sách chương</h2>
-                <Chapter comic={data.getComicBySlug as Comic} />
+                <ChapterView comic={data.getComicBySlug as Comic} chapters={chaptersData.getAllChapters as Chapter[]} />
             </div>
         </div>
     );

@@ -257,6 +257,23 @@ export class ComicResolver {
     return SortOption.allSortOptions;
   }
 
+  @Mutation(() => Boolean)
+  @UseGuards(new WithRoleGuardGQL(Role.USER))
+  async toggleFollowComic(
+    @Args('comicId') comicId: string,
+    @CurrentUser() user: UserPayload,
+  ) {
+    return await this.userService.toggleFollowComic(user._id, comicId);
+  }
+  @Query(() => Boolean)
+  @UseGuards(new WithRoleGuardGQL(Role.USER))
+  async isInFollowedComics(
+    @Args('comicId') comicId: string,
+    @CurrentUser() user: UserPayload,
+  ) {
+    return await this.userService.isInFollowedComics(user._id, comicId);
+  }
+
   @Query(() => [ComicStatus])
   async getAllComicStatus() {
     return ComicStatus.allStatus;

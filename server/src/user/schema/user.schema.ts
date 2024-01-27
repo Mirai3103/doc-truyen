@@ -56,7 +56,7 @@ export class User extends BaseSchema {
   @Prop({
     type: [{ type: mongoose.Types.ObjectId, ref: 'Comic' }],
   })
-  followedComics: Comic[] = [];
+  followedComics: (Comic | string | mongoose.Types.ObjectId)[] = [];
   @Field(() => [ReadingHistory])
   @Prop({
     type: [ReadingHistorySchema],

@@ -144,6 +144,7 @@ type Mutation {
   deleteComic(id: String!): Boolean!
   removeAllHistories: Boolean!
   removeHistory(chapterId: String!): Boolean!
+  toggleFollowComic(comicId: String!): Boolean!
   totalUploadedComic: Int!
   updateAuthor(id: String!, updateAuthorInput: UpdateAuthorDto!): Author!
   updateChaptersOrder(input: UpdateChaptersOrderInput!): [Chapter!]!
@@ -173,6 +174,7 @@ type Query {
   getAllHistories(limit: Float = 200, page: Float = 1, userId: String!): [ReadingHistory!]!
   getCategories: [Tag!]!
   getChapterById(chapterId: String!): Chapter!
+  getChaptersByComicSlug(slug: String!): [Chapter!]!
   getComicById(id: String!): Comic!
   getComicBySlug(slug: String!): Comic!
   getComicCreatedByUser(limit: Float = 10, page: Float = 1, userId: String!): [Comic!]!
@@ -186,6 +188,7 @@ type Query {
   getSortOptions: [SortOption!]!
   getTopComics(limit: Float = 10, page: Float = 1): ComicPage!
   getTrendingComics(input: TrendingSortInput!): [Comic!]!
+  isInFollowedComics(comicId: String!): Boolean!
   searchAuthor(keyword: String = "", limit: Float = 25, page: Float = 1): QueryAuthorsDTO!
   tag(id: String!): Tag!
   tags: [Tag!]!
