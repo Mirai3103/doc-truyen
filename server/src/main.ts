@@ -9,13 +9,7 @@ import { AppModule } from './app.module';
 import mongoose from 'mongoose';
 async function bootstrap() {
   mongoose.set('debug', function (coll, method, query, doc, options) {
-    console.log({
-      coll,
-      method,
-      query,
-      doc,
-      options,
-    });
+    console.log(JSON.stringify(query));
   });
   const app = await NestFactory.create(AppModule);
 

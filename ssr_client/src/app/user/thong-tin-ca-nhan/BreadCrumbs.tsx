@@ -7,7 +7,7 @@ export default function Bread() {
         <Breadcrumbs size="lg">
             <BreadcrumbItem href="/">Trang chủ</BreadcrumbItem>
             <BreadcrumbItem>Cá nhân</BreadcrumbItem>
-            <BreadcrumbItem>Truyện đang theo dõi</BreadcrumbItem>
+            <BreadcrumbItem>Thông tin cá nhân</BreadcrumbItem>
         </Breadcrumbs>
     );
 }

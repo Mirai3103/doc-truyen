@@ -8,7 +8,7 @@
   "scripts": {
     "build": "nest build",
     "vercel-build": "nest build",
-    "crawler": "nest start  --entryFile crawler.js",
+    "crawler": "nest start  --entryFile crawl.js",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",

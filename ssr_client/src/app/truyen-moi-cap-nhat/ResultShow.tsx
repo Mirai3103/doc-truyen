@@ -4,7 +4,7 @@ import { Comic } from "@/gql/generated/graphql";
 import React from "react";
 import { GetRecentComicsQuery } from "./query";
 import { useLazyQuery } from "@apollo/client";
-import { Pagination, usePagination } from "@nextui-org/react";
+import { Pagination, Spinner, usePagination } from "@nextui-org/react";
 import useSearchQueryParams from "@/hooks/useSearchQueryParams";
 
 interface Props {
@@ -46,9 +46,12 @@ export default function ResultShow({ initalItems, totalPage, currentPage, limit 
                 <div className="flex-1 text-2xl font-semibold text-primary-400">Mới cập nhật</div>
             </div>
             <div className="grid grid-cols-2 sm:gap-x-2 xl:gap-x-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-x-2">
-                {comics.map((item) => (
-                    <ComicCard withTimeAgo comic={item!} key={item._id} />
-                ))}
+                {!loading && comics.map((item) => <ComicCard withTimeAgo comic={item!} key={item._id} />)}
+                {loading && (
+                    <div className="col-span-full py-unit-2xl flex justify-center items-center">
+                        <Spinner size="lg" />
+                    </div>
+                )}
             </div>
             <div className=" mt-4 flex justify-center items-center">
                 <Pagination variant="bordered" showControls total={totalPage} page={activePage} onChange={setPage} />

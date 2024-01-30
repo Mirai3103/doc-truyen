@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <title>Just a moment...</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+        <meta name="robots" content="noindex,nofollow" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <style>
+            @keyframes lds-ring {
+                0% {
+                    transform: rotate(0deg);
+                }
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            html {
+                line-height: 1.15;
+                -webkit-text-size-adjust: 100%;
+                color: #313131;
+            }
+            button,
+            html {
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+                    "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+                    "Noto Color Emoji";
+            }
+            @media (prefers-color-scheme: dark) {
+                body {
+                    background-color: #222;
+                    color: #d9d9d9;
+                }
+                body a {
+                    color: #fff;
+                }
+                body a:hover {
+                    text-decoration: underline;
+                    color: #ee730a;
+                }
+                body .lds-ring div {
+                    border-color: #999 transparent transparent;
+                }
+                body .font-red {
+                    color: #b20f03;
+                }
+                body .big-button,
+                body .pow-button {
+                    background-color: #4693ff;
+                    color: #1d1d1d;
+                }
+                body #challenge-success-text {
+                    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDI2IDI2Ij48cGF0aCBmaWxsPSIjZDlkOWQ5IiBkPSJNMTMgMGExMyAxMyAwIDEgMCAwIDI2IDEzIDEzIDAgMCAwIDAtMjZtMCAyNGExMSAxMSAwIDEgMSAwLTIyIDExIDExIDAgMCAxIDAgMjIiLz48cGF0aCBmaWxsPSIjZDlkOWQ5IiBkPSJtMTAuOTU1IDE2LjA1NS0zLjk1LTQuMTI1LTEuNDQ1IDEuMzg1IDUuMzcgNS42MSA5LjQ5NS05LjYtMS40Mi0xLjQwNXoiLz48L3N2Zz4);
+                }
+            }
+            body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            body.no-js .loading-spinner {
+                visibility: hidden;
+            }
+            body.no-js .challenge-running {
+                display: none;
+            }
+            body.dark {
+                background-color: #222;
+                color: #d9d9d9;
+            }
+            body.dark a {
+                color: #fff;
+            }
+            a:hover,
+            body.dark a:hover,
+            body.light a:hover {
+                text-decoration: underline;
+                color: #ee730a;
+            }
+            body.dark .lds-ring div {
+                border-color: #999 transparent transparent;
+            }
+            body.dark .font-red {
+                color: #b20f03;
+            }
+            body.dark .big-button,
+            body.dark .pow-button {
+                background-color: #4693ff;
+                color: #1d1d1d;
+            }
+            body.dark #challenge-success-text {
+                background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDI2IDI2Ij48cGF0aCBmaWxsPSIjZDlkOWQ5IiBkPSJNMTMgMGExMyAxMyAwIDEgMCAwIDI2IDEzIDEzIDAgMCAwIDAtMjZtMCAyNGExMSAxMSAwIDEgMSAwLTIyIDExIDExIDAgMCAxIDAgMjIiLz48cGF0aCBmaWxsPSIjZDlkOWQ5IiBkPSJtMTAuOTU1IDE2LjA1NS0zLjk1LTQuMTI1LTEuNDQ1IDEuMzg1IDUuMzcgNS42MSA5LjQ5NS05LjYtMS40Mi0xLjQwNXoiLz48L3N2Zz4);
+            }
+            body.light {
+                color: #313131;
+            }
+            a,
+            body.light a {
+                color: #0051c3;
+            }
+            body.light .lds-ring div {
+                border-color: #595959 transparent transparent;
+            }
+            body.light .font-red {
+                color: #fc574a;
+            }
+            body.light .big-button,
+            body.light .pow-button {
+                border-color: #003681;
+                background-color: #003681;
+                color: #fff;
+            }
+            body.light #challenge-success-text {
+                background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDI2IDI2Ij48cGF0aCBmaWxsPSIjMzEzMTMxIiBkPSJNMTMgMGExMyAxMyAwIDEgMCAwIDI2IDEzIDEzIDAgMCAwIDAtMjZtMCAyNGExMSAxMSAwIDEgMSAwLTIyIDExIDExIDAgMCAxIDAgMjIiLz48cGF0aCBmaWxsPSIjMzEzMTMxIiBkPSJtMTAuOTU1IDE2LjA1NS0zLjk1LTQuMTI1LTEuNDQ1IDEuMzg1IDUuMzcgNS42MSA5LjQ5NS05LjYtMS40Mi0xLjQwNXoiLz48L3N2Zz4=);
+            }
+            a,
+            body.light {
+                background-color: transparent;
+            }
+            a {
+                transition: color 150ms ease;
+                text-decoration: none;
+            }
+            .main-content {
+                margin: 8rem auto;
+                width: 100%;
+                max-width: 60rem;
+            }
+            .heading-favicon {
+                margin-right: 0.5rem;
+                width: 2rem;
+                height: 2rem;
+            }
+            .footer,
+            .main-content {
+                padding-right: 1.5rem;
+                padding-left: 1.5rem;
+            }
+            .main-wrapper {
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                align-items: center;
+            }
+            .font-red {
+                color: #b20f03;
+            }
+            .spacer {
+                margin: 2rem 0;
+            }
+            .h1 {
+                line-height: 3.75rem;
+                font-size: 2.5rem;
+                font-weight: 500;
+            }
+            .core-msg,
+            .h2 {
+                line-height: 2.25rem;
+                font-size: 1.5rem;
+            }
+            .h2 {
+                font-weight: 500;
+            }
+            .body-text,
+            .core-msg {
+                font-weight: 400;
+            }
+            .body-text {
+                line-height: 1.25rem;
+                font-size: 1rem;
+            }
+            #challenge-error-text,
+            #challenge-success-text {
+                background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0ibm9uZSI+PHBhdGggZmlsbD0iI0IyMEYwMyIgZD0iTTE2IDNhMTMgMTMgMCAxIDAgMTMgMTNBMTMuMDE1IDEzLjAxNSAwIDAgMCAxNiAzbTAgMjRhMTEgMTEgMCAxIDEgMTEtMTEgMTEuMDEgMTEuMDEgMCAwIDEtMTEgMTEiLz48cGF0aCBmaWxsPSIjQjIwRjAzIiBkPSJNMTcuMDM4IDE4LjYxNUgxNC44N0wxNC41NjMgOS41aDIuNzgzem0tMS4wODQgMS40MjdxLjY2IDAgMS4wNTcuMzg4LjQwNy4zODkuNDA3Ljk5NCAwIC41OTYtLjQwNy45ODQtLjM5Ny4zOS0xLjA1Ny4zODktLjY1IDAtMS4wNTYtLjM4OS0uMzk4LS4zODktLjM5OC0uOTg0IDAtLjU5Ny4zOTgtLjk4NS40MDYtLjM5NyAxLjA1Ni0uMzk3Ii8+PC9zdmc+);
+                background-repeat: no-repeat;
+                background-size: contain;
+                padding-left: 34px;
+            }
+            #challenge-success-text {
+                background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDI2IDI2Ij48cGF0aCBmaWxsPSIjMzEzMTMxIiBkPSJNMTMgMGExMyAxMyAwIDEgMCAwIDI2IDEzIDEzIDAgMCAwIDAtMjZtMCAyNGExMSAxMSAwIDEgMSAwLTIyIDExIDExIDAgMCAxIDAgMjIiLz48cGF0aCBmaWxsPSIjMzEzMTMxIiBkPSJtMTAuOTU1IDE2LjA1NS0zLjk1LTQuMTI1LTEuNDQ1IDEuMzg1IDUuMzcgNS42MSA5LjQ5NS05LjYtMS40Mi0xLjQwNXoiLz48L3N2Zz4=);
+                padding-left: 42px;
+            }
+            .text-center {
+                text-align: center;
+            }
+            .big-button {
+                transition-duration: 200ms;
+                transition-property: background-color, border-color, color;
+                transition-timing-function: ease;
+                border: 0.063rem solid #0051c3;
+                border-radius: 0.313rem;
+                padding: 0.375rem 1rem;
+                line-height: 1.313rem;
+                font-size: 0.875rem;
+            }
+            .big-button:hover {
+                cursor: pointer;
+            }
+            .captcha-prompt:not(.hidden) {
+                display: flex;
+            }
+            .pow-button {
+                margin: 2rem 0;
+                background-color: #0051c3;
+                color: #fff;
+            }
+            .pow-button:hover {
+                border-color: #003681;
+                background-color: #003681;
+                color: #fff;
+            }
+            .footer {
+                margin: 0 auto;
+                width: 100%;
+                max-width: 60rem;
+                line-height: 1.125rem;
+                font-size: 0.75rem;
+            }
+            .footer-inner {
+                border-top: 1px solid #d9d9d9;
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+            .clearfix::after {
+                display: table;
+                clear: both;
+                content: "";
+            }
+            .clearfix .column {
+                float: left;
+                padding-right: 1.5rem;
+                width: 50%;
+            }
+            .diagnostic-wrapper {
+                margin-bottom: 0.5rem;
+            }
+            .footer .ray-id {
+                text-align: center;
+            }
+            .footer .ray-id code {
+                font-family: monaco, courier, monospace;
+            }
+            .core-msg,
+            .zone-name-title {
+                overflow-wrap: break-word;
+            }
+            .loading-spinner {
+                height: 76.391px;
+            }
+            .lds-ring,
+            .lds-ring div {
+                display: inline-block;
+                position: relative;
+                width: 1.875rem;
+                height: 1.875rem;
+            }
+            .lds-ring div {
+                box-sizing: border-box;
+                display: block;
+                position: absolute;
+                border: 0.3rem solid #595959;
+                border-radius: 50%;
+                border-color: #313131 transparent transparent;
+                animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            }
+            .lds-ring div:nth-child(1) {
+                animation-delay: -0.45s;
+            }
+            .lds-ring div:nth-child(2) {
+                animation-delay: -0.3s;
+            }
+            .lds-ring div:nth-child(3) {
+                animation-delay: -0.15s;
+            }
+            @media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {
+                .main-wrapper,
+                body {
+                    display: block;
+                }
+            }
+        </style>
+        <meta http-equiv="refresh" content="375" />
+    </head>
+    <body class="no-js">
+        <div class="main-wrapper" role="main">
+            <div class="main-content">
+                <noscript
+                    ><div id="challenge-error-title">
+                        <div class="h2">
+                            <span id="challenge-error-text">Enable JavaScript and cookies to continue</span>
+                        </div>
+                    </div></noscript
+                >
+            </div>
+        </div>
+        <script>
+            (function () {
+                window._cf_chl_opt = {
+                    cvId: "3",
+                    cZone: "nhattruyento.com",
+                    cType: "managed",
+                    cNounce: "38639",
+                    cRay: "84d7f800fce2716d",
+                    cHash: "7af6a0e5323c49a",
+                    cUPMDTk:
+                        "\/truyen-tranh\/su-quyen-ru-cua-25d\/chap-77\/1125056?__cf_chl_tk=9arGJECEkRfCkH_N6kCX9sXciawOiAPXKL5g.Z_WO7k-1706599398-0-gaNycGzNC7s",
+                    cFPWv: "g",
+                    cTTimeMs: "1000",
+                    cMTimeMs: "375000",
+                    cTplV: 5,
+                    cTplB: "cf",
+                    cK: "visitor-time",
+                    fa: "\/truyen-tranh\/su-quyen-ru-cua-25d\/chap-77\/1125056?__cf_chl_f_tk=9arGJECEkRfCkH_N6kCX9sXciawOiAPXKL5g.Z_WO7k-1706599398-0-gaNycGzNC7s",
+                    md: "X2ly_uh1aKi.ncjSawo.cWattsJTGb8UY.q8wy53MU8-1706599398-1-AcLHPYY500CVixPU8_PKHAWsRFSeUAw3Q2WYiPHWGe2zyoC_OsBnHlcXqBqUGXytug6UdU1h0Frqt98_EQJYLlwjZooxbf_xl61LeICcHBilBNXj2mNJKK5jHTVEA8oAYLcrVoVI5YtzZZWpe9k4gGkXZfSEhe9TLYKh1Gqbm-eVh4n4-ntBPKjzFuE4vipmfRx6PwDdgnjVyBgvZeDwGLs5iOhapOkdv2rPkSJntzNWItQAqzpwXpdV6QFRNUdH9PsCUzhNEPIWIKGEXktGV0YP2Tp8xPTO3nZX5sim50uw_AM7fr1Qw_CK_D1_aPTS3tHPmzR0ufgWqn90jnGOPT25sE2nRhjIViZzWZfwu7vTea_WzgypJxoAdvNd8qArcVBU7bTYB7wqCwD87AHN775M76RScJrjWSf8l5WNh2x_hX458cOGo3BiXoUki-VPyUz6H8LfgPigjGqaBjl4W5fIElK37t_eC1M234eSC2O8D7c-DQuTvDOEytRr1qORDb4GAhZ1ceZfcGHNb4FUXL_Bj6QVt_mq8N_5w4WDnFndu-Ua8kAMQuAHp3AF0rAINXzz603GL8nn6i2r63Lmue3QwpxPo0Gcc5Iu7jZjDk8ztZ9Vxg7gp2sd_34qQ8hBNzBUxIvRsZS5qmPRYZB8sKzWPyi7WqXWeLrScsxXD-80uKKfB2u71rI9bTFSOxc0Hmhf_NuDsuzI0VfTr6FGi6Fde5CUsQhNOv-4CaF-0QzMJnEHLO7ogyCeTaoaCNGNXnaHR2ErCkJqKPaNxdm-eLEOuyySk6SNagQVvLAp48FIVsJ6chHKlnIPOhE9CzT3uQt9M2BHjEuUuLpA5wLNG850RG296FoHNbCPjchI5Y1OQ3yLGjcNETVokJ872_oRDnSPnU_6DJptnVhfwQTY_hSesSr2VLAsLIUe7UoBV0vGp6DBCgYvS5RWdH-bs_wKMTyymkSzL03ZKTBCxztEdqoeCdTd0SdOQTnhtpNWJaRjWBTOdLQo7kviu8mroFo6Ibol5ByfryLLtnEE3KuzZEESSYyWeMfq0sSJ2ejADTs_6Qfm3WIeyRiHMW-My4FFGCfZY7yVjMyjAo-1lnZyWWgwsmHGXsxurTOOQokfm7wFrVgWnSKUb8zOnp6RvBOgbW9dEWOyvQo-bBnK-jm5u0HeseVPnHy1oFoZnVMGrKc5QwdRMo6kUGoANQHo5xXFAQKb84MXXuq9TRWtSg7SKQOKMOd5i8LAf2CPamayM_duNmtpSaQIBXkYIoTTutBvCnis1bd_mo3aT0G7j2dblW56HzyjahjPifFpsssa7nO16nPsxLqw8l70vSWRBL1z0aIgmAebv_ZGT_PCPrgrdm5qK0vIgXtq1dckNOzBkgrE3XshznD_XeVtZOp4uYr8lO98lk_jQVT2oZgaFHJWB_06soad7i7QOyzlInd5NGRHTqJpQXA0-siADs7r9MgIGyteNoHgPzxrYerNEr1jfC6dB4BTvp1MFdOoWuvT1x88CpmLLbGUdFLyHyynlH4EMQaztq-UFl28YwcOjrHCQjrbrRm6aplTVWvd5hvXVqKsgEuY7PYWx9tQInWgCnZtpv-jCRhgunVMWYthiagML7O6Xx0vdbkNktkQTwTT5ek4ZCsIhisw-aE-QyakqISxxBD2G89tW14DOnSlmlpTaB8OEgvYSJ2OTZXxHmUZFOxOQmUF4aZtiynUpKWwOieeSmZ3jbnBegrjpbHPku2EOc8w8irqj142e08JByZk2AMSNPpcn_ExhngEjhIOH3gVXX50VdKVURZU7dJsF5IpPkJjZ3XIcXTRdpMYPkZEGqozZk9PP_txm4hKYRkcTmzp9ChnZQFneULOTPnmogxrUj3U4QTF_q8d0VdMN1VutkDe5APQ4YMd8KnAeIviV0WjMnwK43aBWCUB5M9WUpEkCc_baijjNvunMBKbbOkp-n7AVx--TQHQ1ENGfB2uANarztA3gJiN7PHODcQxyGcDtjmC-_iq7uA0JgMgc2pL9aCHVSorpUzHfoW6M4-BFSTzZTIQgVhXgAymaUUWEzeJluMHbCPjU_dnh2C3mMP3GWPDWv_hEKOR8QAHvmvWZ9rA4V_tMYG_OEBjzs47vCoZbXFjlvu3HDilMKvuLK1IwvNunNlLFLwh6BTyf6GVnF0I2t1GcmGGI5Ed61PpBnRVuc4dLJmQVUfC7tVOszb6d42FN-DyAO_n38IeQhXhHRb6cAbJOxli7RUMHkxNggAFx9kNMNXQLuz1QQ1YJNbIpvertz4yS-P5lAtK-UZE8DiELKx9_e4Ijc44Hdganc_LTm0aepVWeugudS2hGLxWBtCcW8o3WStrkrqOJkGUNi-vZ_Ze3ho6pmsZoJ1Bfmat6M_qoi38wus_4k0b7jfApJRXAP5_Gpmmew0RwmYI6RvBk3mLdGPRk5avTJhpdpgbAf8SpGa6OxiW5KU8_l0b5b4qkitakyJ8wZt3asSrxDycFZSu-Rb5kUZiKdCTbdLcZi8wBWf7osLgnEYsgqHgXq9FNqzagfJEhArVkwbmcA-RFXsCOjSJ3rnmaF_FEkCrr0KDmiCvE8TcmkdscseTf3xmBpQuBTEQiIGpvvxmxc2fAt89nuCJistIZbhL0MAYmqAn-E3wF_cz0bKyMDyMQ5d7JYFHok-VrpGPdD55igy7KoKkIC26pkBDF2JRVWXVtwbqynZsa_9FNyHNwqOId5-xzGmepmuhfQxszbwRZiOiHVs2qQMouSJs_-tw_AS6D0ZXOW70tILbV8eCGkmnrolg1yCBkOLojPkBHWgMTzuY-cvUvJK7hhzN8Ah6u9E561Atlj813PjV2BpN8EEMSOb1pLpYAsqmczd3VKW3UtRG4v1x9TI1EQuSuJhdDpx6hPE9BPTxWdsfUIxOmP_cAAoVY8lP6qxI8rpp_4OIANusMw",
+                    cRq: {
+                        ru: "aHR0cHM6Ly9uaGF0dHJ1eWVudG8uY29tL3RydXllbi10cmFuaC9zdS1xdXllbi1ydS1jdWEtMjVkL2NoYXAtNzcvMTEyNTA1Ng==",
+                        ra: "Tk9fVUE=",
+                        rm: "R0VU",
+                        d: "rFET2F/d2055d8PwuJ1Q7h/81MzeHySzgDvJotlT7SDIRIEtZK16fWHVSCIEQpXVHwVfme4nrTzyjDjobx7dTY4iL7aw2ch6GibfSJ6hA+G8zu7ju8HRF3EQIYSeXvcb/NJ6vBz5Z6q4HVSa0nxFyDyo50G2yEnAO1VePpbPqBILtG1ycmGyxw07BDI9ow4z2QD1PK44ZX22VVGRZUqOL7U/QsfZ2vQaM3pAdPPeifYuefDB5R7ba3pq/lIxszOGDJ96CvaRCoOvfJUHiL824hUvMtMnOMLpZLgWs1pTmpYHEEMSZAbsFyCV8hmOuDeitmi/m8a3eLgHqEY83Fuk99y/tgibcOqe2/5niQ/8KOyYvgdNO+A6PMZpn6A9Fegtv/K2pXBXzuFJCDaBEgXMCHAqzkoDqfrO0eMxFyxbnrL7KJQNQUSOJpuAyGOiY+bFLCUWDSl0PXyfd+NbHz2DhPqBvJKzb2vdctDyIHr4+LR0BIQ/dz0Y+vOptiy4m7b3lkdf+Tb2xuhWd9i2PibW3FE+V7z4jIOAw909aV0dfZLLWPO7YNkukoJFlZXOx40vxwS7pMp5blyiLhhGSiPWgBXFIYkRf8UU6ML75Zqhez1/K5U/Oda6iMzBgTVlkPrbsd/Lv+LDvJD1Z3kA3PINJQ==",
+                        t: "MTcwNjU5OTM5OC41NTcwMDA=",
+                        cT: Math.floor(Date.now() / 1000),
+                        m: "08eXZ99NtHh3PRsl1i+cwwMG1/eEgoEqBFNAsw0wvKU=",
+                        i1: "UxVZhcDMUVwX+uB48c2YxQ==",
+                        i2: "KtEHQ4GlevKEvjTHEVYAfA==",
+                        zh: "QnTdrXQxQF4udaenRb1kQlV4zenA+9au9M9XHZNsA1g=",
+                        uh: "DV4j3Tmrbi5Rs1q3ahwVS6SgbPbI7np5884QO1u1Cgg=",
+                        hh: "9zjHNpubaRjcS3VRzsh5Es6R48SxqaR+5UV4/+1ULNw=",
+                    },
+                };
+                var cpo = document.createElement("script");
+                cpo.src = "/cdn-cgi/challenge-platform/h/g/orchestrate/chl_page/v1?ray=84d7f800fce2716d";
+                window._cf_chl_opt.cOgUHash =
+                    location.hash === "" && location.href.indexOf("#") !== -1 ? "#" : location.hash;
+                window._cf_chl_opt.cOgUQuery =
+                    location.search === "" &&
+                    location.href.slice(0, location.href.length - window._cf_chl_opt.cOgUHash.length).indexOf("?") !==
+                        -1
+                        ? "?"
+                        : location.search;
+                if (window.history && window.history.replaceState) {
+                    var ogU = location.pathname + window._cf_chl_opt.cOgUQuery + window._cf_chl_opt.cOgUHash;
+                    history.replaceState(
+                        null,
+                        null,
+                        "\/truyen-tranh\/su-quyen-ru-cua-25d\/chap-77\/1125056?__cf_chl_rt_tk=9arGJECEkRfCkH_N6kCX9sXciawOiAPXKL5g.Z_WO7k-1706599398-0-gaNycGzNC7s" +
+                            window._cf_chl_opt.cOgUHash
+                    );
+                    cpo.onload = function () {
+                        history.replaceState(null, null, ogU);
+                    };
+                }
+                document.getElementsByTagName("head")[0].appendChild(cpo);
+            })();
+        </script>
+    </body>
+</html>

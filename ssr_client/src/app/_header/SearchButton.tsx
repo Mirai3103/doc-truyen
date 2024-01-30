@@ -24,7 +24,6 @@ const SearchByKeywordQuery = graphql(/* GraphQL */ `
         data: advanceSearchComics(input: { keyword: $keyword, limit: $limit }) {
             data {
                 _id
-                imageThumbUrl
                 imageCoverUrl
                 name
                 slug

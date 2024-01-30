@@ -16,6 +16,7 @@ import { ReadingHistoryModule } from './readingHistory/reading-history.module';
 import { TagModule } from './tag/tag.module';
 import { AppScheduleModule } from './task/schedule.module';
 import { UserModule } from './user/user.module';
+import { CrawlModule } from './crawl/crawl.module';
 
 @Module({
   imports: [
@@ -27,7 +28,6 @@ import { UserModule } from './user/user.module';
       isGlobal: true,
     }),
     UserModule,
-
     CommonModule,
     DatabaseModule,
     AuthorModule,

@@ -40,7 +40,6 @@ export const GetAdvanceSearchQuery = graphql(/* GraphQL */ `
         advanceSearchComics(input: $input) {
             data {
                 _id
-                imageThumbUrl
                 imageCoverUrl
                 name
                 description

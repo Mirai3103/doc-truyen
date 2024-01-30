@@ -3,13 +3,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      process.env.DATABASE_URI ||
-        'mongodb+srv://hoagxxll:FVNzXi4LoiXZp1EN@doctruyendb.h7u8it7.mongodb.net',
-      {
-        dbName: process.env.MONGO_DBNAME || 'comicDb',
-      },
-    ),
+    MongooseModule.forRoot('mongodb://localhost:27017', {
+      dbName: process.env.MONGO_DBNAME || 'comicDb',
+      user: process.env.MONGO_USER || 'admin',
+      pass: process.env.MONGO_PASS || 'admin',
+    }),
   ],
   providers: [],
 })

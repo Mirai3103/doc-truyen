@@ -16,6 +16,8 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import moment from "moment";
+import userStore from "@/store/userStore";
+import { useRecoilState } from "recoil";
 const LockIcon = (props: any) => (
     <svg
         aria-hidden="true"
@@ -66,43 +68,44 @@ interface FormValues {
     password: string;
 }
 export default function LoginModal({ isOpen, onOpenChange }: Props) {
+    const [userState, setUserState] = useRecoilState(userStore);
     const {
         register,
         handleSubmit,
         setError,
-        formState: { errors },
+        formState: { errors, isSubmitting },
     } = useForm<FormValues>({
         defaultValues: {
             username: "",
             password: "",
         },
     });
-    function onSubmit(data: FormValues) {
-        console.log(data);
-        axios
-            .post("/api/auth/login", data)
-            .then((res) => {
-                const { accessToken, refreshToken, accessTokenExpiresIn, refreshTokenExpiresIn } = res.data;
-                console.log(accessToken, refreshToken);
-                const cookies = new Cookies();
-                cookies.set("accessToken", accessToken, {
-                    expires: moment(moment()).add(accessTokenExpiresIn, "milliseconds").toDate(),
-                });
-                cookies.set("refreshToken", refreshToken, {
-                    expires: moment(moment()).add(refreshTokenExpiresIn, "milliseconds").toDate(),
-                });
-                console.log(
-                    cookies.get("accessToken"),
-                    cookies.get("refreshToken"),
-                    moment(moment()).add(accessTokenExpiresIn, "milliseconds").toDate()
-                );
-            })
-            .catch((err) => {
-                console.log(err);
-                setError("root", { type: "validate", message: "Sai tài khoản hoặc mật khẩu" });
+    async function onSubmit(data: FormValues) {
+        try {
+            const res1 = await axios.post("/api/auth/login", data);
+            const { accessToken, refreshToken, accessTokenExpiresIn, refreshTokenExpiresIn } = res1.data;
+            const cookies = new Cookies();
+            cookies.set("accessToken", accessToken, {
+                expires: moment(moment()).add(accessTokenExpiresIn, "milliseconds").toDate(),
             });
+            cookies.set("refreshToken", refreshToken, {
+                expires: moment(moment()).add(refreshTokenExpiresIn, "milliseconds").toDate(),
+            });
+
+            const res2 = await axios.get("/api/auth/profile");
+            setUserState({
+                ...userState,
+                isAuthenticated: true,
+                isLoading: false,
+                profile: res2.data,
+            });
+            onOpenChange(false);
+        } catch (e) {
+            console.log(e);
+            setError("root", { type: "validate", message: "Sai tài khoản hoặc mật khẩu" });
+        }
     }
-    console.log(errors);
+
     return (
         <>
             <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
@@ -149,7 +152,7 @@ export default function LoginModal({ isOpen, onOpenChange }: Props) {
                                 <Button color="danger" variant="flat" onPress={onClose}>
                                     Hủy
                                 </Button>
-                                <Button color="primary" type="submit">
+                                <Button color="primary" type="submit" isLoading={isSubmitting}>
                                     Đăng nhập
                                 </Button>
                             </ModalFooter>

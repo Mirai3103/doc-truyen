@@ -50,6 +50,7 @@ export default function ComicCard({ comic, classNames, width, withTimeAgo = fals
                 alt={comic.name}
                 className="object-contain  h-auto"
                 src={comic.imageCoverUrl}
+                loading="lazy"
             />
             <CardFooter className=" max-w-full justify-between">
                 <Tooltip content={comic.name} placement="top">

@@ -37,7 +37,6 @@ const GetComicBySlugQuery = graphql(/* GraphQL */ `
             followCount
             totalViewCount
             imageCoverUrl
-            imageThumbUrl
             name
             createdBy {
                 _id

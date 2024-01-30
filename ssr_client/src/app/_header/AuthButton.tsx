@@ -15,6 +15,8 @@ import userStore from "@/store/userStore";
 import LoginModal from "@/components/LoginModal";
 import { userMenuItem } from "./UserMenu";
 import NextLink from "next/link";
+import Cookies from "universal-cookie";
+import axios from "axios";
 
 export default function AuthButton() {
     const [userState, setUserState] = useRecoilState(userStore);
@@ -25,19 +27,34 @@ export default function AuthButton() {
         </DropdownItem>
     ));
 
+    const onLogout = async () => {
+        setUserState({
+            isAuthenticated: false,
+            isLoading: false,
+            profile: null,
+        });
+        const cookies = new Cookies();
+        const refreshToken = cookies.get("refreshToken");
+        axios.post("/api/auth/logout", {
+            refreshToken: refreshToken,
+        });
+        cookies.remove("accessToken");
+        cookies.remove("refreshToken");
+    };
+
     return (
         <>
             {!userState.isAuthenticated && (
                 <>
                     <LoginModal isOpen={isOpen} onOpenChange={onOpenChange} />
 
-                    <NavbarItem className="hidden lg:flex">
+                    <NavbarItem>
                         <Button variant="flat" onClick={onOpen}>
                             Đăng nhập
                         </Button>
                     </NavbarItem>
-                    <NavbarItem>
-                        <Button as={Link} color="primary" href="/dang-ly" variant="flat">
+                    <NavbarItem className="hidden lg:flex">
+                        <Button as={Link} color="primary" href="/dang-ky" variant="flat">
                             Đăng ký
                         </Button>
                     </NavbarItem>
@@ -53,6 +70,10 @@ export default function AuthButton() {
                                 src: userState.profile!.avatarUrl || "https://placewaifu.com/image/200/200",
                             }}
                             className="transition-transform"
+                            classNames={{
+                                name: "hidden lg:block",
+                                description: "hidden lg:block",
+                            }}
                             description={userState.profile!.email}
                             name={userState.profile?.displayName || userState.profile!.userName}
                         />
@@ -80,6 +101,7 @@ export default function AuthButton() {
                                 }
                                 key="logout"
                                 color="danger"
+                                onClick={onLogout}
                             >
                                 Đăng xuất
                             </DropdownItem>,
