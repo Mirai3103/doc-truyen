@@ -10,6 +10,8 @@ import { getAccessToken } from "@/core/utils/server.util";
 import FollowButton from "./FollowButton";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import NextLink from "next/link";
+import { advanceSearchHref } from "@/core/utils";
 const GetComicBySlugQuery = graphql(/* GraphQL */ `
     query getComicBySlug($slug: String!) {
         getComicBySlug(slug: $slug) {
@@ -104,12 +106,25 @@ export default async function ComicPage({ params }: { params: { slug: string } }
                             gridTemplateColumns: "1fr 4fr",
                         }}
                     >
-                        <span className="">Tên khác: </span>
-                        <span className="ml-unit-md ">
-                            {data.getComicBySlug.otherNames.filter((e) => e !== data.getComicBySlug.name).join(", ")}
-                        </span>
+                        {data.getComicBySlug.otherNames && (
+                            <>
+                                <span className="">Tên khác: </span>
+                                <span className="ml-unit-md ">
+                                    {data.getComicBySlug.otherNames
+                                        .filter((e) => e !== data.getComicBySlug.name)
+                                        .join(", ")}
+                                </span>
+                            </>
+                        )}
                         <span className="">Tác giả: </span>
-                        <span className="ml-unit-md ">{data.getComicBySlug.author.name}</span>
+                        <NextLink
+                            href={advanceSearchHref({
+                                authorIds: [data.getComicBySlug.author._id],
+                            })}
+                            className="ml-unit-md "
+                        >
+                            {data.getComicBySlug.author.name}
+                        </NextLink>
                         <span className="">Tình trạng: </span>
                         <span className="ml-unit-md">{data.getComicBySlug.status}</span>
                         <span className="">Lượt xem: </span>

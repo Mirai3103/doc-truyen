@@ -29,6 +29,7 @@ export default function ComicCard({ comic, classNames, width, withTimeAgo = fals
                 <Chip
                     size="sm"
                     color="primary"
+                    variant="faded"
                     onClick={(e) => {
                         e.stopPropagation();
                         router.push(`/truyen/${comic.slug}/chuong/${comic.recentChapter?._id}`);
@@ -39,7 +40,7 @@ export default function ComicCard({ comic, classNames, width, withTimeAgo = fals
                 <Spacer y={1} />
 
                 {withTimeAgo && (
-                    <Chip size="sm" color="success">
+                    <Chip size="sm" color="success" variant="faded">
                         {toReadbleTime(comic.recentChapter?.createdAt)}
                     </Chip>
                 )}
@@ -47,8 +48,11 @@ export default function ComicCard({ comic, classNames, width, withTimeAgo = fals
             <Image
                 shadow="none"
                 radius="sm"
+                classNames={{
+                    wrapper: "w-full !max-w-full",
+                }}
                 alt={comic.name}
-                className="object-contain  h-auto"
+                className="object-contain w-full h-auto aspect-[3/4] "
                 src={comic.imageCoverUrl}
                 loading="lazy"
             />
