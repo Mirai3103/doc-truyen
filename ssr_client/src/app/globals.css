@@ -1,9 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+.comic-basic-info {
+  grid-template-columns: 2fr 3fr;
+}
+@media screen and (min-width: 768px) {
+  .comic-basic-info {
+    grid-template-columns: 1fr 4fr;
+  }
+}
 @layer components {
-    .container {
-        @apply mx-auto px-unit-4 2xl:max-w-[1280px] xl:max-w-[1024px];
-    }
+  .container {
+    @apply mx-auto px-unit-4 2xl:max-w-[1280px] xl:max-w-[1024px];
+  }
 }

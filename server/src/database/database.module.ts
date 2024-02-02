@@ -3,10 +3,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017', {
+    MongooseModule.forRoot(process.env.DATABASE_URI!, {
       dbName: process.env.MONGO_DBNAME || 'comicDb',
-      user: process.env.MONGO_USER || 'admin',
-      pass: process.env.MONGO_PASS || 'admin',
     }),
   ],
   providers: [],

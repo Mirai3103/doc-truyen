@@ -104,7 +104,8 @@ export class AuthService {
   }
   async register(user: CreateUserDto) {
     const newUser = await this.userService.create(user);
-    return newUser;
+
+    return await this.login(newUser);
   }
   async googleLogin(req: { user: GoogleUser }) {
     const existingUser = await this.userService.findByUniqueField(

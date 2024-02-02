@@ -2,10 +2,7 @@ import fs from "fs";
 import { Db, MongoClient, ObjectId } from "mongodb";
 import slugify from "slugify";
 import dayjs from "dayjs";
-// export class BaseSchema {
-//     createdAt: Date = new Date();
-//     updatedAt: Date = new Date();
-// }
+
 export enum Status {
     Paused = "Tạm dừng",
     Completed = "Hoàn thành",
@@ -17,97 +14,8 @@ export enum TagType {
     Category = "category",
     Genre = "genre",
 }
-// export class Tag extends BaseSchema {
-//     name: string;
-//     totalComic: number;
-//     description: string;
-//     type: TagType;
-// }
-
-// export class Author extends BaseSchema {
-//     name: string;
-
-//     totalComic: number;
-//     description?: string;
-// }
-// export class Page {
-//     url: string;
-//     order: number;
-// }
-// export class Chapter extends BaseSchema {
-//     order: number;
-
-//     name?: string;
-
-//     chapterNumber: string;
-
-//     comic: Comic;
-
-//     pages: Page[];
-//     pageCount: number;
-//     // analytics
-//     weekViewCount: number;
-
-//     monthViewCount: number;
-
-//     yearViewCount: number;
-
-//     totalViewCount: number;
-
-//     todayViewCount: number;
-// }
-
-// export class Comic extends BaseSchema {
-//     name: string;
-
-//     otherNames: string[];
-
-//     slug: string;
-
-//     description: string;
-
-//     imageCoverUrl: string;
-//     officeUrl?: string;
-//     status: Status = Status.NonPublished;
-//     category: Tag = "64362ce5372c92c23ca0bcc8" as any;
-//     createdBy: string;
-//     author: Author;
-//     genres: Tag[] = [];
-//     followCount: number;
-//     recentChapter: Chapter;
-//     chapterCount = 0;
-//     weekViewCount: number;
-//     monthViewCount: number;
-//     yearViewCount: number;
-//     totalViewCount: number;
-//     todayViewCount: number;
-// }
 
 const comics = JSON.parse(fs.readFileSync("./comics.json", "utf-8")) as any[];
-// {
-//     "image": "//st.nhattruyento.com/data/comics/246/nangoku-yuta-girl.jpg",
-//     "title": "Nangoku ! Yuta Girl",
-//     "detailLink": "https://nhattruyento.com/truyen-tranh/nangoku-yuta-girl-105718",
-//     "author": "Mochinishi Umashi",
-//     "status": "Đang tiến hành",
-//     "genres": [
-//       "Comedy",
-//       "Drama",
-//       "Manga",
-//       "Romance",
-//       "Slice of Life"
-//     ],
-//     "description": "Sato Nagi, một cậu bé có \"thể chất dễ bị ám\", ngay sau khi chuyển đến Okinawa, đã bị các linh hồn ám vào...! Dựa vào các mối quan hệ của mẹ cậu, Nagi tìm kiếm một chú thuật sư, hay là Yuta ở Okinawa, nhưng một cuộc gặp gỡ bất ngờ đang chờ cậu ở đó!!",
-//     "followCount": "618",
-//     "viewCount": "13558",
-//     "chapters": [
-//       {
-//         "chapterName": "Chapter 12: Chuyến đi",
-//         "chapterLink": "https://nhattruyento.com/truyen-tranh/nangoku-yuta-girl/chap-12/1123915",
-//         "chapterTime": "1 ngày trước",
-//         "chapterView": "658"
-//       },
-//     ]
 
 function parseTimeAgo(timeAgo: string) {
     //27/04/22
