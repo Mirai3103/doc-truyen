@@ -4,8 +4,7 @@ import Humanoid from "humanoid-js";
 import { load } from "cheerio";
 import dayjs from "dayjs";
 import UserAgent from "user-agents";
-const url =
-  "mongodb+srv://huuhoag1412:rzTVm7oCCMjGeOnp@cluster0.qiumshy.mongodb.net/comicDb";
+const url = process.env.MONGODB_URI;
 const client = new MongoClient(url, {
   serverApi: {
     version: ServerApiVersion.v1,

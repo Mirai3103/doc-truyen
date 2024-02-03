@@ -58,8 +58,7 @@ function parseTimeAgo(timeAgo) {
   }
   return 0;
 }
-const url =
-  "mongodb+srv://huuhoag1412:rzTVm7oCCMjGeOnp@cluster0.qiumshy.mongodb.net/comicDb";
+const url = process.env.MONGODB_URI;
 const client = new MongoClient(url, {
   serverApi: {
     version: ServerApiVersion.v1,
