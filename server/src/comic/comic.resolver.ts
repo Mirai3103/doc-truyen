@@ -34,10 +34,9 @@ import {
   TrendingSortType,
 } from './dto/trendingSort.dto';
 import { Comic, ComicStatus } from './schema/comic.schema';
-import { PaginateResult } from '@/common/dto/pagination.dto';
 @Resolver(() => Comic)
 export class ComicResolver {
-  private readonly EXPIRE_TIME = 15 * 60 * 1000; //15 minutes
+  private readonly EXPIRE_TIME = 5 * 60 * 1000; //15 minutes
   constructor(
     @Inject(ComicService) private readonly commicService: ComicService,
     @Inject(AuthorService) private readonly authorService: AuthorService,
