@@ -9,7 +9,7 @@ export default function Logo() {
       width="0"
       height="0"
       sizes="100vw"
-      className="h-full w-auto"
+      className="h-full w-auto hidden sm:block"
     />
   );
 }

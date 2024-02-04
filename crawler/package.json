@@ -4,6 +4,7 @@
         "async": "^3.2.5",
         "axios": "^1.6.7",
         "dayjs": "^1.11.10",
+        "dotenv": "^16.4.1",
         "humanoid-js": "^1.0.1",
         "mongodb": "^6.3.0",
         "mongoose": "^8.1.1",

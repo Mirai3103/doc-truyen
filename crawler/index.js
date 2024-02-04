@@ -7,6 +7,8 @@ import { Db, MongoClient, ObjectId, ServerApiVersion } from "mongodb";
 import slugify from "slugify";
 import dayjs from "dayjs";
 import async from "async";
+import { config } from "dotenv";
+config({});
 export var Status;
 (function (Status) {
   Status["Paused"] = "T\u1EA1m d\u1EEBng";
@@ -211,68 +213,77 @@ function getChapterNumber(chapterName) {
 async function insert(comics) {
   const collection = db.collection("comics");
   for await (const comic of comics) {
-    const newCm = {};
-    newCm["name"] = comic.title;
-    // check if comic exist
-    const existed = await collection.findOne({
-      slug: slugify(comic.title, { lower: true }),
-    });
-    if (existed) {
-      console.log("comic existed ", comic.title);
-      continue;
-    }
+    try {
+      const newCm = {};
+      newCm["name"] = comic.title;
+      // check if comic exist
+      const existed = await collection.findOne({
+        slug: slugify(comic.title, { lower: true }),
+      });
+      if (existed) {
+        console.log("comic existed ", comic.title);
+        continue;
+      }
 
-    newCm["otherNames"] = [];
-    newCm["slug"] = slugify(comic.title, { lower: true });
-    newCm["description"] = comic.description;
-    newCm["imageCoverUrl"] = comic.image;
-    newCm["officeUrl"] = comic.detailLink;
-    newCm["status"] =
-      comic.status == "Đang tiến hành" ? Status.Ongoing : Status.Completed;
-    const { category, tag } = findCategoryAndTag(comic.genres);
-    newCm["category"] = new ObjectId(
-      await createTagIfNotFound(category, TagType.Category)
-    );
+      newCm["otherNames"] = [];
+      newCm["slug"] = slugify(comic.title, { lower: true });
+      newCm["description"] = comic.description;
+      newCm["imageCoverUrl"] = comic.image;
+      newCm["officeUrl"] = comic.detailLink;
+      newCm["status"] =
+        comic.status == "Đang tiến hành" ? Status.Ongoing : Status.Completed;
+      const { category, tag } = findCategoryAndTag(comic.genres);
+      newCm["category"] = new ObjectId(
+        await createTagIfNotFound(category, TagType.Category)
+      );
 
-    newCm["createdBy"] = new ObjectId("65b7d1fbc3893d0db1996c7e");
-    newCm["author"] = new ObjectId(await createAuthorIfNotFound(comic.author));
-    newCm["genres"] = [];
-    for await (const t of tag) {
-      newCm["genres"].push(new ObjectId(await createTagIfNotFound(t)));
-    }
-    newCm["followCount"] = parseInt(comic.followCount);
-    newCm["chapterCount"] = comic.chapters.length;
-    newCm["totalViewCount"] = parseInt(comic.viewCount);
-    // last update = recent chapter
-    const lastChapter = comic.chapters[0];
-    const lastChapterTime = parseTimeAgo(lastChapter.chapterTime);
-    newCm["updatedAt"] = lastChapterTime;
-    const firstChapter = comic.chapters[comic.chapters.length - 1];
-    const firstChapterTime = parseTimeAgo(firstChapter.chapterTime);
-    newCm["createdAt"] = firstChapterTime;
-    // save comic
+      newCm["createdBy"] = new ObjectId("65b7d1fbc3893d0db1996c7e");
+      newCm["author"] = new ObjectId(
+        await createAuthorIfNotFound(comic.author)
+      );
+      newCm["genres"] = [];
+      for await (const t of tag) {
+        newCm["genres"].push(new ObjectId(await createTagIfNotFound(t)));
+      }
+      newCm["followCount"] = parseInt(comic.followCount);
+      newCm["chapterCount"] = comic.chapters.length;
+      newCm["totalViewCount"] = parseInt(comic.viewCount);
+      // last update = recent chapter
+      const lastChapter = comic.chapters[0];
+      const lastChapterTime = parseTimeAgo(
+        lastChapter.chapterTime || "0 giây trước"
+      );
+      newCm["updatedAt"] = lastChapterTime;
+      const firstChapter = comic.chapters[comic.chapters.length - 1];
+      const firstChapterTime = parseTimeAgo(firstChapter.chapterTime);
+      newCm["createdAt"] = firstChapterTime;
+      // save comic
 
-    const newComic = await collection.insertOne(newCm);
-    console.log("inserted comic ", comic.title);
-    // chapter part
-    const chapters = [];
-    for (let i = 0; i < comic.chapters.length; i++) {
-      const c = comic.chapters[i];
-      const newChapter = {};
-      newChapter["order"] = comic.chapters.length - i;
-      newChapter["name"] = c.chapterName;
-      newChapter["chapterNumber"] = getChapterNumber(c.chapterName);
-      newChapter["comic"] = new ObjectId(newComic.insertedId);
-      newChapter["pages"] = [];
-      newChapter["pageCount"] = 0;
-      newChapter["createdAt"] = parseTimeAgo(c.chapterTime);
-      newChapter["updatedAt"] = parseTimeAgo(c.chapterTime);
-      newChapter["officeUrl"] = c.chapterLink;
-      newChapter["totalViewCount"] = parseInt(c.chapterView);
-      chapters.push(newChapter);
+      const newComic = await collection.insertOne(newCm);
+      console.log("inserted comic ", comic.title);
+      // chapter part
+      const chapters = [];
+      for (let i = 0; i < comic.chapters.length; i++) {
+        const c = comic.chapters[i];
+        const newChapter = {};
+        newChapter["order"] = comic.chapters.length - i;
+        newChapter["name"] = c.chapterName;
+        newChapter["chapterNumber"] = getChapterNumber(c.chapterName);
+        newChapter["comic"] = new ObjectId(newComic.insertedId);
+        newChapter["pages"] = [];
+        newChapter["pageCount"] = 0;
+        newChapter["createdAt"] = parseTimeAgo(c.chapterTime);
+        newChapter["updatedAt"] = parseTimeAgo(c.chapterTime);
+        newChapter["officeUrl"] = c.chapterLink;
+        newChapter["totalViewCount"] = parseInt(c.chapterView);
+        chapters.push(newChapter);
+      }
+      const chapterCollection = db.collection("chapters");
+      const newChapters = await chapterCollection.insertMany(chapters);
+    } catch (e) {
+      console.log("error insert comic ", comic.title);
+      console.log(comic);
     }
-    const chapterCollection = db.collection("chapters");
-    const newChapters = await chapterCollection.insertMany(chapters);
   }
 }
 async function main() {
@@ -280,7 +291,7 @@ async function main() {
   db = client.db(dbName);
   console.log("Connected successfully to server");
   // 1 -> 10
-  const pages = new Array(20).fill(0).map((_, i) => i + 1);
+  const pages = new Array(30).fill(0).map((_, i) => i + 1);
   const limit = 4;
   await async.eachLimit(pages, limit, async (page) => {
     console.warn("start page " + page);
