@@ -4,7 +4,10 @@ import Humanoid from "humanoid-js";
 
 import puppeteer from "puppeteer";
 import UserAgent from "user-agents";
+import { config } from "dotenv";
+config({});
 const url = process.env.MONGODB_URI;
+
 const client = new MongoClient(url, {
   serverApi: {
     version: ServerApiVersion.v1,

@@ -3,6 +3,8 @@ import PQueue from "p-queue";
 import Humanoid from "humanoid-js";
 import { load } from "cheerio";
 import dayjs from "dayjs";
+import { config } from "dotenv";
+config({});
 import UserAgent from "user-agents";
 const url = process.env.MONGODB_URI;
 const client = new MongoClient(url, {
@@ -167,3 +169,28 @@ function parseTimeAgo(timeAgo) {
 main().then(() => {
   console.log("Done");
 });
+
+async function updateUpdatedAtOfComics() {
+  // updatedAt = first chapter found order by updatedAt
+  const comicCollection = db.collection("comics");
+  const comicCursor = comicCollection.find({});
+  while (await comicCursor.hasNext()) {
+    const comic = await comicCursor.next();
+    const chapter = await chapterCollection.findOne(
+      {
+        comic: comic._id,
+      },
+      {
+        sort: {
+          createdAt: 1,
+        },
+      }
+    );
+    if (chapter) {
+      await comicCollection.updateOne(
+        { _id: comic._id },
+        { $set: { updatedAt: chapter.createdAt } }
+      );
+    }
+  }
+}
