@@ -32,12 +32,18 @@ async function main() {
   db = client.db(dbName);
   const chaptersCollection = db.collection("chapters");
   //get streamed  documents one by one
-  const cursor = chaptersCollection.find({
+  // updatedAt after 2024-05-2
+
+  const query = {
+    updatedAt: {
+      $gte: new Date("2024-01-01T00:00:00.000Z"),
+    },
     pages: [],
-  });
+  };
+  const cursor = chaptersCollection.find(query).sort({ updatedAt: -1 });
   console.log(
     "Found ",
-    await chaptersCollection.countDocuments({ pages: [] }),
+    await chaptersCollection.countDocuments(query),
     " chapters"
   );
 
@@ -84,6 +90,7 @@ async function makeRequest(url) {
       const list = [];
       for (let i = 0; i < elements.length; i++) {
         let src = elements[i].getAttribute("data-original");
+
         src = src.startsWith("//") ? "https:" + src : src;
         list.push(src);
       }
@@ -94,7 +101,6 @@ async function makeRequest(url) {
     return listUrl;
   } catch (error) {
     console.error(error);
-    // await page.screenshot({ path: `error/${randomUUID()}.png` });
     await page.close();
     return [];
   }
@@ -102,14 +108,8 @@ async function makeRequest(url) {
 
 async function crawlChapterDetailAndUpdate(chapter) {
   try {
-    if (chapter.pages.length > 0) {
-      console.log("Skip chapter", chapter._id);
-      return;
-    }
     const listUrl = await makeRequest(chapter.officeUrl);
-    if (listUrl.length == 0) {
-      throw new Error("Cannot crawl chapter");
-    }
+
     let chapterImages = [];
     listUrl.map((url, index) => {
       const page = {};
@@ -131,7 +131,9 @@ async function crawlChapterDetailAndUpdate(chapter) {
       chapterImages.length,
       "pages"
     );
-  } catch (error) {}
+  } catch (error) {
+    console.error("error");
+  }
 }
 
 main().then(() => {

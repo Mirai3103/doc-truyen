@@ -44,7 +44,7 @@ const GetMyBookmarksQuery = graphql(/* GraphQL */ `
 `);
 
 export default function BookmarkView() {
-  const [limit, setLimit] = React.useState(5);
+  const [limit, setLimit] = React.useState(10);
   const { data, loading, refetch, called } = useQuery(GetMyBookmarksQuery, {
     variables: {
       limit: limit,

@@ -18,9 +18,6 @@ const queue = new PQueue({ concurrency: 10 });
 const dbName = "comicDb";
 let db;
 let chapterCollection;
-
-const browserPath =
-  "C:/Users/laffy/AppData/Local/Thorium/Application/thorium.exe";
 const humanoid = new Humanoid();
 const userAgent = new UserAgent();
 import { appendFileSync } from "fs";
@@ -32,7 +29,7 @@ async function checkIfChapterExist(chapterName, comicId) {
   return result !== null;
 }
 function getChapterNumber(chapterName) {
-  const regex = /Chapter\s*(\d+(\.\d+)?)/;
+  const regex = /[-+]?\d+(\.\d+)?/;
   const match = chapterName.match(regex);
   if (match) {
     return match[1];
@@ -163,7 +160,7 @@ function parseTimeAgo(timeAgo) {
   if (unit === "năm") {
     return now.subtract(number, "year").toDate();
   }
-  return 0;
+  return new Date(2016, 0, 1);
 }
 
 main().then(() => {

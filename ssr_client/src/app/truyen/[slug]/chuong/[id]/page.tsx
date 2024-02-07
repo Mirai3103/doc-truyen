@@ -6,6 +6,7 @@ import { Chapter, Comic } from "@/gql/generated/graphql";
 import { toReadbleTime } from "@/core/utils";
 import SelectChapter from "./SelectChapter";
 import { getAccessToken } from "@/core/utils/server.util";
+import PageImage from "./PageImage";
 const GetProps = graphql(/* GraphQL */ `
   query GetChapterProps($chapterId: String!, $comicSlug: String!) {
     getChapterById(chapterId: $chapterId) {
@@ -77,15 +78,7 @@ export default async function DocTruyen({
       />
       <div className="mx-auto mt-4 flex flex-col gap-6 items-center">
         {chapter.pages?.map((item: any) => (
-          <Image
-            classNames={{
-              wrapper: "border-none",
-            }}
-            loading="lazy"
-            key={item?.url}
-            src={"/images?url=" + item?.url}
-            alt=""
-          />
+          <PageImage url={item.url} key={item.url} />
         ))}
       </div>
     </div>

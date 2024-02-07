@@ -58,7 +58,7 @@ function parseTimeAgo(timeAgo) {
   if (unit === "năm") {
     return now.subtract(number, "year").toDate();
   }
-  return 0;
+  return new Date(2016, 0, 1);
 }
 const url = process.env.MONGODB_URI;
 const client = new MongoClient(url, {

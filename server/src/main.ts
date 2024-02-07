@@ -7,6 +7,10 @@ import morgan from 'morgan';
 dotenv.config();
 import { AppModule } from './app.module';
 import mongoose from 'mongoose';
+function logAccessTokenMiddleware(req: any, res: any, next: any) {
+  console.log(req.headers.authorization);
+  next();
+}
 async function bootstrap() {
   mongoose.set('debug', function (coll, method, query, doc, options) {
     console.log(JSON.stringify(query));
@@ -14,6 +18,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.use(morgan(process.env.MORGAN_LOG_FORMAT || 'dev'));
+  app.use(logAccessTokenMiddleware);
   app.enableCors({
     origin: '*',
   });

@@ -23,11 +23,9 @@ export class ReadingHistoryResolver {
     private readonly readingHistoryService: ReadingHistoryService,
   ) {}
   @Query(() => [ReadingHistory])
+  @UseGuards(GrapqlJwtAuthGuard)
   async getAllHistories(
-    @Args('userId', {
-      type: () => String,
-    })
-    userId: string,
+    @CurrentUser() currentUser: UserPayload,
     @Args('page', {
       type: () => Number,
       defaultValue: 1,
@@ -42,7 +40,7 @@ export class ReadingHistoryResolver {
     limit: number,
   ) {
     return await this.readingHistoryService.getReadingHistories(
-      userId,
+      currentUser._id,
       limit,
       page,
     );

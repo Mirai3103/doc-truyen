@@ -13,7 +13,6 @@ import { TagService } from '@/tag/tag.service';
 import { UserPayload } from '@/auth/interface/user-payload.jwt';
 import { Role, User } from '@/user/schema/user.schema';
 import { UserService } from '@/user/user.service';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, UseGuards } from '@nestjs/common';
 import {
   Args,
@@ -36,13 +35,11 @@ import {
 import { Comic, ComicStatus } from './schema/comic.schema';
 @Resolver(() => Comic)
 export class ComicResolver {
-  private readonly EXPIRE_TIME = 5 * 60 * 1000; //15 minutes
   constructor(
     @Inject(ComicService) private readonly commicService: ComicService,
     @Inject(AuthorService) private readonly authorService: AuthorService,
     @Inject(TagService) private readonly tagService: TagService,
     @Inject(ChapterService) private readonly chapterService: ChapterService,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private readonly userService: UserService,
   ) {}
   @Query(() => Comic)
@@ -97,18 +94,7 @@ export class ComicResolver {
     @Args('page', { type: () => Number, nullable: true, defaultValue: 1 })
     page: number,
   ) {
-    const key = `recent-comics-${limit}-${page}`;
-    const cached = await this.cacheManager.get(key);
-
-    if (cached) {
-      console.log('cached found');
-      return cached;
-    }
-    console.log('cached miss');
-
     const data = await this.commicService.getRecentComics(limit, page);
-    this.cacheManager.set(key, data, this.EXPIRE_TIME);
-
     return data;
   }
   @ResolveField(() => Chapter)
@@ -122,13 +108,7 @@ export class ComicResolver {
     @Args('page', { type: () => Number, nullable: true, defaultValue: 1 })
     page: number,
   ) {
-    const key = `top-comics-${limit}-${page}`;
-    const cached = await this.cacheManager.get(key);
-    if (cached) {
-      return cached;
-    }
     const data = await this.commicService.getTopComics(limit, page);
-    this.cacheManager.set(key, data, this.EXPIRE_TIME);
     return data;
   }
   @Query(() => Comic)
@@ -138,13 +118,7 @@ export class ComicResolver {
   }
   @Query(() => [Comic])
   async getTrendingComics(@Args('input') input: TrendingSortInput) {
-    const key = `trending-comics-${JSON.stringify(input)}`;
-    const cached = await this.cacheManager.get(key);
-    if (cached) {
-      return cached;
-    }
     const data = await this.commicService.getTrendingComics(input);
-    this.cacheManager.set(key, data, this.EXPIRE_TIME);
     return data;
   }
   @Query(() => [Comic])

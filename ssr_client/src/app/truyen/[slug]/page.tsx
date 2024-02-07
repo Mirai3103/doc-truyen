@@ -5,13 +5,12 @@ import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 import Bread from "./BreadCrumbs";
 import { Comic, Chapter } from "@/gql/generated/graphql";
 import ChapterView from "./ChapterView";
-import { cookies } from "next/headers";
 import { getAccessToken } from "@/core/utils/server.util";
 import FollowButton from "./FollowButton";
-import { useRouter } from "next/router";
 import Link from "next/link";
 import NextLink from "next/link";
 import { advanceSearchHref } from "@/core/utils";
+import { cookies } from "next/headers";
 const GetComicBySlugQuery = graphql(/* GraphQL */ `
   query getComicBySlug($slug: String!) {
     getComicBySlug(slug: $slug) {
@@ -70,7 +69,6 @@ export default async function ComicPage({
 }: {
   params: { slug: string };
 }) {
-  console.log(await getAccessToken());
   const { data, loading, error } = await getClient().query({
     query: GetComicBySlugQuery,
     variables: {

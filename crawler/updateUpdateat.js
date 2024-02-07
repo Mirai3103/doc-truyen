@@ -14,7 +14,7 @@ const client = new MongoClient(url, {
     deprecationErrors: true,
   },
 });
-const queue = new PQueue({ concurrency: 20 });
+const queue = new PQueue({ concurrency: 50 });
 const dbName = "comicDb";
 let db;
 let chapterCollection;
@@ -33,7 +33,7 @@ async function updateUpdatedAtOfComics() {
         },
         {
           sort: {
-            createdAt: 1,
+            order: -1,
           },
         }
       );

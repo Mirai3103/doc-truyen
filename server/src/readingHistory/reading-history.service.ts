@@ -75,23 +75,23 @@ export class ReadingHistoryService {
     }
     await user.save();
   }
-  public async getReadingHistories(
-    userId: string,
-    limit: number,
-    page: number,
-  ) {
+  public async getReadingHistories(userId: string, limit = 200, page = 1) {
     const user = await this.userModel
       .findOne({
         _id: userId,
       })
       .populate('readingHistories.chapter')
-      .skip((page - 1) * limit)
-      .limit(limit);
+      .lean();
     if (!user) {
       throw new NotFoundException('User not found');
     }
-
-    return user.readingHistories;
+    const histories = user.readingHistories;
+    histories
+      .sort((a, b) => {
+        return b.createdAt.getTime() - a.createdAt.getTime();
+      })
+      .slice((page - 1) * limit, page * limit);
+    return histories;
   }
   public async removeHistory(userId: string, chapterId: string | ObjectId) {
     const user = await this.userModel

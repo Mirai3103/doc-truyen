@@ -7,6 +7,7 @@ import { getClient } from "@/core/apollo/apolloRsc";
 import { Comic } from "@/gql/generated/graphql";
 import RecentUpdate from "./RecentUpdate";
 import { Spacer } from "@nextui-org/react";
+import { cookies } from "next/headers";
 
 const GetTopComicsQuery = graphql(/* GraphQL */ `
   query GetTopComics($limit: Float, $page: Float) {
@@ -70,8 +71,9 @@ interface Props {
     [key: string]: string | undefined;
   };
 }
-export default async function Home({ searchParams }: Props) {
-  console.log(searchParams);
+export default async function Home() {
+  const cookiesStore = cookies();
+  console.log(cookiesStore.get("accessToken"));
   async function fetchData() {
     const query1 = getClient().query({
       query: GetTopComicsQuery,
