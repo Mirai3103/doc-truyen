@@ -86,6 +86,9 @@ export class ReadingHistoryService {
       throw new NotFoundException('User not found');
     }
     const histories = user.readingHistories;
+    if (histories.length < (page - 1) * limit) {
+      return [];
+    }
     histories
       .sort((a, b) => {
         return b.createdAt.getTime() - a.createdAt.getTime();
