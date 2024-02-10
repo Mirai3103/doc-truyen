@@ -29,8 +29,6 @@ import { UserModule } from './user/user.module';
     UserModule,
     CommonModule,
     DatabaseModule,
-    AuthorModule,
-    TagModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/graphql/schema.gql'),
@@ -38,6 +36,8 @@ import { UserModule } from './user/user.module';
       playground: true,
       logger: console,
     }),
+    AuthorModule,
+    TagModule,
 
     AuthModule,
     ComicModule,

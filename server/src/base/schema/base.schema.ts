@@ -1,9 +1,12 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType, extend } from '@nestjs/graphql';
 import { Schema as MongooseSchema } from 'mongoose';
+import { Document } from 'mongoose';
+import { IDField } from '@nestjs-query/query-graphql';
 
 @ObjectType()
-export class BaseSchema {
+export class BaseSchema extends Document {
   @Field(() => String)
+  @IDField(() => ID)
   _id: MongooseSchema.Types.ObjectId;
   @Field(() => Date)
   createdAt: Date = new Date();

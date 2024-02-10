@@ -320,7 +320,7 @@ export class ComicService {
       throw new ForbiddenException('You are not allowed to delete this comic');
     }
 
-    await this.comicModal.remove({
+    await this.comicModal.deleteOne({
       _id: id,
       createdBy: {
         _id: userId,

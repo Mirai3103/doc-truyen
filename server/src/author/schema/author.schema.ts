@@ -1,6 +1,7 @@
 import { BaseSchema } from '@/base/schema/base.schema';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { FilterableField, IDField } from '@nestjs-query/query-graphql';
 
 @Schema({
   timestamps: true,
@@ -9,6 +10,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 export class Author extends BaseSchema {
   @Prop()
   @Field()
+  @FilterableField()
   name: string;
 
   @Field()

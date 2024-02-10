@@ -19,19 +19,7 @@ import { Author } from './schema/author.schema';
 @Resolver(() => Author)
 export class AuthorResolver {
   constructor(private readonly authorService: AuthorService) {}
-  @Query(() => Author)
-  async author(@Args('id') id: string) {
-    const author = await this.authorService.findOne(id);
-    if (!author) {
-      throw new NotFoundException(id);
-    }
 
-    return author;
-  }
-  @Query(() => [Author])
-  async authors() {
-    return await this.authorService.findAll();
-  }
   @Mutation(() => Author)
   @UseGuards(new WithRoleGuard(Role.CREATOR))
   async createAuthor(

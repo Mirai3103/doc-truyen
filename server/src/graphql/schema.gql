@@ -15,7 +15,7 @@ input AdvanceSearchInput {
 }
 
 type Author {
-  _id: String!
+  _id: ID!
   createdAt: DateTime!
   description: String
   name: String!
@@ -23,8 +23,80 @@ type Author {
   updatedAt: DateTime!
 }
 
+type AuthorAggregateGroupBy {
+  _id: ID
+  name: String
+}
+
+type AuthorConnection {
+  """Array of nodes."""
+  nodes: [Author!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type AuthorCountAggregate {
+  _id: Int
+  name: Int
+}
+
+input AuthorDeleteFilter {
+  _id: IDFilterComparison
+  and: [AuthorDeleteFilter!]
+  name: StringFieldComparison
+  or: [AuthorDeleteFilter!]
+}
+
+type AuthorDeleteResponse {
+  _id: ID
+  createdAt: DateTime
+  description: String
+  name: String
+  totalComic: Float
+  updatedAt: DateTime
+}
+
+input AuthorFilter {
+  _id: IDFilterComparison
+  and: [AuthorFilter!]
+  name: StringFieldComparison
+  or: [AuthorFilter!]
+}
+
+type AuthorMaxAggregate {
+  _id: ID
+  name: String
+}
+
+type AuthorMinAggregate {
+  _id: ID
+  name: String
+}
+
+input AuthorSort {
+  direction: SortDirection!
+  field: AuthorSortFields!
+  nulls: SortNulls
+}
+
+enum AuthorSortFields {
+  _id
+  name
+}
+
+input AuthorUpdateFilter {
+  _id: IDFilterComparison
+  and: [AuthorUpdateFilter!]
+  name: StringFieldComparison
+  or: [AuthorUpdateFilter!]
+}
+
 type Chapter {
-  _id: String!
+  _id: ID!
   chapterNumber: String!
   comic: Comic!
   createdAt: DateTime!
@@ -48,7 +120,7 @@ input ChapterOrder {
 }
 
 type Comic {
-  _id: String!
+  _id: ID!
   artist: Author
   author: Author!
   category: Tag
@@ -111,6 +183,16 @@ input CreateComicInput {
   status: String = "Chưa xuất bản"
 }
 
+input CreateManyAuthorsInput {
+  """Array of records to create"""
+  authors: [CreateAuthorDto!]!
+}
+
+input CreateOneAuthorInput {
+  """The record to create"""
+  author: CreateAuthorDto!
+}
+
 input CreateTagDto {
   description: String!
   name: String!
@@ -129,20 +211,56 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input DeleteManyAuthorsInput {
+  """Filter to find records to delete"""
+  filter: AuthorDeleteFilter!
+}
+
+type DeleteManyResponse {
+  """The number of records deleted."""
+  deletedCount: Int!
+}
+
+input DeleteOneAuthorInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
 input FindUserDto {
   _id: String
   email: String
   username: String
 }
 
+input IDFilterComparison {
+  eq: ID
+  gt: ID
+  gte: ID
+  iLike: ID
+  in: [ID!]
+  is: Boolean
+  isNot: Boolean
+  like: ID
+  lt: ID
+  lte: ID
+  neq: ID
+  notILike: ID
+  notIn: [ID!]
+  notLike: ID
+}
+
 type Mutation {
   createAuthor(createAuthorInput: CreateAuthorDto!): Author!
   createChapter(input: CreateChapterDto!): Chapter!
   createComic(input: CreateComicInput!): Comic!
+  createManyAuthors(input: CreateManyAuthorsInput!): [Author!]!
+  createOneAuthor(input: CreateOneAuthorInput!): Author!
   createTag(createTagInput: CreateTagDto!): Tag!
   createUser(createUserInput: CreateUserDto!): User!
   deleteAuthor(id: String!): Boolean!
   deleteComic(id: String!): Boolean!
+  deleteManyAuthors(input: DeleteManyAuthorsInput!): DeleteManyResponse!
+  deleteOneAuthor(input: DeleteOneAuthorInput!): AuthorDeleteResponse!
   removeAllHistories: Boolean!
   removeHistory(chapterId: String!): Boolean!
   toggleFollowComic(comicId: String!): Boolean!
@@ -151,8 +269,26 @@ type Mutation {
   updateChaptersOrder(input: UpdateChaptersOrderInput!): [Chapter!]!
   updateComic(id: String!, input: CreateComicInput!): Comic!
   updateImportantInfo(input: UpdateImportantInfoDTO!): User!
+  updateManyAuthors(input: UpdateManyAuthorsInput!): UpdateManyResponse!
+  updateOneAuthor(input: UpdateOneAuthorInput!): Author!
   updateTag(id: String!, updateTagInput: UpdateTagDto!): Tag!
   updateUser(id: String!, updateUserInput: UpdateUserDto!): User!
+}
+
+type OffsetPageInfo {
+  """true if paging forward and there are more records."""
+  hasNextPage: Boolean
+
+  """true if paging backwards and there are more records."""
+  hasPreviousPage: Boolean
+}
+
+input OffsetPaging {
+  """Limit the number of records returned"""
+  limit: Int
+
+  """Offset to start returning records from"""
+  offset: Int
 }
 
 type Page {
@@ -167,8 +303,20 @@ input PageInput {
 
 type Query {
   advanceSearchComics(input: AdvanceSearchInput!): ComicPage!
-  author(id: String!): Author!
-  authors: [Author!]!
+  author(
+    """The id of the record to find."""
+    id: ID!
+  ): Author
+  authors(
+    """Specify to filter the records returned."""
+    filter: AuthorFilter! = {}
+
+    """Limit or page results."""
+    paging: OffsetPaging! = {limit: 10}
+
+    """Specify to sort results."""
+    sorting: [AuthorSort!]! = []
+  ): AuthorConnection!
   getAllChapters(comicId: String!): [Chapter!]!
   getAllComicStatus: [ComicStatus!]!
   getAllComics: [Comic!]!
@@ -208,6 +356,18 @@ type ReadingHistory {
   createdAt: DateTime!
 }
 
+"""Sort Directions"""
+enum SortDirection {
+  ASC
+  DESC
+}
+
+"""Sort Nulls Options"""
+enum SortNulls {
+  NULLS_FIRST
+  NULLS_LAST
+}
+
 type SortOption {
   name: String!
   value: SortType!
@@ -218,8 +378,25 @@ type SortType {
   field: String!
 }
 
+input StringFieldComparison {
+  eq: String
+  gt: String
+  gte: String
+  iLike: String
+  in: [String!]
+  is: Boolean
+  isNot: Boolean
+  like: String
+  lt: String
+  lte: String
+  neq: String
+  notILike: String
+  notIn: [String!]
+  notLike: String
+}
+
 type Tag {
-  _id: String!
+  _id: ID!
   createdAt: DateTime!
   description: String
   name: String!
@@ -249,6 +426,27 @@ input UpdateImportantInfoDTO {
   password: String!
 }
 
+input UpdateManyAuthorsInput {
+  """Filter used to find fields to update"""
+  filter: AuthorUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateAuthorDto!
+}
+
+type UpdateManyResponse {
+  """The number of records updated."""
+  updatedCount: Int!
+}
+
+input UpdateOneAuthorInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateAuthorDto!
+}
+
 input UpdateTagDto {
   description: String
   name: String
@@ -264,7 +462,7 @@ input UpdateUserDto {
 }
 
 type User {
-  _id: String!
+  _id: ID!
   avatarUrl: String
   createdAt: DateTime!
   description: String
