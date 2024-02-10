@@ -53,24 +53,26 @@ export default function HistoryView() {
       aria-label="Example table with client side pagination"
       bottomContent={
         <div className="flex w-full justify-center">
-          <Button
-            hidden={!isHasMore}
-            disabled={loading}
-            onClick={() => {
-              fetchMore({
-                variables: {
-                  page: activePage + 1,
-                },
-              }).then((data) => {
-                if (data.data.histories && data.data.histories.length === 0) {
-                  setIsHasMore(false);
-                }
-              });
-              setPage(activePage + 1);
-            }}
-          >
-            Tải thêm
-          </Button>
+          {isHasMore && (
+            <Button
+              disabled={loading}
+              onClick={() => {
+                fetchMore({
+                  variables: {
+                    page: activePage + 1,
+                  },
+                }).then((data) => {
+                  console.log(data);
+                  if (data.data.histories.length === 0) {
+                    setIsHasMore(false);
+                  }
+                });
+                setPage(activePage + 1);
+              }}
+            >
+              Tải thêm
+            </Button>
+          )}
         </div>
       }
       classNames={{

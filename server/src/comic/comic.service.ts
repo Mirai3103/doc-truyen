@@ -212,14 +212,22 @@ export class ComicService {
     const query =
       role === Role.CREATOR
         ? {
-            createdBy: {
-              _id: userId,
-            },
+            $or: [
+              {
+                createdBy: {
+                  _id: userId,
+                },
+              },
+              {
+                contributors: userId,
+              },
+            ],
           }
-        : {};
+        : { contributors: userId };
     const result = await this.comicModal
       .find(query)
       .skip((page - 1) * limit)
+      .sort({ updatedAt: -1 })
       .limit(limit)
       .exec();
     return result;
@@ -302,6 +310,7 @@ export class ComicService {
     });
     return comic;
   }
+
   async deleteComic(id: string | ObjectId, userId: string | ObjectId) {
     const comic = await this.comicModal.findById(id);
     if (!comic) {

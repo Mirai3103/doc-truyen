@@ -53,6 +53,7 @@ type Comic {
   author: Author!
   category: Tag
   chapterCount: Int!
+  contributors: [String!]!
   createdAt: DateTime!
   createdBy: User!
   description: String!
@@ -181,7 +182,7 @@ type Query {
   getComicsByAuthorId(id: String!, limit: Float = 25, page: Float = 1): ComicPage!
   getComicsByTagId(id: String!, limit: Float = 25, page: Float = 1): ComicPage!
   getComicsByUserId(id: String!, limit: Float = 25, page: Float = 1): ComicPage!
-  getContributedComics(limit: Float = 10, page: Float = 1, userId: String!): [Comic!]!
+  getContributedComics(limit: Float = 10, page: Float = 1): [Comic!]!
   getFollowedComics(limit: Float = 25, page: Float = 1): ComicPage!
   getGenres: [Tag!]!
   getLastedChapterByComicId(comicId: String!): Chapter!

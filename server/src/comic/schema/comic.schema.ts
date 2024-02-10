@@ -61,6 +61,12 @@ export class Comic extends BaseSchema {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
   @Field(() => User)
   createdBy: User;
+
+  @Prop({
+    type: MongooseSchema.Types.Array,
+  })
+  @Field(() => [String])
+  contributors: string[] = [];
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Author' })
   @Field()
   author: Author;

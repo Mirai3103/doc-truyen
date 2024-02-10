@@ -8,6 +8,7 @@ import slugify from "slugify";
 import dayjs from "dayjs";
 import async from "async";
 import { config } from "dotenv";
+import { toSlug } from "./utils";
 config({});
 export var Status;
 (function (Status) {
@@ -74,13 +75,13 @@ let db;
 async function createTagIfNotFound(name, type = TagType.Genre) {
   const collection = db.collection("tags");
   const exist = await collection.findOne({
-    slug: slugify(name, { lower: true }),
+    slug: toSlug(name),
   });
   if (!exist) {
     const tag = {};
     tag.name = name;
     tag.type = type;
-    tag.slug = slugify(name, { lower: true });
+    tag.slug = toSlug(name);
     const newTag = await collection.insertOne(tag);
     return newTag.insertedId;
   }
@@ -89,12 +90,12 @@ async function createTagIfNotFound(name, type = TagType.Genre) {
 async function createAuthorIfNotFound(name) {
   const collection = db.collection("authors");
   const exist = await collection.findOne({
-    slug: slugify(name, { lower: true }),
+    slug: toSlug(name),
   });
   if (!exist) {
     const author = {};
     author.name = name;
-    author.slug = slugify(name, { lower: true });
+    author.slug = toSlug(name);
     const newAuthor = await collection.insertOne(author);
     return newAuthor.insertedId;
   }
@@ -138,7 +139,7 @@ async function worker(page = 1) {
     comic.title = titleElement.text().trim().replace(/\n/g, " ");
 
     const existed = await collection.findOne({
-      slug: slugify(comic.title, { lower: true }),
+      slug: toSlug(comic.title),
     });
     if (existed) {
       continue;
@@ -218,7 +219,7 @@ async function insert(comics) {
       newCm["name"] = comic.title;
       // check if comic exist
       const existed = await collection.findOne({
-        slug: slugify(comic.title, { lower: true }),
+        slug: toSlug(comic.title),
       });
       if (existed) {
         console.log("comic existed ", comic.title);
@@ -226,7 +227,7 @@ async function insert(comics) {
       }
 
       newCm["otherNames"] = [];
-      newCm["slug"] = slugify(comic.title, { lower: true });
+      newCm["slug"] = toSlug(comic.title);
       newCm["description"] = comic.description;
       newCm["imageCoverUrl"] = comic.image;
       newCm["officeUrl"] = comic.detailLink;

@@ -11,14 +11,12 @@ import {
 } from "@refinedev/chakra-ui";
 
 import { ChakraProvider } from "@chakra-ui/react";
-import nestjsxCrudDataProvider from "@refinedev/nestjsx-crud";
 import routerBindings, {
   CatchAllNavigate,
   DocumentTitleHandler,
   NavigateToResource,
   UnsavedChangesNotifier,
 } from "@refinedev/react-router-v6";
-import { useTranslation } from "react-i18next";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { authProvider } from "./authProvider";
 import { AppIcon } from "./components/app-icon";
@@ -38,19 +36,9 @@ import {
 import { ForgotPassword } from "./pages/forgotPassword";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
-
+import dataProvider from "./providers/dataProvider";
+import { resources } from "./configs";
 function App() {
-  const { t, i18n } = useTranslation();
-
-  const API_URL = "https://api.nestjsx-crud.refine.dev";
-  const dataProvider = nestjsxCrudDataProvider(API_URL);
-
-  const i18nProvider = {
-    translate: (key: string, params: object) => t(key, params),
-    changeLocale: (lang: string) => i18n.changeLanguage(lang),
-    getLocale: () => i18n.language,
-  };
-
   return (
     <BrowserRouter>
       <GitHubBanner />
@@ -62,30 +50,8 @@ function App() {
               dataProvider={dataProvider}
               notificationProvider={notificationProvider}
               authProvider={authProvider}
-              i18nProvider={i18nProvider}
               routerProvider={routerBindings}
-              resources={[
-                {
-                  name: "blog_posts",
-                  list: "/blog-posts",
-                  create: "/blog-posts/create",
-                  edit: "/blog-posts/edit/:id",
-                  show: "/blog-posts/show/:id",
-                  meta: {
-                    canDelete: true,
-                  },
-                },
-                {
-                  name: "categories",
-                  list: "/categories",
-                  create: "/categories/create",
-                  edit: "/categories/edit/:id",
-                  show: "/categories/show/:id",
-                  meta: {
-                    canDelete: true,
-                  },
-                },
-              ]}
+              resources={resources}
               options={{
                 syncWithLocation: true,
                 warnWhenUnsavedChanges: true,
