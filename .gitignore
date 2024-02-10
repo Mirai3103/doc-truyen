@@ -6,6 +6,7 @@ node_modules
 # Logs
 logs
 *.log
+*.lock
 build
 */upload
 npm-debug.log*
@@ -37,3 +38,4 @@ coverage
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+admin-refine
