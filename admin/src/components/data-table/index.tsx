@@ -13,7 +13,6 @@ import {
   Flex,
   Input,
   Box,
-  MenuItem,
   Select,
   Popover,
   PopoverTrigger,

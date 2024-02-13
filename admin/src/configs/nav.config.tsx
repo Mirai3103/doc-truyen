@@ -9,22 +9,22 @@ interface NavItemProps {
 export const appNavItems: NavItemProps[] = [
   {
     label: "Dashboard",
-    href: "/",
+    href: "/dashboard",
     icon: MdSpaceDashboard,
   },
   {
-    href: "/authors",
+    href: "/dashboard/authors",
     label: "Tác giả",
     icon: FaUserTie,
   },
   {
-    href: "/tags",
+    href: "/dashboard/tags",
     label: "Thẻ",
     icon: FaTag,
   },
   {
     label: "Truyện",
-    href: "/comics",
+    href: "/dashboard /comics",
     icon: FaBookOpen,
   },
 ];

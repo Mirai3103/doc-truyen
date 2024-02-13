@@ -14,6 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  query AuthorsTable(\n    $filter: AuthorFilter!\n    $sorting: [AuthorSort!]!\n    $paging: OffsetPaging!\n  ) {\n    authors(filter: $filter, sorting: $sorting, paging: $paging) {\n      nodes {\n        _id\n        description\n        name\n      }\n      totalCount\n    }\n  }\n": types.AuthorsTableDocument,
+    "\n  query AuthorById($id: ID!) {\n    author(id: $id) {\n      _id\n      name\n      description\n      totalComic\n    }\n  }\n": types.AuthorByIdDocument,
 };
 
 /**
@@ -34,6 +35,10 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query AuthorsTable(\n    $filter: AuthorFilter!\n    $sorting: [AuthorSort!]!\n    $paging: OffsetPaging!\n  ) {\n    authors(filter: $filter, sorting: $sorting, paging: $paging) {\n      nodes {\n        _id\n        description\n        name\n      }\n      totalCount\n    }\n  }\n"): (typeof documents)["\n  query AuthorsTable(\n    $filter: AuthorFilter!\n    $sorting: [AuthorSort!]!\n    $paging: OffsetPaging!\n  ) {\n    authors(filter: $filter, sorting: $sorting, paging: $paging) {\n      nodes {\n        _id\n        description\n        name\n      }\n      totalCount\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query AuthorById($id: ID!) {\n    author(id: $id) {\n      _id\n      name\n      description\n      totalComic\n    }\n  }\n"): (typeof documents)["\n  query AuthorById($id: ID!) {\n    author(id: $id) {\n      _id\n      name\n      description\n      totalComic\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

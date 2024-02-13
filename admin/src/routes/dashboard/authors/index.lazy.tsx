@@ -17,12 +17,12 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table";
-import { BsBoxArrowUpRight, BsFillTrashFill } from "react-icons/bs";
+import { BsFillTrashFill } from "react-icons/bs";
 import { AiFillEdit } from "react-icons/ai";
 import { Box, ButtonGroup, Heading, IconButton } from "@chakra-ui/react";
 import React from "react";
 import { parseFilter } from "@/utils/filter.utils";
-export const Route = createLazyFileRoute("" as never)({
+export const Route = createLazyFileRoute("/dashboard/authors/")({
   component: AuthorPage,
 });
 
@@ -85,18 +85,11 @@ const columns = [
     cell: (props) => (
       <ButtonGroup variant="solid" size="sm" spacing={3}>
         <IconButton
-          colorScheme="blue"
-          icon={<BsBoxArrowUpRight />}
-          aria-label="Up"
-          as={Link}
-          to={`/authors/${props.row.original._id}`}
-        />
-        <IconButton
           colorScheme="green"
           icon={<AiFillEdit />}
           aria-label="Edit"
           as={Link}
-          to={`/authors/${props.row.original._id}/edit`}
+          to={`/dashboard/authors/${props.row.original._id}/edit`}
         />
         <IconButton
           colorScheme="red"
