@@ -957,39 +957,6 @@
   dependencies:
     sparse-bitfield "^3.0.3"
 
-"@nestjs-query/core@0.30.0", "@nestjs-query/core@^0.30.0":
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/@nestjs-query/core/-/core-0.30.0.tgz#2f86835a7b4d61e3a1c2f8b7ee7329a1041488ff"
-  integrity sha512-q2ykkGmC220LYkud6AGy8udyXspPSTVKHxAMwXMO/AsKEZkyT/kTEJdRoBPJqIs20Tdx8azDbEk4UCpb0l4Buw==
-  dependencies:
-    lodash.merge "^4.6.2"
-    reflect-metadata "^0.1.13"
-    tslib "^2.1.0"
-
-"@nestjs-query/query-graphql@^0.30.0":
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/@nestjs-query/query-graphql/-/query-graphql-0.30.0.tgz#9d22f6cfb13b77f3b56a64f9d00480cc36908bbd"
-  integrity sha512-nxy//6SOcsThr+1fE1wdfGm4SgiBzDWtxR1Uhbr7BefeEnqTqptbOn+W3wgayxg2bi89rcbCgn/gC7Mcum4BNw==
-  dependencies:
-    "@nestjs-query/core" "0.30.0"
-    graphql-fields "^2.0.3"
-    lodash.omit "^4.5.0"
-    lower-case-first "^2.0.1"
-    pluralize "^8.0.0"
-    tslib "^2.1.0"
-    upper-case-first "^2.0.1"
-
-"@nestjs-query/query-mongoose@^0.30.0":
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/@nestjs-query/query-mongoose/-/query-mongoose-0.30.0.tgz#faf105f3475a144e2b197940e5bfa809654095aa"
-  integrity sha512-oxFUq6KzJaFkTE16Kfro+F4lyJl7QP/IwyQddMVk7hhEufrF5pjzJCFV5JFQoKoUs9QNMpOziolNF/QmZUCM9g==
-  dependencies:
-    "@nestjs-query/core" "0.30.0"
-    camel-case "^4.1.2"
-    lodash.escaperegexp "^4.1.2"
-    lodash.merge "^4.6.2"
-    tslib "^2.1.0"
-
 "@nestjs/apollo@^11.0.3":
   version "11.0.6"
   resolved "https://registry.yarnpkg.com/@nestjs/apollo/-/apollo-11.0.6.tgz#7bd39e0efbaef3eceabfd99b3ae1e2dc8eff2d7a"
@@ -1033,10 +1000,10 @@
     webpack "5.82.1"
     webpack-node-externals "3.0.0"
 
-"@nestjs/common@^10.3.2":
-  version "10.3.2"
-  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-10.3.2.tgz#021c3637b0db3cc302ea24d291e779ec47914ee5"
-  integrity sha512-yrtohmQlN5J/gFS/ui86SO+KIfUKeL39JPR3f/3AWgpz+duIfc9cGkfh7FGZQMfG9ZqXf7Zw+PRO9G+D4iEbPw==
+"@nestjs/common@^10.3.3":
+  version "10.3.3"
+  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-10.3.3.tgz#ba20f756dbed62f5fe29737c42384ad41156c9e9"
+  integrity sha512-LAkTe8/CF0uNWM0ecuDwUNTHCi1lVSITmmR4FQ6Ftz1E7ujQCnJ5pMRzd8JRN14vdBkxZZ8VbVF0BDUKoKNxMQ==
   dependencies:
     uid "2.0.2"
     iterare "1.2.1"
@@ -1225,6 +1192,43 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
+
+"@ptc-org/nestjs-query-core@5.0.0", "@ptc-org/nestjs-query-core@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@ptc-org/nestjs-query-core/-/nestjs-query-core-5.0.0.tgz#cec86bac051331571a4be9888031d6f83338c482"
+  integrity sha512-yscg9VanZKc47MT984qALjWXFNDpaS9Y3d6FLRyIIGc767ulQEKpWbLs1z4Lg733A2hWv9bxYExe2FiBUDbodw==
+  dependencies:
+    lodash.merge "^4.6.2"
+    reflect-metadata "^0.2.1"
+    tslib "^2.6.2"
+
+"@ptc-org/nestjs-query-graphql@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@ptc-org/nestjs-query-graphql/-/nestjs-query-graphql-5.0.0.tgz#4485b04981a8611998f834a64e33727eb79720f8"
+  integrity sha512-Lu91ABKL8NSDs97chYD/QxCOxKI440L4VBLNAYRKDxJMVfpgc1kCxkzr4Xitc9eLT3nVK6X6PIQLmXmAzGhoxA==
+  dependencies:
+    "@ptc-org/nestjs-query-core" "5.0.0"
+    dataloader "^2.2.2"
+    graphql-fields "^2.0.3"
+    lodash.merge "4.6.2"
+    lodash.omit "^4.5.0"
+    lower-case-first "^2.0.2"
+    pluralize "^8.0.0"
+    reflect-metadata "0.2.1"
+    tslib "^2.6.2"
+    upper-case-first "^2.0.2"
+
+"@ptc-org/nestjs-query-mongoose@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@ptc-org/nestjs-query-mongoose/-/nestjs-query-mongoose-5.0.0.tgz#6265681e83a5b04a047320d2f38f5ab7881d22f3"
+  integrity sha512-At6llAFaxSrqts0hbgzbHIMJWiyCOIlEbWNMepIsNQAqyaevBitPk005jXuRMLVtKlIWajVob443xX++cs53Iw==
+  dependencies:
+    "@ptc-org/nestjs-query-core" "5.0.0"
+    camel-case "^4.1.2"
+    lodash.escaperegexp "^4.1.2"
+    lodash.merge "^4.6.2"
+    reflect-metadata "0.2.1"
+    tslib "^2.6.2"
 
 "@sinclair/typebox@^0.27.8":
   version "0.27.8"
@@ -4785,7 +4789,7 @@ lodash.memoize@4.x:
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
   integrity sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==
 
-lodash.merge@^4.6.2:
+lodash.merge@4.6.2, lodash.merge@^4.6.2:
   version "4.6.2"
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
   integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
@@ -4828,7 +4832,7 @@ long@^4.0.0:
   resolved "https://registry.yarnpkg.com/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
   integrity sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==
 
-lower-case-first@^2.0.1:
+lower-case-first@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/lower-case-first/-/lower-case-first-2.0.2.tgz#64c2324a2250bf7c37c5901e76a5b5309301160b"
   integrity sha512-EVm/rR94FJTZi3zefZ82fLWab+GX14LJN4HrWBcuo6Evmsl9hEfnqxgcHCKb9q+mNf6EVdsjx/qucYFIIB84pg==
@@ -5902,6 +5906,11 @@ rechoir@^0.6.2:
   dependencies:
     resolve "^1.1.6"
 
+reflect-metadata@0.2.1, reflect-metadata@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.2.1.tgz#8d5513c0f5ef2b4b9c3865287f3c0940c1f67f74"
+  integrity sha512-i5lLI6iw9AU3Uu4szRNPPEkomnkjRTaVt9hy/bn5g/oSzekBSMeLZblcjP74AW0vBabqERLLIrz+gR8QYR54Tw==
+
 reflect-metadata@^0.1.13:
   version "0.1.14"
   resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.14.tgz#24cf721fe60677146bb77eeb0e1f9dece3d65859"
@@ -6783,7 +6792,7 @@ update-browserslist-db@^1.0.13:
     escalade "^3.1.1"
     picocolors "^1.0.0"
 
-upper-case-first@^2.0.1:
+upper-case-first@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/upper-case-first/-/upper-case-first-2.0.2.tgz#992c3273f882abd19d1e02894cc147117f844324"
   integrity sha512-514ppYHBaKwfJRK/pNC6c/OxfGa0obSnAl106u97Ed0I625Nin96KAjttZF6ZL3e1XLtphxnqrOi9iWgm+u+bg==

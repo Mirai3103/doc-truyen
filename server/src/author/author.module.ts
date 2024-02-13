@@ -10,8 +10,8 @@ import { Author, AuthorSchema } from './schema/author.schema';
 import {
   NestjsQueryGraphQLModule,
   PagingStrategies,
-} from '@nestjs-query/query-graphql';
-import { NestjsQueryMongooseModule } from '@nestjs-query/query-mongoose';
+} from '@ptc-org/nestjs-query-graphql';
+import { NestjsQueryMongooseModule } from '@ptc-org/nestjs-query-mongoose';
 import { Chapter, ChapterSchema } from '@/chapter/schema/chapter.schema';
 import { CreateAuthorDto } from './dto/createAuthor.dto';
 import { UpdateAuthorDto } from './dto/updateAuthor.dto';

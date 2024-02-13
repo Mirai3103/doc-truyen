@@ -23,11 +23,6 @@ type Author {
   updatedAt: DateTime!
 }
 
-type AuthorAggregateGroupBy {
-  _id: ID
-  name: String
-}
-
 type AuthorConnection {
   """Array of nodes."""
   nodes: [Author!]!
@@ -37,11 +32,6 @@ type AuthorConnection {
 
   """Fetch total count of records"""
   totalCount: Int!
-}
-
-type AuthorCountAggregate {
-  _id: Int
-  name: Int
 }
 
 input AuthorDeleteFilter {
@@ -65,16 +55,6 @@ input AuthorFilter {
   and: [AuthorFilter!]
   name: StringFieldComparison
   or: [AuthorFilter!]
-}
-
-type AuthorMaxAggregate {
-  _id: ID
-  name: String
-}
-
-type AuthorMinAggregate {
-  _id: ID
-  name: String
 }
 
 input AuthorSort {
@@ -306,7 +286,7 @@ type Query {
   author(
     """The id of the record to find."""
     id: ID!
-  ): Author
+  ): Author!
   authors(
     """Specify to filter the records returned."""
     filter: AuthorFilter! = {}

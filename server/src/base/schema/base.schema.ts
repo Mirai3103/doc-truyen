@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType, extend } from '@nestjs/graphql';
 import { Schema as MongooseSchema } from 'mongoose';
 import { Document } from 'mongoose';
-import { IDField } from '@nestjs-query/query-graphql';
+import { IDField } from '@ptc-org/nestjs-query-graphql';
 
 @ObjectType()
 export class BaseSchema extends Document {
