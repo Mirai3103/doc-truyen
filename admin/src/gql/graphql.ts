@@ -189,14 +189,25 @@ export type CreateManyAuthorsInput = {
   authors: Array<CreateAuthorDto>;
 };
 
+export type CreateManyTagsInput = {
+  /** Array of records to create */
+  tags: Array<CreateTagDto>;
+};
+
 export type CreateOneAuthorInput = {
   /** The record to create */
   author: CreateAuthorDto;
 };
 
+export type CreateOneTagInput = {
+  /** The record to create */
+  tag: CreateTagDto;
+};
+
 export type CreateTagDto = {
   description: Scalars['String']['input'];
   name: Scalars['String']['input'];
+  type?: Scalars['String']['input'];
 };
 
 export type CreateUserDto = {
@@ -218,7 +229,17 @@ export type DeleteManyResponse = {
   deletedCount: Scalars['Int']['output'];
 };
 
+export type DeleteManyTagsInput = {
+  /** Filter to find records to delete */
+  filter: TagDeleteFilter;
+};
+
 export type DeleteOneAuthorInput = {
+  /** The id of the record to delete. */
+  id: Scalars['ID']['input'];
+};
+
+export type DeleteOneTagInput = {
   /** The id of the record to delete. */
   id: Scalars['ID']['input'];
 };
@@ -252,13 +273,17 @@ export type Mutation = {
   createChapter: Chapter;
   createComic: Comic;
   createManyAuthors: Array<Author>;
+  createManyTags: Array<Tag>;
   createOneAuthor: Author;
+  createOneTag: Tag;
   createTag: Tag;
   createUser: User;
   deleteAuthor: Scalars['Boolean']['output'];
   deleteComic: Scalars['Boolean']['output'];
   deleteManyAuthors: DeleteManyResponse;
+  deleteManyTags: DeleteManyResponse;
   deleteOneAuthor: AuthorDeleteResponse;
+  deleteOneTag: TagDeleteResponse;
   removeAllHistories: Scalars['Boolean']['output'];
   removeHistory: Scalars['Boolean']['output'];
   toggleFollowComic: Scalars['Boolean']['output'];
@@ -268,7 +293,9 @@ export type Mutation = {
   updateComic: Comic;
   updateImportantInfo: User;
   updateManyAuthors: UpdateManyResponse;
+  updateManyTags: UpdateManyResponse;
   updateOneAuthor: Author;
+  updateOneTag: Tag;
   updateTag: Tag;
   updateUser: User;
 };
@@ -294,8 +321,18 @@ export type MutationCreateManyAuthorsArgs = {
 };
 
 
+export type MutationCreateManyTagsArgs = {
+  input: CreateManyTagsInput;
+};
+
+
 export type MutationCreateOneAuthorArgs = {
   input: CreateOneAuthorInput;
+};
+
+
+export type MutationCreateOneTagArgs = {
+  input: CreateOneTagInput;
 };
 
 
@@ -324,8 +361,18 @@ export type MutationDeleteManyAuthorsArgs = {
 };
 
 
+export type MutationDeleteManyTagsArgs = {
+  input: DeleteManyTagsInput;
+};
+
+
 export type MutationDeleteOneAuthorArgs = {
   input: DeleteOneAuthorInput;
+};
+
+
+export type MutationDeleteOneTagArgs = {
+  input: DeleteOneTagInput;
 };
 
 
@@ -366,8 +413,18 @@ export type MutationUpdateManyAuthorsArgs = {
 };
 
 
+export type MutationUpdateManyTagsArgs = {
+  input: UpdateManyTagsInput;
+};
+
+
 export type MutationUpdateOneAuthorArgs = {
   input: UpdateOneAuthorInput;
+};
+
+
+export type MutationUpdateOneTagArgs = {
+  input: UpdateOneTagInput;
 };
 
 
@@ -437,7 +494,7 @@ export type Query = {
   isInFollowedComics: Scalars['Boolean']['output'];
   searchAuthor: QueryAuthorsDto;
   tag: Tag;
-  tags: Array<Tag>;
+  tags: TagConnection;
   user: User;
   users: UserQueryDto;
 };
@@ -566,7 +623,14 @@ export type QuerySearchAuthorArgs = {
 
 
 export type QueryTagArgs = {
-  id: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryTagsArgs = {
+  filter?: TagFilter;
+  paging?: OffsetPaging;
+  sorting?: Array<TagSort>;
 };
 
 
@@ -645,6 +709,63 @@ export type Tag = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
+export type TagConnection = {
+  __typename?: 'TagConnection';
+  /** Array of nodes. */
+  nodes: Array<Tag>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type TagDeleteFilter = {
+  _id?: InputMaybe<IdFilterComparison>;
+  and?: InputMaybe<Array<TagDeleteFilter>>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<TagDeleteFilter>>;
+  type?: InputMaybe<StringFieldComparison>;
+};
+
+export type TagDeleteResponse = {
+  __typename?: 'TagDeleteResponse';
+  _id?: Maybe<Scalars['ID']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  totalComic?: Maybe<Scalars['Float']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type TagFilter = {
+  _id?: InputMaybe<IdFilterComparison>;
+  and?: InputMaybe<Array<TagFilter>>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<TagFilter>>;
+  type?: InputMaybe<StringFieldComparison>;
+};
+
+export type TagSort = {
+  direction: SortDirection;
+  field: TagSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum TagSortFields {
+  Id = '_id',
+  Name = 'name',
+  Type = 'type'
+}
+
+export type TagUpdateFilter = {
+  _id?: InputMaybe<IdFilterComparison>;
+  and?: InputMaybe<Array<TagUpdateFilter>>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<TagUpdateFilter>>;
+  type?: InputMaybe<StringFieldComparison>;
+};
+
 export type TrendingSortInput = {
   limit?: InputMaybe<Scalars['Float']['input']>;
   page?: InputMaybe<Scalars['Float']['input']>;
@@ -679,6 +800,13 @@ export type UpdateManyResponse = {
   updatedCount: Scalars['Int']['output'];
 };
 
+export type UpdateManyTagsInput = {
+  /** Filter used to find fields to update */
+  filter: TagUpdateFilter;
+  /** The update to apply to all records found using the filter */
+  update: UpdateTagDto;
+};
+
 export type UpdateOneAuthorInput = {
   /** The id of the record to update */
   id: Scalars['ID']['input'];
@@ -686,9 +814,17 @@ export type UpdateOneAuthorInput = {
   update: UpdateAuthorDto;
 };
 
+export type UpdateOneTagInput = {
+  /** The id of the record to update */
+  id: Scalars['ID']['input'];
+  /** The update to apply. */
+  update: UpdateTagDto;
+};
+
 export type UpdateTagDto = {
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  type: Scalars['String']['input'];
 };
 
 export type UpdateUserDto = {
@@ -731,13 +867,63 @@ export type AuthorsTableQueryVariables = Exact<{
 
 export type AuthorsTableQuery = { __typename?: 'Query', authors: { __typename?: 'AuthorConnection', totalCount: number, nodes: Array<{ __typename?: 'Author', _id: string, description?: string | null, name: string }> } };
 
-export type AuthorByIdQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
+export type CreateOneAuthorMutationVariables = Exact<{
+  input: CreateOneAuthorInput;
 }>;
 
 
-export type AuthorByIdQuery = { __typename?: 'Query', author: { __typename?: 'Author', _id: string, name: string, description?: string | null, totalComic: number } };
+export type CreateOneAuthorMutation = { __typename?: 'Mutation', createOneAuthor: { __typename?: 'Author', _id: string } };
+
+export type UpdateOneAuthorMutationVariables = Exact<{
+  input: UpdateOneAuthorInput;
+}>;
+
+
+export type UpdateOneAuthorMutation = { __typename?: 'Mutation', updateOneAuthor: { __typename?: 'Author', _id: string, description?: string | null, name: string } };
+
+export type DeleteOneAuthorMutationVariables = Exact<{
+  input: DeleteOneAuthorInput;
+}>;
+
+
+export type DeleteOneAuthorMutation = { __typename?: 'Mutation', deleteOneAuthor: { __typename?: 'AuthorDeleteResponse', _id?: string | null } };
+
+export type TagsTableQueryVariables = Exact<{
+  filter: TagFilter;
+  sorting: Array<TagSort> | TagSort;
+  paging: OffsetPaging;
+}>;
+
+
+export type TagsTableQuery = { __typename?: 'Query', tags: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', _id: string, description?: string | null, name: string, type: string }> } };
+
+export type CreateOneTagMutationVariables = Exact<{
+  input: CreateOneTagInput;
+}>;
+
+
+export type CreateOneTagMutation = { __typename?: 'Mutation', createOneTag: { __typename?: 'Tag', _id: string } };
+
+export type UpdateOneTagMutationVariables = Exact<{
+  input: UpdateOneTagInput;
+}>;
+
+
+export type UpdateOneTagMutation = { __typename?: 'Mutation', updateOneTag: { __typename?: 'Tag', _id: string, description?: string | null, name: string, type: string } };
+
+export type DeleteOneTagMutationVariables = Exact<{
+  input: DeleteOneTagInput;
+}>;
+
+
+export type DeleteOneTagMutation = { __typename?: 'Mutation', deleteOneTag: { __typename?: 'TagDeleteResponse', _id?: string | null } };
 
 
 export const AuthorsTableDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AuthorsTable"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AuthorFilter"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sorting"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AuthorSort"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paging"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"OffsetPaging"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authors"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}},{"kind":"Argument","name":{"kind":"Name","value":"sorting"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sorting"}}},{"kind":"Argument","name":{"kind":"Name","value":"paging"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paging"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<AuthorsTableQuery, AuthorsTableQueryVariables>;
-export const AuthorByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AuthorById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"author"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"totalComic"}}]}}]}}]} as unknown as DocumentNode<AuthorByIdQuery, AuthorByIdQueryVariables>;
+export const CreateOneAuthorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateOneAuthor"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateOneAuthorInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createOneAuthor"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<CreateOneAuthorMutation, CreateOneAuthorMutationVariables>;
+export const UpdateOneAuthorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateOneAuthor"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateOneAuthorInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateOneAuthor"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<UpdateOneAuthorMutation, UpdateOneAuthorMutationVariables>;
+export const DeleteOneAuthorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteOneAuthor"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteOneAuthorInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteOneAuthor"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<DeleteOneAuthorMutation, DeleteOneAuthorMutationVariables>;
+export const TagsTableDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"TagsTable"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TagFilter"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sorting"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TagSort"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paging"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"OffsetPaging"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tags"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}},{"kind":"Argument","name":{"kind":"Name","value":"sorting"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sorting"}}},{"kind":"Argument","name":{"kind":"Name","value":"paging"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paging"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<TagsTableQuery, TagsTableQueryVariables>;
+export const CreateOneTagDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateOneTag"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateOneTagInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createOneTag"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<CreateOneTagMutation, CreateOneTagMutationVariables>;
+export const UpdateOneTagDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateOneTag"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateOneTagInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateOneTag"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}}]}}]} as unknown as DocumentNode<UpdateOneTagMutation, UpdateOneTagMutationVariables>;
+export const DeleteOneTagDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteOneTag"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteOneTagInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteOneTag"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<DeleteOneTagMutation, DeleteOneTagMutationVariables>;

@@ -16,7 +16,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       password,
     });
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({
+        message: 'Sai tên đăng nhập hoặc mật khẩu',
+      });
     }
     return user;
   }

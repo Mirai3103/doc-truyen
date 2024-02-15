@@ -1,5 +1,6 @@
 import { IsString, MinLength, ValidateIf } from 'class-validator';
 import { InputType, Field } from '@nestjs/graphql';
+import { TagType } from '../schema/tag.schema';
 
 @InputType()
 export class UpdateTagDto {
@@ -12,4 +13,8 @@ export class UpdateTagDto {
   @ValidateIf((o) => o.description !== undefined)
   @Field(() => String, { nullable: true })
   description: string;
+
+  @IsString()
+  @Field(() => String)
+  type: TagType;
 }

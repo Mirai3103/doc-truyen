@@ -7,7 +7,13 @@ import tsconfigPaths from "vite-tsconfig-paths";
 config();
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), tsconfigPaths(), TanStackRouterVite()],
+  plugins: [
+    react({
+      tsDecorators: true,
+    }),
+    tsconfigPaths(),
+    TanStackRouterVite(),
+  ],
   server: {
     proxy: {
       "/api": {

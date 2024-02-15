@@ -62,6 +62,7 @@ export class AuthService {
       accessTokenExpiresIn: ms(process.env.JWT_ACCESS_TOKEN_EXPIRES || '15m'),
       refreshTokenExpiresIn: ms(process.env.JWT_REFRESH_TOKEN_EXPIRES || '15d'),
       refreshToken: refreshToken,
+      profile: payload,
     };
   }
   async refreshToken(refreshToken: string) {

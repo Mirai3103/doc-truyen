@@ -168,14 +168,25 @@ input CreateManyAuthorsInput {
   authors: [CreateAuthorDto!]!
 }
 
+input CreateManyTagsInput {
+  """Array of records to create"""
+  tags: [CreateTagDto!]!
+}
+
 input CreateOneAuthorInput {
   """The record to create"""
   author: CreateAuthorDto!
 }
 
+input CreateOneTagInput {
+  """The record to create"""
+  tag: CreateTagDto!
+}
+
 input CreateTagDto {
   description: String!
   name: String!
+  type: String! = "genre"
 }
 
 input CreateUserDto {
@@ -201,7 +212,17 @@ type DeleteManyResponse {
   deletedCount: Int!
 }
 
+input DeleteManyTagsInput {
+  """Filter to find records to delete"""
+  filter: TagDeleteFilter!
+}
+
 input DeleteOneAuthorInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteOneTagInput {
   """The id of the record to delete."""
   id: ID!
 }
@@ -234,13 +255,17 @@ type Mutation {
   createChapter(input: CreateChapterDto!): Chapter!
   createComic(input: CreateComicInput!): Comic!
   createManyAuthors(input: CreateManyAuthorsInput!): [Author!]!
+  createManyTags(input: CreateManyTagsInput!): [Tag!]!
   createOneAuthor(input: CreateOneAuthorInput!): Author!
+  createOneTag(input: CreateOneTagInput!): Tag!
   createTag(createTagInput: CreateTagDto!): Tag!
   createUser(createUserInput: CreateUserDto!): User!
   deleteAuthor(id: String!): Boolean!
   deleteComic(id: String!): Boolean!
   deleteManyAuthors(input: DeleteManyAuthorsInput!): DeleteManyResponse!
+  deleteManyTags(input: DeleteManyTagsInput!): DeleteManyResponse!
   deleteOneAuthor(input: DeleteOneAuthorInput!): AuthorDeleteResponse!
+  deleteOneTag(input: DeleteOneTagInput!): TagDeleteResponse!
   removeAllHistories: Boolean!
   removeHistory(chapterId: String!): Boolean!
   toggleFollowComic(comicId: String!): Boolean!
@@ -250,7 +275,9 @@ type Mutation {
   updateComic(id: String!, input: CreateComicInput!): Comic!
   updateImportantInfo(input: UpdateImportantInfoDTO!): User!
   updateManyAuthors(input: UpdateManyAuthorsInput!): UpdateManyResponse!
+  updateManyTags(input: UpdateManyTagsInput!): UpdateManyResponse!
   updateOneAuthor(input: UpdateOneAuthorInput!): Author!
+  updateOneTag(input: UpdateOneTagInput!): Tag!
   updateTag(id: String!, updateTagInput: UpdateTagDto!): Tag!
   updateUser(id: String!, updateUserInput: UpdateUserDto!): User!
 }
@@ -320,8 +347,20 @@ type Query {
   getTrendingComics(input: TrendingSortInput!): [Comic!]!
   isInFollowedComics(comicId: String!): Boolean!
   searchAuthor(keyword: String = "", limit: Float = 25, page: Float = 1): QueryAuthorsDTO!
-  tag(id: String!): Tag!
-  tags: [Tag!]!
+  tag(
+    """The id of the record to find."""
+    id: ID!
+  ): Tag!
+  tags(
+    """Specify to filter the records returned."""
+    filter: TagFilter! = {}
+
+    """Limit or page results."""
+    paging: OffsetPaging! = {limit: 10}
+
+    """Specify to sort results."""
+    sorting: [TagSort!]! = []
+  ): TagConnection!
   user(findUserInput: FindUserDto!): User!
   users(keywords: String, limit: Float = 25, page: Float = 1): UserQueryDto!
 }
@@ -385,6 +424,63 @@ type Tag {
   updatedAt: DateTime!
 }
 
+type TagConnection {
+  """Array of nodes."""
+  nodes: [Tag!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+input TagDeleteFilter {
+  _id: IDFilterComparison
+  and: [TagDeleteFilter!]
+  name: StringFieldComparison
+  or: [TagDeleteFilter!]
+  type: StringFieldComparison
+}
+
+type TagDeleteResponse {
+  _id: ID
+  createdAt: DateTime
+  description: String
+  name: String
+  totalComic: Float
+  type: String
+  updatedAt: DateTime
+}
+
+input TagFilter {
+  _id: IDFilterComparison
+  and: [TagFilter!]
+  name: StringFieldComparison
+  or: [TagFilter!]
+  type: StringFieldComparison
+}
+
+input TagSort {
+  direction: SortDirection!
+  field: TagSortFields!
+  nulls: SortNulls
+}
+
+enum TagSortFields {
+  _id
+  name
+  type
+}
+
+input TagUpdateFilter {
+  _id: IDFilterComparison
+  and: [TagUpdateFilter!]
+  name: StringFieldComparison
+  or: [TagUpdateFilter!]
+  type: StringFieldComparison
+}
+
 input TrendingSortInput {
   limit: Float = 5
   page: Float = 5
@@ -419,6 +515,14 @@ type UpdateManyResponse {
   updatedCount: Int!
 }
 
+input UpdateManyTagsInput {
+  """Filter used to find fields to update"""
+  filter: TagUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateTagDto!
+}
+
 input UpdateOneAuthorInput {
   """The id of the record to update"""
   id: ID!
@@ -427,9 +531,18 @@ input UpdateOneAuthorInput {
   update: UpdateAuthorDto!
 }
 
+input UpdateOneTagInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateTagDto!
+}
+
 input UpdateTagDto {
   description: String
   name: String
+  type: String!
 }
 
 input UpdateUserDto {

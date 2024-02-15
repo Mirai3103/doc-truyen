@@ -15,7 +15,7 @@ import { NestjsQueryMongooseModule } from '@ptc-org/nestjs-query-mongoose';
 import { Chapter, ChapterSchema } from '@/chapter/schema/chapter.schema';
 import { CreateAuthorDto } from './dto/createAuthor.dto';
 import { UpdateAuthorDto } from './dto/updateAuthor.dto';
-import { WithRoleGuard } from '@/auth/guard/roles.guard';
+import { WithRoleGuard, withCreatorRole } from '@/auth/guard/roles.guard';
 import { Role } from '@/user/schema/user.schema';
 import { GrapqlJwtAuthGuard } from '@/auth/guard/grapql-jwt.auth.guard';
 
@@ -47,13 +47,13 @@ import { GrapqlJwtAuthGuard } from '@/auth/guard/grapql-jwt.auth.guard';
             guards: [],
           },
           create: {
-            guards: [GrapqlJwtAuthGuard],
+            guards: [withCreatorRole],
           },
           update: {
-            guards: [GrapqlJwtAuthGuard],
+            guards: [withCreatorRole],
           },
           delete: {
-            guards: [GrapqlJwtAuthGuard],
+            guards: [withCreatorRole],
           },
           pagingStrategy: PagingStrategies.OFFSET,
         },

@@ -29,3 +29,7 @@ export class WithRoleGuard extends AuthGuard('jwt') {
     return user;
   }
 }
+
+export const withAdminRole = new WithRoleGuard(Role.ADMIN);
+export const withUserRole = new WithRoleGuard(Role.USER);
+export const withCreatorRole = new WithRoleGuard(Role.CREATOR);

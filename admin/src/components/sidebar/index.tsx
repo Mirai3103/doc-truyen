@@ -17,9 +17,10 @@ import { FaBell } from "react-icons/fa";
 import { FiSearch, FiMenu } from "react-icons/fi";
 import { Outlet } from "@tanstack/react-router";
 import ToggleDarkModeButton from "../ToggleDarkModeButton";
+import useUserStore from "@/stores/userStore";
 export default function SideBar() {
   const sidebar = useDisclosure();
-
+  const profile = useUserStore((state) => state.profile);
   return (
     <Box
       as="section"
@@ -95,8 +96,11 @@ export default function SideBar() {
             <Avatar
               ml="4"
               size="sm"
-              name="anubra266"
-              src="https://avatars.githubusercontent.com/u/30869823?v=4"
+              name={profile?.displayName + ""}
+              src={
+                (profile?.avatar as string) ||
+                "https://placewaifu.com/image/200/200"
+              }
               cursor="pointer"
             />
           </Flex>

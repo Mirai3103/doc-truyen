@@ -13,12 +13,16 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LoginImport } from './routes/login'
+import { Route as DashboardImport } from './routes/dashboard'
 
 // Create Virtual Routes
 
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
-const AuthorsIndexLazyImport = createFileRoute('/authors/')()
+const DashboardIndexLazyImport = createFileRoute('/dashboard/')()
+const DashboardTagsIndexLazyImport = createFileRoute('/dashboard/tags/')()
+const DashboardAuthorsIndexLazyImport = createFileRoute('/dashboard/authors/')()
 
 // Create/Update Routes
 
@@ -27,15 +31,41 @@ const AboutLazyRoute = AboutLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
+const LoginRoute = LoginImport.update({
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DashboardRoute = DashboardImport.update({
+  path: '/dashboard',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
-const AuthorsIndexLazyRoute = AuthorsIndexLazyImport.update({
+const DashboardIndexLazyRoute = DashboardIndexLazyImport.update({
+  path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any).lazy(() =>
+  import('./routes/dashboard/index.lazy').then((d) => d.Route),
+)
+
+const DashboardTagsIndexLazyRoute = DashboardTagsIndexLazyImport.update({
+  path: '/tags/',
+  getParentRoute: () => DashboardRoute,
+} as any).lazy(() =>
+  import('./routes/dashboard/tags/index.lazy').then((d) => d.Route),
+)
+
+const DashboardAuthorsIndexLazyRoute = DashboardAuthorsIndexLazyImport.update({
   path: '/authors/',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/authors/index.lazy').then((d) => d.Route))
+  getParentRoute: () => DashboardRoute,
+} as any).lazy(() =>
+  import('./routes/dashboard/authors/index.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -45,13 +75,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/dashboard': {
+      preLoaderRoute: typeof DashboardImport
+      parentRoute: typeof rootRoute
+    }
+    '/login': {
+      preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
+    }
     '/about': {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
-    '/authors/': {
-      preLoaderRoute: typeof AuthorsIndexLazyImport
-      parentRoute: typeof rootRoute
+    '/dashboard/': {
+      preLoaderRoute: typeof DashboardIndexLazyImport
+      parentRoute: typeof DashboardImport
+    }
+    '/dashboard/authors/': {
+      preLoaderRoute: typeof DashboardAuthorsIndexLazyImport
+      parentRoute: typeof DashboardImport
+    }
+    '/dashboard/tags/': {
+      preLoaderRoute: typeof DashboardTagsIndexLazyImport
+      parentRoute: typeof DashboardImport
     }
   }
 }
@@ -60,8 +106,13 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
+  DashboardRoute.addChildren([
+    DashboardIndexLazyRoute,
+    DashboardAuthorsIndexLazyRoute,
+    DashboardTagsIndexLazyRoute,
+  ]),
+  LoginRoute,
   AboutLazyRoute,
-  AuthorsIndexLazyRoute,
 ])
 
 /* prettier-ignore-end */

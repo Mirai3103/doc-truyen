@@ -1,7 +1,7 @@
 import { BaseSchema } from '@/base/schema/base.schema';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql';
+import { FilterableField } from '@ptc-org/nestjs-query-graphql';
 
 @Schema({
   timestamps: true,
