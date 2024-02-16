@@ -4,6 +4,7 @@ export enum TagType {
   Category = "category",
   Genre = "genre",
 }
+
 export const TAG_TYPES = [
   {
     value: TagType.Category,

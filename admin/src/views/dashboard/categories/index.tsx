@@ -25,6 +25,7 @@ import CreateButton from "./CreateButton";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { GET_TAGS_QUERY } from "./gql";
 import DeleteButton from "./DeleteButton";
+import { TAG_TYPES } from "./validators";
 
 type TagType = Omit<TagsTableQuery["tags"]["nodes"][number], "__typename">;
 
@@ -85,7 +86,7 @@ export default function TagPage() {
       }),
       columnHelper.accessor("name", {
         id: "name",
-        header: "Tên tác giả",
+        header: "Tên thẻ",
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
         enableSorting: true,
@@ -101,6 +102,21 @@ export default function TagPage() {
         footer: (props) => props.column.id,
         enableSorting: false,
         enableColumnFilter: false,
+      }),
+      columnHelper.accessor("type", {
+        id: "type",
+        header: "Loại thẻ ",
+        cell: (info) =>
+          TAG_TYPES.filter((t) => t.value === info.getValue())[0].label,
+        footer: (props) => props.column.id,
+        enableSorting: true,
+        enableColumnFilter: true,
+        meta: {
+          filterType: "array",
+          filterOptions: {
+            validOptions: TAG_TYPES,
+          },
+        },
       }),
       columnHelper.display({
         id: "actions",
@@ -147,7 +163,7 @@ export default function TagPage() {
   return (
     <Box>
       <CreateButton mb={4} colorScheme="blue" mt={4}>
-        Thêm tác giả
+        Thêm thẻ
       </CreateButton>
       <Box
         overflowX={"auto"}
@@ -159,7 +175,7 @@ export default function TagPage() {
         }}
       >
         <Heading size={"lg"} mb={5} as={"h1"}>
-          Danh sách tác giả
+          Danh sách thẻ
         </Heading>
         <DataTable size={"md"} table={table} />
       </Box>

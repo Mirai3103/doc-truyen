@@ -1,7 +1,9 @@
-import { Flex } from "@chakra-ui/react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Button, Checkbox, Flex, VStack } from "@chakra-ui/react";
 import { Column, Table } from "@tanstack/react-table";
 import React from "react";
 import DebouncedInput from "../DebouncedInput";
+import { useForm } from "react-hook-form";
 
 interface DataTableFilterProps<T> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -31,12 +33,10 @@ declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends unknown, TValue> {
     filterType?: FilterType;
     filterOptions?: {
-      [key: string]:
-        | string
-        | number
-        | boolean
-        | Date
-        | Array<string | number | boolean | Date>;
+      validOptions: Array<{
+        value: string | number;
+        label: string;
+      }>;
     };
     op?: Op;
   }
@@ -93,5 +93,38 @@ function BooleanFilter<T>({ column, table }: DataTableFilterProps<T>) {
 
 function ArrayFilter<T>({ column, table }: DataTableFilterProps<T>) {
   // in
-  return <div>ArrayFilter</div>;
+  const validOptions = column.columnDef.meta?.filterOptions?.validOptions;
+  const { register, handleSubmit } = useForm({
+    defaultValues: {
+      ...validOptions?.reduce((acc, option) => {
+        (acc as any)[option.value] = true;
+        return acc;
+      }, {}),
+    },
+  });
+  if (!validOptions) {
+    console.warn("ArrayFilter: validOptions is not defined");
+    return null;
+  }
+  return (
+    <Flex direction={"column"} gap={2}>
+      {column.columnDef.meta?.filterOptions?.validOptions?.map((option) => (
+        <Checkbox key={option.value} {...register(option.value as never)}>
+          {option.label}
+        </Checkbox>
+      ))}
+      <Button
+        size={"sm"}
+        mt={2}
+        colorScheme="blue"
+        onClick={handleSubmit((data: any) => {
+          const keys = Object.keys(data);
+          const selectedOptions = keys.filter((key) => data[key]);
+          column.setFilterValue(selectedOptions);
+        })}
+      >
+        Apply
+      </Button>
+    </Flex>
+  );
 }
