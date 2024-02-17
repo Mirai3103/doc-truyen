@@ -1,15 +1,7 @@
 import { WithRoleGuard } from '@/auth/guard/roles.guard';
 import { Role } from '@/user/schema/user.schema';
 import { NotFoundException, UseGuards } from '@nestjs/common';
-import {
-  Args,
-  Int,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthorService } from './author.service';
 import { CreateAuthorDto } from './dto/createAuthor.dto';
 import { QueryAuthorsDTO } from './dto/queryAuthor.dto';

@@ -12,12 +12,9 @@ import {
   PagingStrategies,
 } from '@ptc-org/nestjs-query-graphql';
 import { NestjsQueryMongooseModule } from '@ptc-org/nestjs-query-mongoose';
-import { Chapter, ChapterSchema } from '@/chapter/schema/chapter.schema';
 import { CreateAuthorDto } from './dto/createAuthor.dto';
 import { UpdateAuthorDto } from './dto/updateAuthor.dto';
-import { WithRoleGuard, withCreatorRole } from '@/auth/guard/roles.guard';
-import { Role } from '@/user/schema/user.schema';
-import { GrapqlJwtAuthGuard } from '@/auth/guard/grapql-jwt.auth.guard';
+import { withCreatorRole } from '@/auth/guard/roles.guard';
 import { ComicEventHandlers } from './handlers';
 
 @Module({
