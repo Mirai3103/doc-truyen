@@ -7,6 +7,8 @@ import { User } from '@/user/schema/user.schema';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as MongooseSchema } from 'mongoose';
+import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql';
+
 export enum Status {
   Paused = 'Tạm dừng',
   Completed = 'Hoàn thành',
@@ -40,6 +42,7 @@ export class Comic extends BaseSchema {
   otherNames: string[];
   @Prop()
   @Field()
+  @IDField(() => String)
   slug: string;
   @Prop()
   @Field()

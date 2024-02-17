@@ -28,6 +28,7 @@ import { User, UserSchema } from '@/user/schema/user.schema';
       },
     ]),
     CacheModule.register(),
+
     AuthorModule,
     UserModule,
     TagModule,
