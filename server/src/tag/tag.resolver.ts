@@ -55,8 +55,4 @@ export class TagResolver {
   async getGenres() {
     return await this.tagService.getGenres();
   }
-  @ResolveField(() => Int)
-  async totalComic(@Parent() tag: Tag) {
-    return await this.tagService.countComicsByTagId(tag._id);
-  }
 }

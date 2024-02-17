@@ -104,6 +104,21 @@ export default function AuthorPage() {
           filterType: "string",
         },
       }),
+      columnHelper.accessor("totalComics", {
+        id: "totalComics",
+        header: "Số truyện",
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
+        enableSorting: true,
+        enableColumnFilter: true,
+        meta: {
+          filterType: "number",
+          filterOptions: {
+            min: 0,
+            max: Number.MAX_SAFE_INTEGER,
+          },
+        },
+      }),
       columnHelper.accessor("description", {
         id: "description",
         header: "Mô tả",

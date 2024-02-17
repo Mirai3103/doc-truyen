@@ -16,7 +16,11 @@ export class Tag extends BaseSchema {
   @FilterableField()
   name: string;
   @Field()
-  totalComic: number;
+  @FilterableField()
+  @Prop({
+    default: 0,
+  })
+  totalComics: number;
   @Prop()
   @Field(() => String, { nullable: true })
   description: string;

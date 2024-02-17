@@ -13,6 +13,7 @@ import { FindUserDto } from './dto/findUser.dto';
 import { UpdateImportantInfoDTO, UpdateUserDto } from './dto/updateUser.dto';
 import { UserQueryDto } from './dto/userQuery.dto';
 import { User, UserDocument } from './schema/user.schema';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class UserService {

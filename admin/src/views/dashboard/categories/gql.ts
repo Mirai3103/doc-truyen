@@ -12,6 +12,7 @@ export const GET_TAGS_QUERY = graphql(/* GraphQL */ `
         _id
         description
         name
+        totalComics
         type
       }
       totalCount

@@ -36,7 +36,7 @@ async function main() {
 
   const query = {
     updatedAt: {
-      $gte: new Date("2024-01-01T00:00:00.000Z"),
+      $gte: new Date("2024-02-02T00:00:00.000Z"),
     },
     pages: [],
   };

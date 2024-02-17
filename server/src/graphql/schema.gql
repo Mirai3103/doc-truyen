@@ -19,7 +19,7 @@ type Author {
   createdAt: DateTime!
   description: String
   name: String!
-  totalComic: Float!
+  totalComics: Float!
   updatedAt: DateTime!
 }
 
@@ -39,6 +39,7 @@ input AuthorDeleteFilter {
   and: [AuthorDeleteFilter!]
   name: StringFieldComparison
   or: [AuthorDeleteFilter!]
+  totalComics: NumberFieldComparison
 }
 
 type AuthorDeleteResponse {
@@ -46,7 +47,7 @@ type AuthorDeleteResponse {
   createdAt: DateTime
   description: String
   name: String
-  totalComic: Float
+  totalComics: Float
   updatedAt: DateTime
 }
 
@@ -55,6 +56,7 @@ input AuthorFilter {
   and: [AuthorFilter!]
   name: StringFieldComparison
   or: [AuthorFilter!]
+  totalComics: NumberFieldComparison
 }
 
 input AuthorSort {
@@ -66,6 +68,7 @@ input AuthorSort {
 enum AuthorSortFields {
   _id
   name
+  totalComics
 }
 
 input AuthorUpdateFilter {
@@ -73,6 +76,7 @@ input AuthorUpdateFilter {
   and: [AuthorUpdateFilter!]
   name: StringFieldComparison
   or: [AuthorUpdateFilter!]
+  totalComics: NumberFieldComparison
 }
 
 type Chapter {
@@ -282,6 +286,26 @@ type Mutation {
   updateUser(id: String!, updateUserInput: UpdateUserDto!): User!
 }
 
+input NumberFieldComparison {
+  between: NumberFieldComparisonBetween
+  eq: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  is: Boolean
+  isNot: Boolean
+  lt: Float
+  lte: Float
+  neq: Float
+  notBetween: NumberFieldComparisonBetween
+  notIn: [Float!]
+}
+
+input NumberFieldComparisonBetween {
+  lower: Float!
+  upper: Float!
+}
+
 type OffsetPageInfo {
   """true if paging forward and there are more records."""
   hasNextPage: Boolean
@@ -419,7 +443,7 @@ type Tag {
   createdAt: DateTime!
   description: String
   name: String!
-  totalComic: Float!
+  totalComics: Float!
   type: String!
   updatedAt: DateTime!
 }
@@ -440,6 +464,7 @@ input TagDeleteFilter {
   and: [TagDeleteFilter!]
   name: StringFieldComparison
   or: [TagDeleteFilter!]
+  totalComics: NumberFieldComparison
   type: StringFieldComparison
 }
 
@@ -448,7 +473,7 @@ type TagDeleteResponse {
   createdAt: DateTime
   description: String
   name: String
-  totalComic: Float
+  totalComics: Float
   type: String
   updatedAt: DateTime
 }
@@ -458,6 +483,7 @@ input TagFilter {
   and: [TagFilter!]
   name: StringFieldComparison
   or: [TagFilter!]
+  totalComics: NumberFieldComparison
   type: StringFieldComparison
 }
 
@@ -470,6 +496,7 @@ input TagSort {
 enum TagSortFields {
   _id
   name
+  totalComics
   type
 }
 
@@ -478,6 +505,7 @@ input TagUpdateFilter {
   and: [TagUpdateFilter!]
   name: StringFieldComparison
   or: [TagUpdateFilter!]
+  totalComics: NumberFieldComparison
   type: StringFieldComparison
 }
 

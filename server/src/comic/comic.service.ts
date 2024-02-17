@@ -21,14 +21,16 @@ import { TrendingSortInput, TrendingSortType } from './dto/trendingSort.dto';
 import { Comic, Status } from './schema/comic.schema';
 import { PageClass } from '@/common/dto/pagination.dto';
 import { ObjectId as ObjectIdClass } from 'mongodb';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ComicCreatedEvent, ComicDeletedEvent } from './events';
 @Injectable()
 export class ComicService {
   constructor(
     @InjectModel(Comic.name) private readonly comicModal: Model<Comic>,
-    private readonly userService: UserService,
     @Inject(forwardRef(() => ChapterService))
     private readonly chapterService: ChapterService,
     @InjectModel(User.name) private readonly userModel = Model<User>,
+    private eventEmitter: EventEmitter2,
   ) {}
   public async getAll() {
     return await this.comicModal.find();
@@ -267,7 +269,13 @@ export class ComicService {
           }
         : null,
     });
-    return await comic.save();
+    const res = (await comic.save()).toJSON();
+    this.eventEmitter.emit(
+      'comic.created',
+      new ComicCreatedEvent(res._id + '', res),
+    );
+
+    return;
   }
   public async updateComic(
     id: string | ObjectId,
@@ -326,6 +334,11 @@ export class ComicService {
         _id: userId,
       },
     });
+    this.eventEmitter.emit(
+      'comic.deleted',
+      new ComicDeletedEvent(id + '', comic),
+    );
+    // todo: create event handler to delete all chapter of this comic ;
     await this.chapterService.deleteChapterOfComic(id);
   }
   public async advanceSearch(

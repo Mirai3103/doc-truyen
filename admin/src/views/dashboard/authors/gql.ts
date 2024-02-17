@@ -12,6 +12,7 @@ export const GET_AUTHORS_QUERY = graphql(/* GraphQL */ `
         _id
         description
         name
+        totalComics
       }
       totalCount
     }

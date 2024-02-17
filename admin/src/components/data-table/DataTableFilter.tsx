@@ -1,46 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Checkbox, Flex, VStack } from "@chakra-ui/react";
-import { Column, Table } from "@tanstack/react-table";
+import { Button, Checkbox, Flex } from "@chakra-ui/react";
 import React from "react";
 import DebouncedInput from "../DebouncedInput";
 import { useForm } from "react-hook-form";
+import { NumberFilter } from "./NumberFilter";
+import { DataTableFilterProps } from "./type";
 
-interface DataTableFilterProps<T> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  column: Column<any, unknown>;
-  table: Table<T>;
-}
-export type FilterType = "string" | "number" | "date" | "boolean" | "array";
-
-export type Op =
-  | "eq"
-  | "ne"
-  | "lt"
-  | "lte"
-  | "gt"
-  | "gte"
-  | "iLike"
-  | "like"
-  | "notILike"
-  | "in"
-  | "notIn"
-  | "is"
-  | "isNot"
-  | "like"
-  | "notLike";
-declare module "@tanstack/react-table" {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint, @typescript-eslint/no-unused-vars
-  interface ColumnMeta<TData extends unknown, TValue> {
-    filterType?: FilterType;
-    filterOptions?: {
-      validOptions: Array<{
-        value: string | number;
-        label: string;
-      }>;
-    };
-    op?: Op;
-  }
-}
 export default function DataTableFilter<T>({
   column,
   table,
@@ -75,10 +40,6 @@ function StringFilter<T>({ column, table }: DataTableFilterProps<T>) {
       />
     </Flex>
   );
-}
-function NumberFilter<T>({ column, table }: DataTableFilterProps<T>) {
-  // between
-  return <div>NumberFilter</div>;
 }
 
 function DateFilter<T>({ column, table }: DataTableFilterProps<T>) {

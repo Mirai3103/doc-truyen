@@ -56,8 +56,4 @@ export class AuthorResolver {
     await this.authorService.delete(id);
     return true;
   }
-  @ResolveField(() => Int)
-  async totalComic(@Parent() author: Author) {
-    return await this.authorService.countComicsByAuthorId(author._id);
-  }
 }

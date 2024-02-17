@@ -15,6 +15,7 @@ import { CreateTagDto } from './dto/createTag.dto';
 import { UpdateTagDto } from './dto/updateTag.dto';
 import { GrapqlJwtAuthGuard } from '@/auth/guard/grapql-jwt.auth.guard';
 import { withCreatorRole } from '@/auth/guard/roles.guard';
+import { ComicEventHandlers } from './handlers';
 
 @Module({
   imports: [
@@ -69,6 +70,6 @@ import { withCreatorRole } from '@/auth/guard/roles.guard';
     forwardRef(() => CommonModule),
   ],
   exports: [TagService],
-  providers: [TagService, TagResolver],
+  providers: [TagService, TagResolver, ComicEventHandlers],
 })
 export class TagModule {}

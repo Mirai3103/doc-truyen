@@ -13,8 +13,12 @@ export class Author extends BaseSchema {
   @FilterableField()
   name: string;
 
+  @FilterableField()
+  @Prop({
+    default: 0,
+  })
   @Field()
-  totalComic: number;
+  totalComics: number;
   @Prop()
   @Field({ nullable: true })
   description?: string;

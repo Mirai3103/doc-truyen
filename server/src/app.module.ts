@@ -16,7 +16,7 @@ import { ReadingHistoryModule } from './readingHistory/reading-history.module';
 import { TagModule } from './tag/tag.module';
 import { AppScheduleModule } from './task/schedule.module';
 import { UserModule } from './user/user.module';
-
+import { EventEmitterModule } from '@nestjs/event-emitter';
 @Module({
   imports: [
     FileModule,
@@ -35,6 +35,9 @@ import { UserModule } from './user/user.module';
       sortSchema: true,
       playground: true,
       logger: console,
+    }),
+    EventEmitterModule.forRoot({
+      verboseMemoryLeak: true,
     }),
     AuthorModule,
     TagModule,

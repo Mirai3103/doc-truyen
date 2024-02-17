@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Op } from "@/components/data-table/DataTableFilter";
+import { Op } from "@/components/data-table/type";
 import { ColumnFiltersState, Table } from "@tanstack/react-table";
 
 export function parseFilter<T>(
@@ -24,7 +24,12 @@ export function parseFilter<T>(
       case "date":
         // eslint-disable-next-line no-case-declarations
         const [min, max] = value;
-        result[column.id] = { gte: min, lte: max };
+        result[column.id] = {
+          between: {
+            lower: min,
+            upper: max,
+          },
+        };
         break;
       case "boolean":
         result[column.id] = { eq: value };

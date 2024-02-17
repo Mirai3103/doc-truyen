@@ -18,6 +18,7 @@ import { UpdateAuthorDto } from './dto/updateAuthor.dto';
 import { WithRoleGuard, withCreatorRole } from '@/auth/guard/roles.guard';
 import { Role } from '@/user/schema/user.schema';
 import { GrapqlJwtAuthGuard } from '@/auth/guard/grapql-jwt.auth.guard';
+import { ComicEventHandlers } from './handlers';
 
 @Module({
   imports: [
@@ -71,7 +72,7 @@ import { GrapqlJwtAuthGuard } from '@/auth/guard/grapql-jwt.auth.guard';
     ]),
   ],
   controllers: [AuthorController],
-  providers: [AuthorService, AuthorResolver],
+  providers: [AuthorService, AuthorResolver, ComicEventHandlers],
   exports: [AuthorService],
 })
 export class AuthorModule {}
