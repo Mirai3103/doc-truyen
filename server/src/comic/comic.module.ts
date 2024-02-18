@@ -14,9 +14,51 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ComicResolver } from './comic.resolver';
 import { Comic, ComicSchema } from './schema/comic.schema';
 import { User, UserSchema } from '@/user/schema/user.schema';
+import {
+  NestjsQueryGraphQLModule,
+  PagingStrategies,
+} from '@ptc-org/nestjs-query-graphql';
+import { NestjsQueryMongooseModule } from '@ptc-org/nestjs-query-mongoose';
+import { ComicBriefDto } from './dto/comic.dto';
+import CreateComicInput from './dto/create-comic-input.dto';
+import { withCreatorRole } from '@/auth/guard/roles.guard';
 
 @Module({
   imports: [
+    NestjsQueryGraphQLModule.forFeature({
+      // import the NestjsQueryMongooseModule to register the entity with mongoose
+      // and provide a QueryService
+      imports: [
+        NestjsQueryMongooseModule.forFeature([
+          {
+            document: Comic,
+            name: Comic.name,
+            schema: ComicSchema,
+          },
+        ]),
+      ],
+      // describe the resolvers you want to expose
+      resolvers: [
+        {
+          DTOClass: ComicBriefDto,
+          EntityClass: Comic,
+          enableTotalCount: true,
+          read: {
+            guards: [],
+          },
+          create: {
+            disabled: true,
+          },
+          update: {
+            disabled: true,
+          },
+          delete: {
+            disabled: true,
+          },
+          pagingStrategy: PagingStrategies.OFFSET,
+        },
+      ],
+    }),
     MongooseModule.forFeature([
       {
         name: Comic.name,

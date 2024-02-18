@@ -131,6 +131,135 @@ type Comic {
   yearViewCount: Int!
 }
 
+type ComicBriefDto {
+  _id: ID!
+  author: Author!
+  category: Tag!
+  contributors: [String!]!
+  createdBy: User!
+  description: String!
+  followCount: Float!
+  genres: Tag!
+  imageCoverUrl: String!
+  name: String!
+  otherNames: [String!]!
+  recentChapter: Chapter!
+  slug: String!
+  status: String!
+  totalViewCount: Float!
+  weekViewCount: Float!
+}
+
+type ComicBriefDtoConnection {
+  """Array of nodes."""
+  nodes: [ComicBriefDto!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+input ComicBriefDtoContributorsFilterComparison {
+  in: [[String!]!]
+  notIn: [[String!]!]
+}
+
+input ComicBriefDtoFilter {
+  _id: IDFilterComparison
+  and: [ComicBriefDtoFilter!]
+  contributors: ComicBriefDtoContributorsFilterComparison
+  followCount: ComicBriefDtoFollowCountFilterComparison
+  name: ComicBriefDtoNameFilterComparison
+  or: [ComicBriefDtoFilter!]
+  slug: ComicBriefDtoSlugFilterComparison
+  status: ComicBriefDtoStatusFilterComparison
+  totalViewCount: ComicBriefDtoTotalViewCountFilterComparison
+  weekViewCount: ComicBriefDtoWeekViewCountFilterComparison
+}
+
+input ComicBriefDtoFollowCountFilterComparison {
+  between: ComicBriefDtoFollowCountFilterComparisonBetween
+  gt: Float
+  gte: Float
+  lt: Float
+  lte: Float
+  neq: Float
+}
+
+input ComicBriefDtoFollowCountFilterComparisonBetween {
+  lower: Float!
+  upper: Float!
+}
+
+input ComicBriefDtoNameFilterComparison {
+  eq: String
+  iLike: String
+  like: String
+  neq: String
+  notLike: String
+}
+
+input ComicBriefDtoSlugFilterComparison {
+  eq: String
+  iLike: String
+  like: String
+  neq: String
+  notLike: String
+}
+
+input ComicBriefDtoSort {
+  direction: SortDirection!
+  field: ComicBriefDtoSortFields!
+  nulls: SortNulls
+}
+
+enum ComicBriefDtoSortFields {
+  _id
+  contributors
+  followCount
+  name
+  slug
+  status
+  totalViewCount
+  weekViewCount
+}
+
+input ComicBriefDtoStatusFilterComparison {
+  eq: String
+  in: [String!]
+  notIn: [String!]
+}
+
+input ComicBriefDtoTotalViewCountFilterComparison {
+  between: ComicBriefDtoTotalViewCountFilterComparisonBetween
+  gt: Float
+  gte: Float
+  lt: Float
+  lte: Float
+  neq: Float
+}
+
+input ComicBriefDtoTotalViewCountFilterComparisonBetween {
+  lower: Float!
+  upper: Float!
+}
+
+input ComicBriefDtoWeekViewCountFilterComparison {
+  between: ComicBriefDtoWeekViewCountFilterComparisonBetween
+  gt: Float
+  gte: Float
+  lt: Float
+  lte: Float
+  neq: Float
+}
+
+input ComicBriefDtoWeekViewCountFilterComparisonBetween {
+  lower: Float!
+  upper: Float!
+}
+
 type ComicPage {
   data: [Comic!]!
   totalPages: Int!
@@ -348,6 +477,20 @@ type Query {
     """Specify to sort results."""
     sorting: [AuthorSort!]! = []
   ): AuthorConnection!
+  comicBriefDto(
+    """The id of the record to find."""
+    id: ID!
+  ): ComicBriefDto!
+  comicBriefDtos(
+    """Specify to filter the records returned."""
+    filter: ComicBriefDtoFilter! = {}
+
+    """Limit or page results."""
+    paging: OffsetPaging! = {limit: 10}
+
+    """Specify to sort results."""
+    sorting: [ComicBriefDtoSort!]! = []
+  ): ComicBriefDtoConnection!
   getAllChapters(comicId: String!): [Chapter!]!
   getAllComicStatus: [ComicStatus!]!
   getAllComics: [Comic!]!

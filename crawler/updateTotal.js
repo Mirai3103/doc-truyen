@@ -38,6 +38,16 @@ async function updateTotalComicsForTag(tagId) {
     { $set: { totalComics: totalComics } }
   );
 }
+// set contributors to [createdBy] for all comics
+async function setContributors() {
+  const comics = await comicCollection.find({}).toArray();
+  for (const comic of comics) {
+    await comicCollection.updateOne(
+      { _id: comic._id },
+      { $set: { contributors: [comic.createdBy + ""] } }
+    );
+  }
+}
 
 (async () => {
   await client.connect();
@@ -45,16 +55,17 @@ async function updateTotalComicsForTag(tagId) {
   comicCollection = db.collection("comics");
   authorCollection = db.collection("authors");
   tagCollection = db.collection("tags");
-  let cursor = tagCollection.find({});
-  while (await cursor.hasNext()) {
-    const tag = await cursor.next();
-    queue.add(() => updateTotalComicsForTag(tag._id));
-  }
-  cursor = authorCollection.find({});
-  while (await cursor.hasNext()) {
-    const author = await cursor.next();
-    queue.add(() => updateTotalComicsForAuthor(author._id));
-  }
+  // let cursor = tagCollection.find({});
+  // while (await cursor.hasNext()) {
+  //   const tag = await cursor.next();
+  //   queue.add(() => updateTotalComicsForTag(tag._id));
+  // }
+  // cursor = authorCollection.find({});
+  // while (await cursor.hasNext()) {
+  //   const author = await cursor.next();
+  //   queue.add(() => updateTotalComicsForAuthor(author._id));
+  // }
+  await setContributors();
 
   await queue.onIdle();
 })().then(() => {
