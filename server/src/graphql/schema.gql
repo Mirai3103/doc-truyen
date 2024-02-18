@@ -34,12 +34,23 @@ type AuthorConnection {
   totalCount: Int!
 }
 
+input AuthorCreatedAtFilterComparison {
+  eq: DateTime
+  gt: DateTime
+  gte: DateTime
+  lt: DateTime
+  lte: DateTime
+  neq: DateTime
+}
+
 input AuthorDeleteFilter {
   _id: IDFilterComparison
   and: [AuthorDeleteFilter!]
+  createdAt: AuthorCreatedAtFilterComparison
   name: StringFieldComparison
   or: [AuthorDeleteFilter!]
   totalComics: NumberFieldComparison
+  updatedAt: AuthorUpdatedAtFilterComparison
 }
 
 type AuthorDeleteResponse {
@@ -54,9 +65,11 @@ type AuthorDeleteResponse {
 input AuthorFilter {
   _id: IDFilterComparison
   and: [AuthorFilter!]
+  createdAt: AuthorCreatedAtFilterComparison
   name: StringFieldComparison
   or: [AuthorFilter!]
   totalComics: NumberFieldComparison
+  updatedAt: AuthorUpdatedAtFilterComparison
 }
 
 input AuthorSort {
@@ -67,16 +80,29 @@ input AuthorSort {
 
 enum AuthorSortFields {
   _id
+  createdAt
   name
   totalComics
+  updatedAt
 }
 
 input AuthorUpdateFilter {
   _id: IDFilterComparison
   and: [AuthorUpdateFilter!]
+  createdAt: AuthorCreatedAtFilterComparison
   name: StringFieldComparison
   or: [AuthorUpdateFilter!]
   totalComics: NumberFieldComparison
+  updatedAt: AuthorUpdatedAtFilterComparison
+}
+
+input AuthorUpdatedAtFilterComparison {
+  eq: DateTime
+  gt: DateTime
+  gte: DateTime
+  lt: DateTime
+  lte: DateTime
+  neq: DateTime
 }
 
 type Chapter {
@@ -132,9 +158,9 @@ type Comic {
 }
 
 type ComicBriefDto {
-  _id: ID!
   author: Author!
   category: Tag!
+  chapterCount: Int!
   contributors: [String!]!
   createdBy: User!
   description: String!
@@ -147,7 +173,20 @@ type ComicBriefDto {
   slug: String!
   status: String!
   totalViewCount: Float!
-  weekViewCount: Float!
+}
+
+input ComicBriefDtoChapterCountFilterComparison {
+  between: ComicBriefDtoChapterCountFilterComparisonBetween
+  gt: Float
+  gte: Float
+  lt: Float
+  lte: Float
+  neq: Float
+}
+
+input ComicBriefDtoChapterCountFilterComparisonBetween {
+  lower: Float!
+  upper: Float!
 }
 
 type ComicBriefDtoConnection {
@@ -166,17 +205,34 @@ input ComicBriefDtoContributorsFilterComparison {
   notIn: [[String!]!]
 }
 
+input ComicBriefDtoCreatedAtFilterComparison {
+  between: ComicBriefDtoCreatedAtFilterComparisonBetween
+  eq: DateTime
+  gt: DateTime
+  gte: DateTime
+  lt: DateTime
+  lte: DateTime
+  neq: DateTime
+}
+
+input ComicBriefDtoCreatedAtFilterComparisonBetween {
+  lower: DateTime!
+  upper: DateTime!
+}
+
 input ComicBriefDtoFilter {
   _id: IDFilterComparison
   and: [ComicBriefDtoFilter!]
+  chapterCount: ComicBriefDtoChapterCountFilterComparison
   contributors: ComicBriefDtoContributorsFilterComparison
+  createdAt: ComicBriefDtoCreatedAtFilterComparison
   followCount: ComicBriefDtoFollowCountFilterComparison
   name: ComicBriefDtoNameFilterComparison
   or: [ComicBriefDtoFilter!]
   slug: ComicBriefDtoSlugFilterComparison
   status: ComicBriefDtoStatusFilterComparison
   totalViewCount: ComicBriefDtoTotalViewCountFilterComparison
-  weekViewCount: ComicBriefDtoWeekViewCountFilterComparison
+  updatedAt: ComicBriefDtoUpdatedAtFilterComparison
 }
 
 input ComicBriefDtoFollowCountFilterComparison {
@@ -217,13 +273,15 @@ input ComicBriefDtoSort {
 
 enum ComicBriefDtoSortFields {
   _id
+  chapterCount
   contributors
+  createdAt
   followCount
   name
   slug
   status
   totalViewCount
-  weekViewCount
+  updatedAt
 }
 
 input ComicBriefDtoStatusFilterComparison {
@@ -246,18 +304,19 @@ input ComicBriefDtoTotalViewCountFilterComparisonBetween {
   upper: Float!
 }
 
-input ComicBriefDtoWeekViewCountFilterComparison {
-  between: ComicBriefDtoWeekViewCountFilterComparisonBetween
-  gt: Float
-  gte: Float
-  lt: Float
-  lte: Float
-  neq: Float
+input ComicBriefDtoUpdatedAtFilterComparison {
+  between: ComicBriefDtoUpdatedAtFilterComparisonBetween
+  eq: DateTime
+  gt: DateTime
+  gte: DateTime
+  lt: DateTime
+  lte: DateTime
+  neq: DateTime
 }
 
-input ComicBriefDtoWeekViewCountFilterComparisonBetween {
-  lower: Float!
-  upper: Float!
+input ComicBriefDtoUpdatedAtFilterComparisonBetween {
+  lower: DateTime!
+  upper: DateTime!
 }
 
 type ComicPage {
@@ -602,13 +661,24 @@ type TagConnection {
   totalCount: Int!
 }
 
+input TagCreatedAtFilterComparison {
+  eq: DateTime
+  gt: DateTime
+  gte: DateTime
+  lt: DateTime
+  lte: DateTime
+  neq: DateTime
+}
+
 input TagDeleteFilter {
   _id: IDFilterComparison
   and: [TagDeleteFilter!]
+  createdAt: TagCreatedAtFilterComparison
   name: StringFieldComparison
   or: [TagDeleteFilter!]
   totalComics: NumberFieldComparison
   type: StringFieldComparison
+  updatedAt: TagUpdatedAtFilterComparison
 }
 
 type TagDeleteResponse {
@@ -624,10 +694,12 @@ type TagDeleteResponse {
 input TagFilter {
   _id: IDFilterComparison
   and: [TagFilter!]
+  createdAt: TagCreatedAtFilterComparison
   name: StringFieldComparison
   or: [TagFilter!]
   totalComics: NumberFieldComparison
   type: StringFieldComparison
+  updatedAt: TagUpdatedAtFilterComparison
 }
 
 input TagSort {
@@ -638,18 +710,31 @@ input TagSort {
 
 enum TagSortFields {
   _id
+  createdAt
   name
   totalComics
   type
+  updatedAt
 }
 
 input TagUpdateFilter {
   _id: IDFilterComparison
   and: [TagUpdateFilter!]
+  createdAt: TagCreatedAtFilterComparison
   name: StringFieldComparison
   or: [TagUpdateFilter!]
   totalComics: NumberFieldComparison
   type: StringFieldComparison
+  updatedAt: TagUpdatedAtFilterComparison
+}
+
+input TagUpdatedAtFilterComparison {
+  eq: DateTime
+  gt: DateTime
+  gte: DateTime
+  lt: DateTime
+  lte: DateTime
+  neq: DateTime
 }
 
 input TrendingSortInput {

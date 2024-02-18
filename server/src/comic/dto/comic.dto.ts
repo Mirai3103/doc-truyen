@@ -1,21 +1,25 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import {
   FilterableField,
   IDField,
   KeySet,
+  Relation,
 } from '@ptc-org/nestjs-query-graphql';
-import { Status } from '../schema/comic.schema';
+import { Comic, Status } from '../schema/comic.schema';
 import { Tag } from '@/tag/schema/tag.schema';
 import { User } from '@/user/schema/user.schema';
 import { Author } from '@/author/schema/author.schema';
 import { Chapter } from '@/chapter/schema/chapter.schema';
+import { BaseSchema, BaseSchemaDto } from '@/base/schema/base.schema';
+import {
+  Assembler,
+  ClassTransformerAssembler,
+} from '@ptc-org/nestjs-query-core';
 
 @ObjectType()
 @KeySet(['slug', '_id'])
-export class ComicBriefDto {
-  @IDField(() => ID)
-  _id: string;
-
+@Relation('category', () => Tag, {})
+export class ComicBriefDto extends BaseSchemaDto {
   @FilterableField(() => String, {
     allowedComparisons: ['eq', 'neq', 'like', 'iLike', 'notLike'],
   })
@@ -60,6 +64,8 @@ export class ComicBriefDto {
   @FilterableField(() => Number, {
     allowedComparisons: ['between', 'gt', 'gte', 'lt', 'lte', 'neq'],
   })
+  @Field(() => Int)
+  chapterCount = 0;
   // analytics
   weekViewCount: number;
   monthViewCount: number;
@@ -70,4 +76,14 @@ export class ComicBriefDto {
   })
   totalViewCount: number;
   todayViewCount: number;
+}
+
+@Assembler(ComicBriefDto, Comic)
+export class ComicBriefDtoAssembler extends ClassTransformerAssembler<
+  ComicBriefDto,
+  Comic
+> {
+  convertToDTO(entity: Comic): ComicBriefDto {
+    return entity.toJSON();
+  }
 }

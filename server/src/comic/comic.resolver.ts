@@ -42,6 +42,7 @@ export class ComicResolver {
     @Inject(ChapterService) private readonly chapterService: ChapterService,
     private readonly userService: UserService,
   ) {}
+
   @Query(() => Comic)
   async getComicById(@Args('id') id: string) {
     return await this.commicService.getById(id);
@@ -54,20 +55,24 @@ export class ComicResolver {
   @ResolveField(() => Author)
   async author(@Parent() comic: Comic) {
     if (comic.author.name) return comic.author;
-    const author = await this.authorService.findOne(comic.author._id + '');
+    const author = await this.authorService.authorLoader.load(
+      comic.author._id + '',
+    );
     return author;
   }
   @ResolveField(() => Author)
   async artist(@Parent() comic: Comic) {
     if (comic.artist?.name) return comic.artist;
     if (!comic.artist) return null;
-    const author = await this.authorService.findOne(comic.artist._id + '');
+    const author = await this.authorService.authorLoader.load(
+      comic.artist._id + '',
+    );
     return author;
   }
   @ResolveField(() => User)
   async createdBy(@Parent() comic: Comic) {
     if (comic.createdBy.email) return comic.createdBy;
-    const user = await this.userService.findByUniqueField(
+    const user = await this.userService.userDataloader.load(
       comic.createdBy._id + '',
     );
     return user;
@@ -75,17 +80,34 @@ export class ComicResolver {
   @ResolveField(() => [Tag])
   async genres(@Parent() comic: Comic) {
     if (comic.genres && comic.genres[0].name) return comic.genres;
-    const tags = await this.tagService.getListsTag(
-      comic.genres.map((tag) => tag._id),
-    );
+    const genrePromise: Promise<Tag>[] = [];
+    for (const genre of comic.genres) {
+      genrePromise.push(this.tagService.tagDataLoader.load(genre._id + ''));
+    }
+    const tags = await Promise.all(genrePromise);
     return tags;
   }
   @ResolveField(() => [Tag])
   async category(@Parent() comic: Comic) {
     if (comic.category.name) return comic.category;
     if (!comic.category) return null;
-    const tags = await this.tagService.findOne(comic.category._id);
+    const tags = await this.tagService.tagDataLoader.load(
+      comic.category._id + '',
+    );
     return tags;
+  }
+  ///
+  @ResolveField(() => Chapter)
+  async recentChapter(@Parent() comic: Comic) {
+    return await this.chapterService.lastestChapterByComicIdDataLoader.load(
+      comic._id + '',
+    );
+  }
+  @ResolveField(() => Number)
+  async chapterCount(@Parent() comic: Comic) {
+    return await this.chapterService.countChapterByComicIdDataLoader.load(
+      comic._id + '',
+    );
   }
   @Query(() => ComicPage)
   async getRecentComics(
@@ -97,10 +119,7 @@ export class ComicResolver {
     const data = await this.commicService.getRecentComics(limit, page);
     return data;
   }
-  @ResolveField(() => Chapter)
-  async recentChapter(@Parent() comic: Comic) {
-    return await this.chapterService.getLastedChapterByComicId(comic._id);
-  }
+
   @Query(() => ComicPage)
   async getTopComics(
     @Args('limit', { type: () => Number, nullable: true, defaultValue: 10 })
@@ -158,10 +177,7 @@ export class ComicResolver {
     const result = await this.commicService.createNewComic(input);
     return result;
   }
-  @ResolveField(() => Number)
-  async chapterCount(@Parent() comic: Comic) {
-    return await this.chapterService.countChapterByComicId(comic._id);
-  }
+
   @Mutation(() => Comic)
   @UseGuards(new WithRoleGuardGQL(Role.CREATOR))
   async updateComic(

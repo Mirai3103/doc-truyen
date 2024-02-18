@@ -6,6 +6,8 @@ import { UtilService } from '../common/util.service';
 import { CreateTagDto } from './dto/createTag.dto';
 import { UpdateTagDto } from './dto/updateTag.dto';
 import { Tag, TagDocument, TagType } from './schema/tag.schema';
+import DataLoader from 'dataloader';
+import { ObjectId as ObjectIdClass } from 'mongodb';
 @Injectable()
 export class TagService {
   constructor(
@@ -15,6 +17,18 @@ export class TagService {
     @InjectModel(Comic.name) private comicModel: Model<ComicDocument>,
   ) {}
 
+  public tagDataLoader = new DataLoader<string, TagDocument>(async (ids) => {
+    const tags = await this.tagModel.find({
+      _id: {
+        $in: ids.map((id) => new ObjectIdClass(id)),
+      },
+    });
+    const tagMap: { [key: string]: TagDocument } = {};
+    tags.forEach((tag) => {
+      tagMap[tag._id + ''] = tag;
+    });
+    return ids.map((id) => tagMap[id]);
+  });
   async create(createTagDto: CreateTagDto): Promise<TagDocument> {
     const createdTag = new this.tagModel({
       ...createTagDto,

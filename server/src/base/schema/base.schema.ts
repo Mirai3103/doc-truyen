@@ -1,15 +1,36 @@
 import { Field, ID, ObjectType, extend } from '@nestjs/graphql';
 import { Schema as MongooseSchema } from 'mongoose';
 import { Document } from 'mongoose';
-import { IDField } from '@ptc-org/nestjs-query-graphql';
+import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql';
 
 @ObjectType()
 export class BaseSchema extends Document {
   @Field(() => String)
   @IDField(() => ID)
   _id: MongooseSchema.Types.ObjectId;
-  @Field(() => Date)
+  @FilterableField(() => Date, {
+    allowedComparisons: ['eq', 'neq', 'lt', 'lte', 'gt', 'gte'],
+  })
   createdAt: Date = new Date();
-  @Field(() => Date)
+
+  @FilterableField(() => Date, {
+    allowedComparisons: ['eq', 'neq', 'lt', 'lte', 'gt', 'gte'],
+  })
   updatedAt: Date = new Date();
+}
+
+export class BaseSchemaDto {
+  @Field(() => String)
+  @IDField(() => ID)
+  _id: MongooseSchema.Types.ObjectId;
+  @FilterableField(() => Date, {
+    allowedComparisons: ['eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'between'],
+    nullable: true,
+  })
+  createdAt: Date;
+  @FilterableField(() => Date, {
+    allowedComparisons: ['eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'between'],
+    nullable: true,
+  })
+  updatedAt: Date;
 }

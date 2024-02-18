@@ -19,15 +19,16 @@ import {
   PagingStrategies,
 } from '@ptc-org/nestjs-query-graphql';
 import { NestjsQueryMongooseModule } from '@ptc-org/nestjs-query-mongoose';
-import { ComicBriefDto } from './dto/comic.dto';
-import CreateComicInput from './dto/create-comic-input.dto';
-import { withCreatorRole } from '@/auth/guard/roles.guard';
+import { ComicBriefDto, ComicBriefDtoAssembler } from './dto/comic.dto';
+import { ComicBriefDtoResolver } from './comicDto.resolver';
 
 @Module({
+  providers: [ComicService, ComicResolver, ComicBriefDtoResolver],
   imports: [
     NestjsQueryGraphQLModule.forFeature({
       // import the NestjsQueryMongooseModule to register the entity with mongoose
       // and provide a QueryService
+      assemblers: [ComicBriefDtoAssembler],
       imports: [
         NestjsQueryMongooseModule.forFeature([
           {
@@ -38,26 +39,7 @@ import { withCreatorRole } from '@/auth/guard/roles.guard';
         ]),
       ],
       // describe the resolvers you want to expose
-      resolvers: [
-        {
-          DTOClass: ComicBriefDto,
-          EntityClass: Comic,
-          enableTotalCount: true,
-          read: {
-            guards: [],
-          },
-          create: {
-            disabled: true,
-          },
-          update: {
-            disabled: true,
-          },
-          delete: {
-            disabled: true,
-          },
-          pagingStrategy: PagingStrategies.OFFSET,
-        },
-      ],
+      dtos: [{ DTOClass: ComicBriefDto }],
     }),
     MongooseModule.forFeature([
       {
@@ -79,6 +61,5 @@ import { withCreatorRole } from '@/auth/guard/roles.guard';
   ],
   controllers: [],
   exports: [ComicService],
-  providers: [ComicService, ComicResolver],
 })
 export class ComicModule {}

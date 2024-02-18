@@ -5,12 +5,13 @@ https://docs.nestjs.com/providers#services
 import { Comic } from '@/comic/schema/comic.schema';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { Model, ObjectId, Types } from 'mongoose';
 import { UtilService } from '../common/util.service';
 import { CreateAuthorDto } from './dto/createAuthor.dto';
 import { QueryAuthorsDTO } from './dto/queryAuthor.dto';
 import { UpdateAuthorDto } from './dto/updateAuthor.dto';
 import { Author, AuthorDocument } from './schema/author.schema';
+import DataLoader from 'dataloader';
 @Injectable()
 export class AuthorService {
   constructor(
@@ -19,6 +20,20 @@ export class AuthorService {
     @Inject(UtilService) private readonly utilService: UtilService,
     @InjectModel(Comic.name) private comicModel: Model<Comic>,
   ) {}
+
+  public authorLoader = new DataLoader<string, AuthorDocument>(async (ids) => {
+    const authors = await this.authorModel.find({
+      _id: {
+        $in: ids.map((id) => new Types.ObjectId(id)),
+      },
+    });
+
+    const authorMap: { [key: string]: AuthorDocument } = {};
+    authors.forEach((author) => {
+      authorMap[author._id + ''] = author;
+    });
+    return ids.map((id) => authorMap[id]);
+  });
 
   async create(createAuthorDto: CreateAuthorDto): Promise<AuthorDocument> {
     const createdAuthor = new this.authorModel({

@@ -14,7 +14,8 @@ import { UpdateImportantInfoDTO, UpdateUserDto } from './dto/updateUser.dto';
 import { UserQueryDto } from './dto/userQuery.dto';
 import { User, UserDocument } from './schema/user.schema';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-
+import DataLoader from 'dataloader';
+import { ObjectId as ObjectIdClass } from 'mongodb';
 @Injectable()
 export class UserService {
   constructor(
@@ -22,6 +23,19 @@ export class UserService {
     @Inject(UtilService) private utilService: UtilService,
     @InjectModel(Comic.name) private comicModel: Model<UserDocument>,
   ) {}
+
+  public userDataloader = new DataLoader<string, UserDocument>(async (ids) => {
+    const users = await this.userModel.find({
+      _id: {
+        $in: ids.map((id) => new ObjectIdClass(id)),
+      },
+    });
+    const userMap: { [key: string]: UserDocument } = {};
+    users.forEach((user) => {
+      userMap[user._id + ''] = user;
+    });
+    return ids.map((id) => userMap[id]);
+  });
   public async countUploadedComics(userId: string) {
     return this.comicModel
       .countDocuments({

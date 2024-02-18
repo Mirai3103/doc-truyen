@@ -15,6 +15,8 @@ import { Model, ObjectId, Schema } from 'mongoose';
 import CreateChapterDto from './dto/create-chapter';
 import { ChapterOrder } from './dto/update-chapter-order';
 import { Chapter } from './schema/chapter.schema';
+import DataLoader from 'dataloader';
+import { ObjectId as MongoOBJId } from 'mongodb';
 
 @Injectable()
 export class ChapterService {
@@ -23,6 +25,77 @@ export class ChapterService {
     @Inject(forwardRef(() => ComicService))
     private readonly comicService: ComicService,
   ) {}
+
+  public countChapterByComicIdDataLoader = new DataLoader<string, number>(
+    async (ids) => {
+      const chapters = await this.chapterModal
+        .aggregate([
+          {
+            $match: {
+              comic: {
+                $in: ids.map((id) => new MongoOBJId(id)),
+              },
+            },
+          },
+          {
+            $group: {
+              _id: '$comic',
+              count: {
+                $sum: 1,
+              },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              count: 1,
+              comicId: '$_id',
+            },
+          },
+        ])
+        .exec();
+      const chapterMap: { [key: string]: number } = {};
+      chapters.forEach((chapter) => {
+        chapterMap[chapter.comicId + ''] = chapter.count;
+      });
+      return ids.map((id) => chapterMap[id]);
+    },
+  );
+
+  public lastestChapterByComicIdDataLoader = new DataLoader<string, Chapter>(
+    async (ids) => {
+      const chapters = await this.chapterModal
+        .aggregate([
+          {
+            $match: {
+              comic: {
+                $in: ids.map((id) => new MongoOBJId(id + '')),
+              },
+            },
+          },
+          {
+            $sort: {
+              order: -1,
+            },
+          },
+          {
+            $group: {
+              _id: '$comic',
+              chapter: {
+                $first: '$$ROOT',
+              },
+            },
+          },
+        ])
+        .exec();
+      const chapterMap: { [key: string]: Chapter } = {};
+      chapters.forEach((chapter) => {
+        chapterMap[chapter._id + ''] = chapter.chapter;
+      });
+      return ids.map((id) => chapterMap[id]);
+    },
+  );
+
   async create(input: CreateChapterDto) {
     const isOwner = this.comicService.isOwner(input.userId, input.comicId);
     if (!isOwner) {
