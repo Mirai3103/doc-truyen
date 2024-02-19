@@ -1,16 +1,11 @@
-import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
-import {
-  FilterableField,
-  IDField,
-  KeySet,
-  Relation,
-} from '@ptc-org/nestjs-query-graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { FilterableField, KeySet } from '@ptc-org/nestjs-query-graphql';
 import { Comic, Status } from '../schema/comic.schema';
 import { Tag } from '@/tag/schema/tag.schema';
 import { User } from '@/user/schema/user.schema';
 import { Author } from '@/author/schema/author.schema';
 import { Chapter } from '@/chapter/schema/chapter.schema';
-import { BaseSchema, BaseSchemaDto } from '@/base/schema/base.schema';
+import { BaseSchemaDto } from '@/base/schema/base.schema';
 import {
   Assembler,
   ClassTransformerAssembler,
@@ -18,8 +13,7 @@ import {
 
 @ObjectType()
 @KeySet(['slug', '_id'])
-@Relation('category', () => Tag, {})
-export class ComicBriefDto extends BaseSchemaDto {
+export class ComicDto extends BaseSchemaDto {
   @FilterableField(() => String, {
     allowedComparisons: ['eq', 'neq', 'like', 'iLike', 'notLike'],
   })
@@ -78,12 +72,13 @@ export class ComicBriefDto extends BaseSchemaDto {
   todayViewCount: number;
 }
 
-@Assembler(ComicBriefDto, Comic)
-export class ComicBriefDtoAssembler extends ClassTransformerAssembler<
-  ComicBriefDto,
+@Assembler(ComicDto, Comic)
+export class ComicDtoAssembler extends ClassTransformerAssembler<
+  ComicDto,
   Comic
 > {
-  convertToDTO(entity: Comic): ComicBriefDto {
+  convertToDTO(entity: Comic): ComicDto {
+    console.log('entity', entity);
     return entity.toJSON();
   }
 }

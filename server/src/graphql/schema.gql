@@ -157,11 +157,13 @@ type Comic {
   yearViewCount: Int!
 }
 
-type ComicBriefDto {
+type ComicDto {
+  _id: ID!
   author: Author!
   category: Tag!
   chapterCount: Int!
   contributors: [String!]!
+  createdAt: DateTime
   createdBy: User!
   description: String!
   followCount: Float!
@@ -173,10 +175,11 @@ type ComicBriefDto {
   slug: String!
   status: String!
   totalViewCount: Float!
+  updatedAt: DateTime
 }
 
-input ComicBriefDtoChapterCountFilterComparison {
-  between: ComicBriefDtoChapterCountFilterComparisonBetween
+input ComicDtoChapterCountFilterComparison {
+  between: ComicDtoChapterCountFilterComparisonBetween
   gt: Float
   gte: Float
   lt: Float
@@ -184,14 +187,14 @@ input ComicBriefDtoChapterCountFilterComparison {
   neq: Float
 }
 
-input ComicBriefDtoChapterCountFilterComparisonBetween {
+input ComicDtoChapterCountFilterComparisonBetween {
   lower: Float!
   upper: Float!
 }
 
-type ComicBriefDtoConnection {
+type ComicDtoConnection {
   """Array of nodes."""
-  nodes: [ComicBriefDto!]!
+  nodes: [ComicDto!]!
 
   """Paging information"""
   pageInfo: OffsetPageInfo!
@@ -200,13 +203,13 @@ type ComicBriefDtoConnection {
   totalCount: Int!
 }
 
-input ComicBriefDtoContributorsFilterComparison {
+input ComicDtoContributorsFilterComparison {
   in: [[String!]!]
   notIn: [[String!]!]
 }
 
-input ComicBriefDtoCreatedAtFilterComparison {
-  between: ComicBriefDtoCreatedAtFilterComparisonBetween
+input ComicDtoCreatedAtFilterComparison {
+  between: ComicDtoCreatedAtFilterComparisonBetween
   eq: DateTime
   gt: DateTime
   gte: DateTime
@@ -215,28 +218,28 @@ input ComicBriefDtoCreatedAtFilterComparison {
   neq: DateTime
 }
 
-input ComicBriefDtoCreatedAtFilterComparisonBetween {
+input ComicDtoCreatedAtFilterComparisonBetween {
   lower: DateTime!
   upper: DateTime!
 }
 
-input ComicBriefDtoFilter {
+input ComicDtoFilter {
   _id: IDFilterComparison
-  and: [ComicBriefDtoFilter!]
-  chapterCount: ComicBriefDtoChapterCountFilterComparison
-  contributors: ComicBriefDtoContributorsFilterComparison
-  createdAt: ComicBriefDtoCreatedAtFilterComparison
-  followCount: ComicBriefDtoFollowCountFilterComparison
-  name: ComicBriefDtoNameFilterComparison
-  or: [ComicBriefDtoFilter!]
-  slug: ComicBriefDtoSlugFilterComparison
-  status: ComicBriefDtoStatusFilterComparison
-  totalViewCount: ComicBriefDtoTotalViewCountFilterComparison
-  updatedAt: ComicBriefDtoUpdatedAtFilterComparison
+  and: [ComicDtoFilter!]
+  chapterCount: ComicDtoChapterCountFilterComparison
+  contributors: ComicDtoContributorsFilterComparison
+  createdAt: ComicDtoCreatedAtFilterComparison
+  followCount: ComicDtoFollowCountFilterComparison
+  name: ComicDtoNameFilterComparison
+  or: [ComicDtoFilter!]
+  slug: ComicDtoSlugFilterComparison
+  status: ComicDtoStatusFilterComparison
+  totalViewCount: ComicDtoTotalViewCountFilterComparison
+  updatedAt: ComicDtoUpdatedAtFilterComparison
 }
 
-input ComicBriefDtoFollowCountFilterComparison {
-  between: ComicBriefDtoFollowCountFilterComparisonBetween
+input ComicDtoFollowCountFilterComparison {
+  between: ComicDtoFollowCountFilterComparisonBetween
   gt: Float
   gte: Float
   lt: Float
@@ -244,12 +247,12 @@ input ComicBriefDtoFollowCountFilterComparison {
   neq: Float
 }
 
-input ComicBriefDtoFollowCountFilterComparisonBetween {
+input ComicDtoFollowCountFilterComparisonBetween {
   lower: Float!
   upper: Float!
 }
 
-input ComicBriefDtoNameFilterComparison {
+input ComicDtoNameFilterComparison {
   eq: String
   iLike: String
   like: String
@@ -257,7 +260,7 @@ input ComicBriefDtoNameFilterComparison {
   notLike: String
 }
 
-input ComicBriefDtoSlugFilterComparison {
+input ComicDtoSlugFilterComparison {
   eq: String
   iLike: String
   like: String
@@ -265,13 +268,13 @@ input ComicBriefDtoSlugFilterComparison {
   notLike: String
 }
 
-input ComicBriefDtoSort {
+input ComicDtoSort {
   direction: SortDirection!
-  field: ComicBriefDtoSortFields!
+  field: ComicDtoSortFields!
   nulls: SortNulls
 }
 
-enum ComicBriefDtoSortFields {
+enum ComicDtoSortFields {
   _id
   chapterCount
   contributors
@@ -284,14 +287,14 @@ enum ComicBriefDtoSortFields {
   updatedAt
 }
 
-input ComicBriefDtoStatusFilterComparison {
+input ComicDtoStatusFilterComparison {
   eq: String
   in: [String!]
   notIn: [String!]
 }
 
-input ComicBriefDtoTotalViewCountFilterComparison {
-  between: ComicBriefDtoTotalViewCountFilterComparisonBetween
+input ComicDtoTotalViewCountFilterComparison {
+  between: ComicDtoTotalViewCountFilterComparisonBetween
   gt: Float
   gte: Float
   lt: Float
@@ -299,13 +302,13 @@ input ComicBriefDtoTotalViewCountFilterComparison {
   neq: Float
 }
 
-input ComicBriefDtoTotalViewCountFilterComparisonBetween {
+input ComicDtoTotalViewCountFilterComparisonBetween {
   lower: Float!
   upper: Float!
 }
 
-input ComicBriefDtoUpdatedAtFilterComparison {
-  between: ComicBriefDtoUpdatedAtFilterComparisonBetween
+input ComicDtoUpdatedAtFilterComparison {
+  between: ComicDtoUpdatedAtFilterComparisonBetween
   eq: DateTime
   gt: DateTime
   gte: DateTime
@@ -314,7 +317,7 @@ input ComicBriefDtoUpdatedAtFilterComparison {
   neq: DateTime
 }
 
-input ComicBriefDtoUpdatedAtFilterComparisonBetween {
+input ComicDtoUpdatedAtFilterComparisonBetween {
   lower: DateTime!
   upper: DateTime!
 }
@@ -536,20 +539,20 @@ type Query {
     """Specify to sort results."""
     sorting: [AuthorSort!]! = []
   ): AuthorConnection!
-  comicBriefDto(
+  comicDto(
     """The id of the record to find."""
     id: ID!
-  ): ComicBriefDto!
-  comicBriefDtos(
+  ): ComicDto!
+  comicDtos(
     """Specify to filter the records returned."""
-    filter: ComicBriefDtoFilter! = {}
+    filter: ComicDtoFilter! = {}
 
     """Limit or page results."""
     paging: OffsetPaging! = {limit: 10}
 
     """Specify to sort results."""
-    sorting: [ComicBriefDtoSort!]! = []
-  ): ComicBriefDtoConnection!
+    sorting: [ComicDtoSort!]! = []
+  ): ComicDtoConnection!
   getAllChapters(comicId: String!): [Chapter!]!
   getAllComicStatus: [ComicStatus!]!
   getAllComics: [Comic!]!

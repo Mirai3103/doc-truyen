@@ -21,6 +21,7 @@ const documents = {
     "\n  mutation CreateOneTag($input: CreateOneTagInput!) {\n    createOneTag(input: $input) {\n      _id\n    }\n  }\n": types.CreateOneTagDocument,
     "\n  mutation UpdateOneTag($input: UpdateOneTagInput!) {\n    updateOneTag(input: $input) {\n      _id\n      description\n      name\n      type\n    }\n  }\n": types.UpdateOneTagDocument,
     "\n  mutation DeleteOneTag($input: DeleteOneTagInput!) {\n    deleteOneTag(input: $input) {\n      _id\n    }\n  }\n": types.DeleteOneTagDocument,
+    "\n  query ComicsTable(\n    $filter: ComicDtoFilter!\n    $sorting: [ComicDtoSort!]!\n    $paging: OffsetPaging!\n  ) {\n    comicDtos(filter: $filter, sorting: $sorting, paging: $paging) {\n      nodes {\n        name\n        _id\n        slug\n        author {\n          name\n        }\n        category {\n          name\n        }\n        chapterCount\n        createdBy {\n          username\n        }\n        imageCoverUrl\n        recentChapter {\n          name\n        }\n      }\n      totalCount\n    }\n  }\n": types.ComicsTableDocument,
 };
 
 /**
@@ -69,6 +70,10 @@ export function graphql(source: "\n  mutation UpdateOneTag($input: UpdateOneTagI
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation DeleteOneTag($input: DeleteOneTagInput!) {\n    deleteOneTag(input: $input) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation DeleteOneTag($input: DeleteOneTagInput!) {\n    deleteOneTag(input: $input) {\n      _id\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query ComicsTable(\n    $filter: ComicDtoFilter!\n    $sorting: [ComicDtoSort!]!\n    $paging: OffsetPaging!\n  ) {\n    comicDtos(filter: $filter, sorting: $sorting, paging: $paging) {\n      nodes {\n        name\n        _id\n        slug\n        author {\n          name\n        }\n        category {\n          name\n        }\n        chapterCount\n        createdBy {\n          username\n        }\n        imageCoverUrl\n        recentChapter {\n          name\n        }\n      }\n      totalCount\n    }\n  }\n"): (typeof documents)["\n  query ComicsTable(\n    $filter: ComicDtoFilter!\n    $sorting: [ComicDtoSort!]!\n    $paging: OffsetPaging!\n  ) {\n    comicDtos(filter: $filter, sorting: $sorting, paging: $paging) {\n      nodes {\n        name\n        _id\n        slug\n        author {\n          name\n        }\n        category {\n          name\n        }\n        chapterCount\n        createdBy {\n          username\n        }\n        imageCoverUrl\n        recentChapter {\n          name\n        }\n      }\n      totalCount\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

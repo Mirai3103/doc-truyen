@@ -13,7 +13,7 @@ function logAccessTokenMiddleware(req: any, res: any, next: any) {
 }
 async function bootstrap() {
   mongoose.set('debug', function (coll, method, query, doc, options) {
-    console.log(JSON.stringify(query));
+    console.log(JSON.stringify(query), coll, method);
   });
   const app = await NestFactory.create(AppModule);
 

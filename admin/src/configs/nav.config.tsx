@@ -24,7 +24,7 @@ export const appNavItems: NavItemProps[] = [
   },
   {
     label: "Truyện",
-    href: "/dashboard /comics",
+    href: "/dashboard/comics",
     icon: FaBookOpen,
   },
 ];

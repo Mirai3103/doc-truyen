@@ -50,12 +50,23 @@ export type AuthorConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type AuthorCreatedAtFilterComparison = {
+  eq?: InputMaybe<Scalars['DateTime']['input']>;
+  gt?: InputMaybe<Scalars['DateTime']['input']>;
+  gte?: InputMaybe<Scalars['DateTime']['input']>;
+  lt?: InputMaybe<Scalars['DateTime']['input']>;
+  lte?: InputMaybe<Scalars['DateTime']['input']>;
+  neq?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
 export type AuthorDeleteFilter = {
   _id?: InputMaybe<IdFilterComparison>;
   and?: InputMaybe<Array<AuthorDeleteFilter>>;
+  createdAt?: InputMaybe<AuthorCreatedAtFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<AuthorDeleteFilter>>;
   totalComics?: InputMaybe<NumberFieldComparison>;
+  updatedAt?: InputMaybe<AuthorUpdatedAtFilterComparison>;
 };
 
 export type AuthorDeleteResponse = {
@@ -71,9 +82,11 @@ export type AuthorDeleteResponse = {
 export type AuthorFilter = {
   _id?: InputMaybe<IdFilterComparison>;
   and?: InputMaybe<Array<AuthorFilter>>;
+  createdAt?: InputMaybe<AuthorCreatedAtFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<AuthorFilter>>;
   totalComics?: InputMaybe<NumberFieldComparison>;
+  updatedAt?: InputMaybe<AuthorUpdatedAtFilterComparison>;
 };
 
 export type AuthorSort = {
@@ -84,16 +97,29 @@ export type AuthorSort = {
 
 export enum AuthorSortFields {
   Id = '_id',
+  CreatedAt = 'createdAt',
   Name = 'name',
-  TotalComics = 'totalComics'
+  TotalComics = 'totalComics',
+  UpdatedAt = 'updatedAt'
 }
 
 export type AuthorUpdateFilter = {
   _id?: InputMaybe<IdFilterComparison>;
   and?: InputMaybe<Array<AuthorUpdateFilter>>;
+  createdAt?: InputMaybe<AuthorCreatedAtFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<AuthorUpdateFilter>>;
   totalComics?: InputMaybe<NumberFieldComparison>;
+  updatedAt?: InputMaybe<AuthorUpdatedAtFilterComparison>;
+};
+
+export type AuthorUpdatedAtFilterComparison = {
+  eq?: InputMaybe<Scalars['DateTime']['input']>;
+  gt?: InputMaybe<Scalars['DateTime']['input']>;
+  gte?: InputMaybe<Scalars['DateTime']['input']>;
+  lt?: InputMaybe<Scalars['DateTime']['input']>;
+  lte?: InputMaybe<Scalars['DateTime']['input']>;
+  neq?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type Chapter = {
@@ -148,6 +174,171 @@ export type Comic = {
   updatedAt: Scalars['DateTime']['output'];
   weekViewCount: Scalars['Int']['output'];
   yearViewCount: Scalars['Int']['output'];
+};
+
+export type ComicDto = {
+  __typename?: 'ComicDto';
+  _id: Scalars['ID']['output'];
+  author: Author;
+  category: Tag;
+  chapterCount: Scalars['Int']['output'];
+  contributors: Array<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  createdBy: User;
+  description: Scalars['String']['output'];
+  followCount: Scalars['Float']['output'];
+  genres: Tag;
+  imageCoverUrl: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  otherNames: Array<Scalars['String']['output']>;
+  recentChapter: Chapter;
+  slug: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+  totalViewCount: Scalars['Float']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type ComicDtoChapterCountFilterComparison = {
+  between?: InputMaybe<ComicDtoChapterCountFilterComparisonBetween>;
+  gt?: InputMaybe<Scalars['Float']['input']>;
+  gte?: InputMaybe<Scalars['Float']['input']>;
+  lt?: InputMaybe<Scalars['Float']['input']>;
+  lte?: InputMaybe<Scalars['Float']['input']>;
+  neq?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type ComicDtoChapterCountFilterComparisonBetween = {
+  lower: Scalars['Float']['input'];
+  upper: Scalars['Float']['input'];
+};
+
+export type ComicDtoConnection = {
+  __typename?: 'ComicDtoConnection';
+  /** Array of nodes. */
+  nodes: Array<ComicDto>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type ComicDtoContributorsFilterComparison = {
+  in?: InputMaybe<Array<Array<Scalars['String']['input']>>>;
+  notIn?: InputMaybe<Array<Array<Scalars['String']['input']>>>;
+};
+
+export type ComicDtoCreatedAtFilterComparison = {
+  between?: InputMaybe<ComicDtoCreatedAtFilterComparisonBetween>;
+  eq?: InputMaybe<Scalars['DateTime']['input']>;
+  gt?: InputMaybe<Scalars['DateTime']['input']>;
+  gte?: InputMaybe<Scalars['DateTime']['input']>;
+  lt?: InputMaybe<Scalars['DateTime']['input']>;
+  lte?: InputMaybe<Scalars['DateTime']['input']>;
+  neq?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type ComicDtoCreatedAtFilterComparisonBetween = {
+  lower: Scalars['DateTime']['input'];
+  upper: Scalars['DateTime']['input'];
+};
+
+export type ComicDtoFilter = {
+  _id?: InputMaybe<IdFilterComparison>;
+  and?: InputMaybe<Array<ComicDtoFilter>>;
+  chapterCount?: InputMaybe<ComicDtoChapterCountFilterComparison>;
+  contributors?: InputMaybe<ComicDtoContributorsFilterComparison>;
+  createdAt?: InputMaybe<ComicDtoCreatedAtFilterComparison>;
+  followCount?: InputMaybe<ComicDtoFollowCountFilterComparison>;
+  name?: InputMaybe<ComicDtoNameFilterComparison>;
+  or?: InputMaybe<Array<ComicDtoFilter>>;
+  slug?: InputMaybe<ComicDtoSlugFilterComparison>;
+  status?: InputMaybe<ComicDtoStatusFilterComparison>;
+  totalViewCount?: InputMaybe<ComicDtoTotalViewCountFilterComparison>;
+  updatedAt?: InputMaybe<ComicDtoUpdatedAtFilterComparison>;
+};
+
+export type ComicDtoFollowCountFilterComparison = {
+  between?: InputMaybe<ComicDtoFollowCountFilterComparisonBetween>;
+  gt?: InputMaybe<Scalars['Float']['input']>;
+  gte?: InputMaybe<Scalars['Float']['input']>;
+  lt?: InputMaybe<Scalars['Float']['input']>;
+  lte?: InputMaybe<Scalars['Float']['input']>;
+  neq?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type ComicDtoFollowCountFilterComparisonBetween = {
+  lower: Scalars['Float']['input'];
+  upper: Scalars['Float']['input'];
+};
+
+export type ComicDtoNameFilterComparison = {
+  eq?: InputMaybe<Scalars['String']['input']>;
+  iLike?: InputMaybe<Scalars['String']['input']>;
+  like?: InputMaybe<Scalars['String']['input']>;
+  neq?: InputMaybe<Scalars['String']['input']>;
+  notLike?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ComicDtoSlugFilterComparison = {
+  eq?: InputMaybe<Scalars['String']['input']>;
+  iLike?: InputMaybe<Scalars['String']['input']>;
+  like?: InputMaybe<Scalars['String']['input']>;
+  neq?: InputMaybe<Scalars['String']['input']>;
+  notLike?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ComicDtoSort = {
+  direction: SortDirection;
+  field: ComicDtoSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum ComicDtoSortFields {
+  Id = '_id',
+  ChapterCount = 'chapterCount',
+  Contributors = 'contributors',
+  CreatedAt = 'createdAt',
+  FollowCount = 'followCount',
+  Name = 'name',
+  Slug = 'slug',
+  Status = 'status',
+  TotalViewCount = 'totalViewCount',
+  UpdatedAt = 'updatedAt'
+}
+
+export type ComicDtoStatusFilterComparison = {
+  eq?: InputMaybe<Scalars['String']['input']>;
+  in?: InputMaybe<Array<Scalars['String']['input']>>;
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+export type ComicDtoTotalViewCountFilterComparison = {
+  between?: InputMaybe<ComicDtoTotalViewCountFilterComparisonBetween>;
+  gt?: InputMaybe<Scalars['Float']['input']>;
+  gte?: InputMaybe<Scalars['Float']['input']>;
+  lt?: InputMaybe<Scalars['Float']['input']>;
+  lte?: InputMaybe<Scalars['Float']['input']>;
+  neq?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type ComicDtoTotalViewCountFilterComparisonBetween = {
+  lower: Scalars['Float']['input'];
+  upper: Scalars['Float']['input'];
+};
+
+export type ComicDtoUpdatedAtFilterComparison = {
+  between?: InputMaybe<ComicDtoUpdatedAtFilterComparisonBetween>;
+  eq?: InputMaybe<Scalars['DateTime']['input']>;
+  gt?: InputMaybe<Scalars['DateTime']['input']>;
+  gte?: InputMaybe<Scalars['DateTime']['input']>;
+  lt?: InputMaybe<Scalars['DateTime']['input']>;
+  lte?: InputMaybe<Scalars['DateTime']['input']>;
+  neq?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type ComicDtoUpdatedAtFilterComparisonBetween = {
+  lower: Scalars['DateTime']['input'];
+  upper: Scalars['DateTime']['input'];
 };
 
 export type ComicPage = {
@@ -494,6 +685,8 @@ export type Query = {
   advanceSearchComics: ComicPage;
   author: Author;
   authors: AuthorConnection;
+  comicDto: ComicDto;
+  comicDtos: ComicDtoConnection;
   getAllChapters: Array<Chapter>;
   getAllComicStatus: Array<ComicStatus>;
   getAllComics: Array<Comic>;
@@ -538,6 +731,18 @@ export type QueryAuthorsArgs = {
   filter?: AuthorFilter;
   paging?: OffsetPaging;
   sorting?: Array<AuthorSort>;
+};
+
+
+export type QueryComicDtoArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryComicDtosArgs = {
+  filter?: ComicDtoFilter;
+  paging?: OffsetPaging;
+  sorting?: Array<ComicDtoSort>;
 };
 
 
@@ -743,13 +948,24 @@ export type TagConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type TagCreatedAtFilterComparison = {
+  eq?: InputMaybe<Scalars['DateTime']['input']>;
+  gt?: InputMaybe<Scalars['DateTime']['input']>;
+  gte?: InputMaybe<Scalars['DateTime']['input']>;
+  lt?: InputMaybe<Scalars['DateTime']['input']>;
+  lte?: InputMaybe<Scalars['DateTime']['input']>;
+  neq?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
 export type TagDeleteFilter = {
   _id?: InputMaybe<IdFilterComparison>;
   and?: InputMaybe<Array<TagDeleteFilter>>;
+  createdAt?: InputMaybe<TagCreatedAtFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<TagDeleteFilter>>;
   totalComics?: InputMaybe<NumberFieldComparison>;
   type?: InputMaybe<StringFieldComparison>;
+  updatedAt?: InputMaybe<TagUpdatedAtFilterComparison>;
 };
 
 export type TagDeleteResponse = {
@@ -766,10 +982,12 @@ export type TagDeleteResponse = {
 export type TagFilter = {
   _id?: InputMaybe<IdFilterComparison>;
   and?: InputMaybe<Array<TagFilter>>;
+  createdAt?: InputMaybe<TagCreatedAtFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<TagFilter>>;
   totalComics?: InputMaybe<NumberFieldComparison>;
   type?: InputMaybe<StringFieldComparison>;
+  updatedAt?: InputMaybe<TagUpdatedAtFilterComparison>;
 };
 
 export type TagSort = {
@@ -780,18 +998,31 @@ export type TagSort = {
 
 export enum TagSortFields {
   Id = '_id',
+  CreatedAt = 'createdAt',
   Name = 'name',
   TotalComics = 'totalComics',
-  Type = 'type'
+  Type = 'type',
+  UpdatedAt = 'updatedAt'
 }
 
 export type TagUpdateFilter = {
   _id?: InputMaybe<IdFilterComparison>;
   and?: InputMaybe<Array<TagUpdateFilter>>;
+  createdAt?: InputMaybe<TagCreatedAtFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<TagUpdateFilter>>;
   totalComics?: InputMaybe<NumberFieldComparison>;
   type?: InputMaybe<StringFieldComparison>;
+  updatedAt?: InputMaybe<TagUpdatedAtFilterComparison>;
+};
+
+export type TagUpdatedAtFilterComparison = {
+  eq?: InputMaybe<Scalars['DateTime']['input']>;
+  gt?: InputMaybe<Scalars['DateTime']['input']>;
+  gte?: InputMaybe<Scalars['DateTime']['input']>;
+  lt?: InputMaybe<Scalars['DateTime']['input']>;
+  lte?: InputMaybe<Scalars['DateTime']['input']>;
+  neq?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type TrendingSortInput = {
@@ -946,6 +1177,15 @@ export type DeleteOneTagMutationVariables = Exact<{
 
 export type DeleteOneTagMutation = { __typename?: 'Mutation', deleteOneTag: { __typename?: 'TagDeleteResponse', _id?: string | null } };
 
+export type ComicsTableQueryVariables = Exact<{
+  filter: ComicDtoFilter;
+  sorting: Array<ComicDtoSort> | ComicDtoSort;
+  paging: OffsetPaging;
+}>;
+
+
+export type ComicsTableQuery = { __typename?: 'Query', comicDtos: { __typename?: 'ComicDtoConnection', totalCount: number, nodes: Array<{ __typename?: 'ComicDto', name: string, _id: string, slug: string, chapterCount: number, imageCoverUrl: string, author: { __typename?: 'Author', name: string }, category: { __typename?: 'Tag', name: string }, createdBy: { __typename?: 'User', username: string }, recentChapter: { __typename?: 'Chapter', name?: string | null } }> } };
+
 
 export const AuthorsTableDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AuthorsTable"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AuthorFilter"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sorting"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AuthorSort"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paging"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"OffsetPaging"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authors"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}},{"kind":"Argument","name":{"kind":"Name","value":"sorting"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sorting"}}},{"kind":"Argument","name":{"kind":"Name","value":"paging"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paging"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"totalComics"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<AuthorsTableQuery, AuthorsTableQueryVariables>;
 export const CreateOneAuthorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateOneAuthor"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateOneAuthorInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createOneAuthor"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<CreateOneAuthorMutation, CreateOneAuthorMutationVariables>;
@@ -955,3 +1195,4 @@ export const TagsTableDocument = {"kind":"Document","definitions":[{"kind":"Oper
 export const CreateOneTagDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateOneTag"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateOneTagInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createOneTag"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<CreateOneTagMutation, CreateOneTagMutationVariables>;
 export const UpdateOneTagDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateOneTag"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateOneTagInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateOneTag"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}}]}}]} as unknown as DocumentNode<UpdateOneTagMutation, UpdateOneTagMutationVariables>;
 export const DeleteOneTagDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteOneTag"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteOneTagInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteOneTag"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<DeleteOneTagMutation, DeleteOneTagMutationVariables>;
+export const ComicsTableDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ComicsTable"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ComicDtoFilter"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sorting"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ComicDtoSort"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paging"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"OffsetPaging"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comicDtos"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}},{"kind":"Argument","name":{"kind":"Name","value":"sorting"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sorting"}}},{"kind":"Argument","name":{"kind":"Name","value":"paging"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paging"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"chapterCount"}},{"kind":"Field","name":{"kind":"Name","value":"createdBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}}]}},{"kind":"Field","name":{"kind":"Name","value":"imageCoverUrl"}},{"kind":"Field","name":{"kind":"Name","value":"recentChapter"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<ComicsTableQuery, ComicsTableQueryVariables>;

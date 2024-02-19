@@ -19,16 +19,16 @@ import {
   PagingStrategies,
 } from '@ptc-org/nestjs-query-graphql';
 import { NestjsQueryMongooseModule } from '@ptc-org/nestjs-query-mongoose';
-import { ComicBriefDto, ComicBriefDtoAssembler } from './dto/comic.dto';
-import { ComicBriefDtoResolver } from './comicDto.resolver';
+import { ComicDto, ComicDtoAssembler } from './dto/comic.dto';
+import { ComicDtoResolver } from './comicDto.resolver';
 
 @Module({
-  providers: [ComicService, ComicResolver, ComicBriefDtoResolver],
+  providers: [ComicService, ComicResolver, ComicDtoResolver],
   imports: [
     NestjsQueryGraphQLModule.forFeature({
       // import the NestjsQueryMongooseModule to register the entity with mongoose
       // and provide a QueryService
-      assemblers: [ComicBriefDtoAssembler],
+      assemblers: [ComicDtoAssembler],
       imports: [
         NestjsQueryMongooseModule.forFeature([
           {
@@ -39,7 +39,7 @@ import { ComicBriefDtoResolver } from './comicDto.resolver';
         ]),
       ],
       // describe the resolvers you want to expose
-      dtos: [{ DTOClass: ComicBriefDto }],
+      dtos: [{ DTOClass: ComicDto }],
     }),
     MongooseModule.forFeature([
       {

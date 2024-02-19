@@ -22,6 +22,7 @@ const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 const DashboardIndexLazyImport = createFileRoute('/dashboard/')()
 const DashboardTagsIndexLazyImport = createFileRoute('/dashboard/tags/')()
+const DashboardComicsIndexLazyImport = createFileRoute('/dashboard/comics/')()
 const DashboardAuthorsIndexLazyImport = createFileRoute('/dashboard/authors/')()
 
 // Create/Update Routes
@@ -60,6 +61,13 @@ const DashboardTagsIndexLazyRoute = DashboardTagsIndexLazyImport.update({
   import('./routes/dashboard/tags/index.lazy').then((d) => d.Route),
 )
 
+const DashboardComicsIndexLazyRoute = DashboardComicsIndexLazyImport.update({
+  path: '/comics/',
+  getParentRoute: () => DashboardRoute,
+} as any).lazy(() =>
+  import('./routes/dashboard/comics/index.lazy').then((d) => d.Route),
+)
+
 const DashboardAuthorsIndexLazyRoute = DashboardAuthorsIndexLazyImport.update({
   path: '/authors/',
   getParentRoute: () => DashboardRoute,
@@ -95,6 +103,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAuthorsIndexLazyImport
       parentRoute: typeof DashboardImport
     }
+    '/dashboard/comics/': {
+      preLoaderRoute: typeof DashboardComicsIndexLazyImport
+      parentRoute: typeof DashboardImport
+    }
     '/dashboard/tags/': {
       preLoaderRoute: typeof DashboardTagsIndexLazyImport
       parentRoute: typeof DashboardImport
@@ -109,6 +121,7 @@ export const routeTree = rootRoute.addChildren([
   DashboardRoute.addChildren([
     DashboardIndexLazyRoute,
     DashboardAuthorsIndexLazyRoute,
+    DashboardComicsIndexLazyRoute,
     DashboardTagsIndexLazyRoute,
   ]),
   LoginRoute,

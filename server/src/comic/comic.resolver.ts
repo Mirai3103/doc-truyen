@@ -87,7 +87,7 @@ export class ComicResolver {
     const tags = await Promise.all(genrePromise);
     return tags;
   }
-  @ResolveField(() => [Tag])
+  @ResolveField(() => Tag)
   async category(@Parent() comic: Comic) {
     if (comic.category.name) return comic.category;
     if (!comic.category) return null;

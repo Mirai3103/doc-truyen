@@ -18,7 +18,7 @@ export class BaseSchema extends Document {
   })
   updatedAt: Date = new Date();
 }
-
+@ObjectType()
 export class BaseSchemaDto {
   @Field(() => String)
   @IDField(() => ID)
