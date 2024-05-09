@@ -53,7 +53,7 @@ export default function ComicsPage() {
     pageSize: 20,
   });
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
 
   const { data, refetch } = useQuery<ComicsTableQuery, Error, ComicsTableQuery>(
@@ -87,7 +87,7 @@ export default function ComicsPage() {
         });
       },
       placeholderData: keepPreviousData,
-    }
+    },
   );
   const table = useReactTable({
     columns,
@@ -98,7 +98,7 @@ export default function ComicsPage() {
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     pageCount: Math.ceil(
-      (data?.comicDtos.totalCount || 0) / pagination.pageSize
+      (data?.comicDtos.totalCount || 0) / pagination.pageSize,
     ),
     state: {
       sorting,
