@@ -1,9 +1,11 @@
 query findAllTag {
-    tags {
-        _id
-        name
+  tags {
+   data:{
+     _id
+    name
 
-        type
-        description
-    }
+    type
+    description
+   }
+  }
 }

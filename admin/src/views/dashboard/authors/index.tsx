@@ -23,13 +23,8 @@ import { gqlClient } from "@/utils/request";
 import EditButton from "./EditButton";
 import CreateButton from "./CreateButton";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { GET_AUTHORS_QUERY } from "./gql";
+import { AuthorType, GET_AUTHORS_QUERY } from "./gql";
 import DeleteButton from "./DeleteButton";
-
-type AuthorType = Omit<
-  AuthorsTableQuery["authors"]["nodes"][number],
-  "__typename"
->;
 
 const columnHelper = createColumnHelper<AuthorType>();
 

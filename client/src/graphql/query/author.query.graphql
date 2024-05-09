@@ -1,17 +1,19 @@
 query searchAuthor($keyword: String, $limit: Float, $page: Float) {
-    searchAuthor(keyword: $keyword, limit: $limit, page: $page) {
-        authors {
-            _id
-            name
-            description
-            createdAt
-        }
-        count
+  searchAuthor(keyword: $keyword, limit: $limit, page: $page) {
+    authors {
+      _id
+      name
+      description
+      createdAt
     }
+    count
+  }
 }
 query FindAllAuthors {
-    authors {
-        _id
-        name
+  authors {
+    data {
+      _id
+      name
     }
+  }
 }

@@ -1,5 +1,5 @@
 query getAllHistories($userId: String!) {
-    histories: getAllHistories(userId: $userId) {
+    histories: getAllHistories() {
         chapter {
             chapterNumber
             name

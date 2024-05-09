@@ -26,7 +26,8 @@ query GetRecentComics($limit: Float, $page: Float) {
 }
 query GetTopComics($limit: Float, $page: Float) {
     getTopComics(limit: $limit, page: $page) {
-        _id
+        data:{
+            _id
         imageThumbUrl
         imageCoverUrl
         name
@@ -46,6 +47,7 @@ query GetTopComics($limit: Float, $page: Float) {
         }
         author {
             name
+        }
         }
     }
 }

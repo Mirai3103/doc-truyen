@@ -1,4 +1,5 @@
 import { graphql } from "@/gql";
+import { ComicsTableQuery } from "@/gql/graphql";
 
 export const GET_COMICS_QUERY = graphql(/* GraphQL */ `
   query ComicsTable(
@@ -30,3 +31,7 @@ export const GET_COMICS_QUERY = graphql(/* GraphQL */ `
     }
   }
 `);
+export type ComicType = Omit<
+  ComicsTableQuery["comicDtos"]["nodes"][number],
+  "__typename"
+>;
