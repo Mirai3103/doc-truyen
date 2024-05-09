@@ -51,6 +51,6 @@ Start the client
 ![App Screenshot](./readme/Screenshot%202024-05-09%20224403.png)
 ![App Screenshot](./readme/Screenshot%202024-05-09%20224514.png)
 ![App Screenshot](./readme/Screenshot%202024-05-09%20224549.png)
-![App Screenshot](./readme/Screenshot%202024-05-09%20224558.png\)
+![App Screenshot](./readme/Screenshot%202024-05-09%20224558.png)
 ![App Screenshot](./readme/Screenshot%202024-05-09%20224644.png)
 ![App Screenshot](./readme/Screenshot%202024-05-09%20224814.png)
