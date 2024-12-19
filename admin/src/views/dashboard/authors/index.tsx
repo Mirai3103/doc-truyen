@@ -35,7 +35,7 @@ export default function AuthorPage() {
     pageSize: 20,
   });
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
 
   const { data, refetch } = useQuery<
@@ -56,7 +56,7 @@ export default function AuthorPage() {
 
       const filter: AuthorFilter = parseFilter(
         columnFilters,
-        table
+        table,
       ) as AuthorFilter;
 
       return gqlClient.request(GET_AUTHORS_QUERY, {
@@ -145,7 +145,7 @@ export default function AuthorPage() {
         header: "Hành động",
       }),
     ],
-    []
+    [],
   );
   const table = useReactTable({
     columns,
